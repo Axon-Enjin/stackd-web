@@ -144,31 +144,31 @@ export type Database = {
         Row: {
           body: string
           created_at: string
-          description: string
           id: string
           image_url: string
+          name: string
           ranking_index: number
-          title: string
+          role: string
           updated_at: string
         }
         Insert: {
           body: string
           created_at?: string
-          description: string
           id?: string
           image_url: string
+          name: string
           ranking_index: number
-          title: string
+          role: string
           updated_at?: string
         }
         Update: {
           body?: string
           created_at?: string
-          description?: string
           id?: string
           image_url?: string
+          name?: string
           ranking_index?: number
-          title?: string
+          role?: string
           updated_at?: string
         }
         Relationships: []
