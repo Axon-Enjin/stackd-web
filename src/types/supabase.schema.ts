@@ -19,6 +19,36 @@ export const jsonSchema: z.ZodSchema<Json> = z.lazy(() =>
     .nullable(),
 );
 
+export const clientStackdCertificationRowSchema = z.object({
+  created_at: z.string(),
+  description: z.string(),
+  id: z.string(),
+  image_url: z.string(),
+  ranking_index: z.number(),
+  title: z.string(),
+  updated_at: z.string(),
+});
+
+export const clientStackdCertificationInsertSchema = z.object({
+  created_at: z.string().optional(),
+  description: z.string(),
+  id: z.string().optional(),
+  image_url: z.string(),
+  ranking_index: z.number(),
+  title: z.string(),
+  updated_at: z.string(),
+});
+
+export const clientStackdCertificationUpdateSchema = z.object({
+  created_at: z.string().optional(),
+  description: z.string().optional(),
+  id: z.string().optional(),
+  image_url: z.string().optional(),
+  ranking_index: z.number().optional(),
+  title: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+
 export const clientStackdFileRecordRowSchema = z.object({
   created_at: z.string(),
   deleted_at: z.string().nullable(),

@@ -1,5 +1,5 @@
-import { CertificationsModuleController } from "./TeamMembersModuleController";
-import { MemberRepository } from "./infrastructure/MemberRepository";
+import { CertificationsModuleController } from "./CertificationsModuleController";
+import { CertificationRepository } from "./infrastructure/CertificationRepository";
 import { ImageService } from "./infrastructure/ImageService"; // Assuming this is your implementation
 import { CreateCertificationUseCase } from "./useCases/CreateCertificationUseCase";
 import { DeleteCertificationUseCase } from "./useCases/DeleteCertificationUseCase";
@@ -12,7 +12,7 @@ import { GetOneCertificationUseCase } from "./useCases/GetOneCertificationUseCas
  * 1. Infrastructure Dependencies
  * These are the low-level implementations (Supabase, Cloud Storage, etc.)
  */
-const certificationRepository = new MemberRepository();
+const certificationRepository = new CertificationRepository();
 const imageService = new ImageService(filesModuleController);
 
 /**
@@ -29,26 +29,31 @@ export const deleteCertificationUseCase = new DeleteCertificationUseCase(
   imageService,
 );
 
-export const listCertificationsUseCase = new ListCertifications(certificationRepository);
+export const listCertificationsUseCase = new ListCertifications(
+  certificationRepository,
+);
 
 export const updateCertificationUseCase = new UpdateCertificationUseCase(
   certificationRepository,
   imageService,
 );
 
-export const getOneCertificationUseCase = new GetOneCertificationUseCase(certificationRepository);
+export const getOneCertificationUseCase = new GetOneCertificationUseCase(
+  certificationRepository,
+);
 
 /**
  * 3. Exporting Default Controller
  * The controller serves as the public API for this module
  */
-export const certificationsModuleController = new CertificationsModuleController(
-  createCertificationUseCase,
-  deleteCertificationUseCase,
-  listCertificationsUseCase,
-  updateCertificationUseCase,
-  getOneCertificationUseCase,
-);
+export const certificationsModuleController =
+  new CertificationsModuleController(
+    createCertificationUseCase,
+    deleteCertificationUseCase,
+    listCertificationsUseCase,
+    updateCertificationUseCase,
+    getOneCertificationUseCase,
+  );
 
 // Exporting the class type for type-safety in other modules
-export * from "./TeamMembersModuleController";
+export * from "./CertificationsModuleController";

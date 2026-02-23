@@ -4,15 +4,15 @@ import { Certification, CertificationCreateDTO } from "../domain/Certification";
 
 export class CreateCertificationUseCase {
   constructor(
-    private readonly memberRepository: ICertificationRepository,
+    private readonly certificationRepository: ICertificationRepository,
     private readonly imageService: IImageService,
   ) {}
 
-  async execute(memberRequestObj: CertificationCreateDTO, image: File) {
+  async execute(certificationRequestObj: CertificationCreateDTO, image: File) {
     const imageUrl = await this.imageService.uploadFile(image);
-    const newMember = Certification.create(imageUrl, memberRequestObj);
-    await this.memberRepository.saveNewMember(newMember);
+    const newCertification = Certification.create(imageUrl, certificationRequestObj);
+    await this.certificationRepository.saveNewCertification(newCertification);
 
-    return newMember;
+    return newCertification;
   }
 }

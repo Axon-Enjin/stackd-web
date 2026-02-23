@@ -3,25 +3,25 @@ import { ICertificationRepository } from "../domain/ICertificationRepository";
 
 export class DeleteCertificationUseCase {
   constructor(
-    private readonly memberRepository: ICertificationRepository,
+    private readonly certificationRepository: ICertificationRepository,
     private readonly imageService: IImageService,
   ) {}
 
-  async execute(memberId: string) {
+  async execute(certificationId: string) {
     /**
-     * get member
-     * delete member image
-     * delete member record
+     * get certification
+     * delete certification image
+     * delete certification record
      * return true
      */
-    const member = await this.memberRepository.findById(memberId);
+    const certification = await this.certificationRepository.findById(certificationId);
 
-    if (!member) {
-      throw new Error("Member not found");
+    if (!certification) {
+      throw new Error("Certification not found");
     }
 
-    await this.imageService.deleteFile(member.props.image_url);
-    await this.memberRepository.deleteById(memberId);
+    await this.imageService.deleteFile(certification.props.image_url);
+    await this.certificationRepository.deleteById(certificationId);
 
     return true;
   }

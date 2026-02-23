@@ -1,44 +1,43 @@
 import { IImageService } from "../domain/IImageService";
 import { ICertificationRepository } from "../domain/ICertificationRepository";
-import { 
-  CertificationUpdateDTO,
-} from "../domain/Certification";
+import { CertificationUpdateDTO } from "../domain/Certification";
 
 export class UpdateCertificationUseCase {
   constructor(
-    private readonly memberRepository: ICertificationRepository,
+    private readonly certificationRepository: ICertificationRepository,
     private readonly imageService: IImageService,
   ) {}
 
   async execute(
-    memberId: string,
-    memberRequestObj: CertificationUpdateDTO,
+    certificationId: string,
+    certificationRequestObj: CertificationUpdateDTO,
     newImage?: File,
   ) {
     /**
-     * get member
+     * get certification
      * apply updates
      * check if new image is provided
-     * if new image, delete old image and upload new image then replace member image
+     * if new image, delete old image and upload new image then replace certification image
      * persist updates
-     * return updated member
+     * return updated certification
      */
-    const member = await this.memberRepository.findById(memberId);
+    const certification =
+      await this.certificationRepository.findById(certificationId);
 
-    if (!member) {
-      throw new Error("Member not found");
+    if (!certification) {
+      throw new Error("Certification not found");
     }
 
-    member.update(memberRequestObj);
+    certification.update(certificationRequestObj);
 
     if (newImage) {
-      await this.imageService.deleteFile(member.props.image_url);
+      await this.imageService.deleteFile(certification.props.image_url);
       const imageUrl = await this.imageService.uploadFile(newImage);
-      member.setImageUrl(imageUrl);
+      certification.setImageUrl(imageUrl);
     }
 
-    await this.memberRepository.persisUpdates(member);
+    await this.certificationRepository.persisUpdates(certification);
 
-    return member;
+    return certification;
   }
 }
