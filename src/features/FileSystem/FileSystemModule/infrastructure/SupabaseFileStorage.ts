@@ -1,7 +1,7 @@
 import { supabaseAdminClient } from "@/lib/supabase";
 import { FileBuffer } from "../domain/FileBuffer";
 import { IFileStorage } from "../domain/IFileStorage";
-import { UploadedFileBuffer } from "../domain/UploadedFileBuffer"; 
+import { UploadedFileBuffer } from "../domain/UploadedFileBuffer";
 import { configs } from "@/configs/configs";
 
 export class SupabaseFileStorage implements IFileStorage {
@@ -10,8 +10,8 @@ export class SupabaseFileStorage implements IFileStorage {
   async uploadFileBuffer(file: FileBuffer): Promise<UploadedFileBuffer> {
     // 1. Generate a unique path/reference for the storage
     // Using a timestamp prefix to avoid naming collisions
-    const fileExtension = file.name.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExtension}`;
+    const fileExtension = file.name.split(".").pop();
+    const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
     const storagePath = `uploads/${fileName}`;
 
     // 2. Upload the ArrayBuffer to Supabase Storage
@@ -34,7 +34,7 @@ export class SupabaseFileStorage implements IFileStorage {
     // 4. Return the domain object
     return new UploadedFileBuffer(
       data.path, // storage_reference
-      publicUrlData.publicUrl // public_url
+      publicUrlData.publicUrl, // public_url
     );
   }
 

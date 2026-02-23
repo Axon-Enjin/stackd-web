@@ -1,7 +1,7 @@
 import {
-  TeamsModuleController,
-  teamsModuleController,
-} from "@/features/Team/TeamsModule";
+  TeamMembersModuleController,
+  teamMembersModuleController,
+} from "@/features/TeamMembers/TeamMembersModule";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -10,7 +10,7 @@ export async function GET(
 ) {
   const { teamMemberId } = await params;
 
-  const data = await teamsModuleController.getOneMember(teamMemberId);
+  const data = await teamMembersModuleController.getOneMember(teamMemberId);
 
   return NextResponse.json(
     { message: "GET teamMember", data: data },
@@ -42,7 +42,7 @@ export async function PATCH(
     });
 
     // 3. Execute the update via controller
-    const updatedMember = await teamsModuleController.updateMember(
+    const updatedMember = await teamMembersModuleController.updateMember(
       teamMemberId,
       updateDTO,
       newImage || undefined,
@@ -71,7 +71,7 @@ export async function DELETE(
 ) {
   const { teamMemberId } = await params;
 
-  const data = await teamsModuleController.deleteMember(teamMemberId);
+  const data = await teamMembersModuleController.deleteMember(teamMemberId);
 
   if (!data) {
     return NextResponse.json(
