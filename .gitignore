@@ -1,38 +1,75 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# --- System Files ---
 
-# Dependencies
-node_modules
+*.code-workspace
+.contract.ts
+typedrest.contract.ts
+
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# --- IDEs & Editors ---
+**/.vscode/*
+!.vscode/extensions.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+Session.vim
+.netrwhist
+
+# --- Monorepo & Dependencies ---
+node_modules/
+**/node_modules/
 .pnp
-.pnp.js
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# Local env files
+# --- Build Outputs (Recursive) ---
+# This catches /dist in packages and apps automatically
+dist/
+**/dist/
+build/
+**/build/
+out/
+**/.next/
+**/.vercel
+**/.turbo
+*.tsbuildinfo
+next-env.d.ts
+
+# --- Environment & Secrets (CRITICAL) ---
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-
-# Testing
-coverage
-
-# Turbo
-.turbo
-
-# Vercel
-.vercel
-
-# Build Outputs
-.next/
-out/
-build
-dist
-
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Misc
-.DS_Store
+.env.*
 *.pem
+*.key
+*.tfvars
+*.tfstate
+*.tfstate.backup
+.terraform/
+**/.terraform/
+
+# --- Testing ---
+coverage/
+**/coverage/
+.nyc_output
+storybook-static/
+
+# --- Database & Generated Types ---
+# Ignore Supabase local temp files but keep your actual migrations/types
+supabase/.temp/
