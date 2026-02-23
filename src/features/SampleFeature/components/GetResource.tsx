@@ -16,16 +16,36 @@ export const GetResource = () => {
   };
 
   return (
-    <>
-      <div className="flex flex-col gap-2 border-2">
-        <div>GET RESOURCE</div>
-        <input className="border-2" ref={inputRef} />
-        <button onClick={handleGet}>submit</button>
-        {isLoading && <div>loading</div>}
-        {isError && <div>{error.message}</div>}
-
-        {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+    <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6">
+      <h3 className="mb-4 text-lg font-semibold">Resource Inspector</h3>
+      <div className="mb-4 flex gap-2">
+        <input
+          ref={inputRef}
+          placeholder="Paste UUID..."
+          className="flex-1 rounded-lg border px-3 py-1 text-sm outline-none focus:border-blue-500"
+        />
+        <button
+          onClick={handleGet}
+          className="rounded-lg bg-slate-900 px-4 py-1 text-sm text-white hover:bg-slate-800"
+        >
+          Inspect
+        </button>
       </div>
-    </>
+
+      {data && (
+        <div className="space-y-2 rounded-lg bg-slate-900 p-4 font-mono text-xs text-blue-300">
+          <div className="flex justify-between">
+            <span className="text-slate-500">ID:</span> {data.id}
+          </div>
+          <div className="flex justify-between">
+            <span className="text-slate-500">TITLE:</span> {data.title}
+          </div>
+          <div className="flex justify-between">
+            <span className="text-slate-500">STATUS:</span>{" "}
+            <span className="text-green-400">ONLINE</span>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
