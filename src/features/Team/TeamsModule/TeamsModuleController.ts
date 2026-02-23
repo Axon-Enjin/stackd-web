@@ -1,6 +1,7 @@
-import { Member, MemberCreateDTO, MemberUpdateDTO } from "./domain/Member";
+import { Member, MemberUpdateDTO } from "./domain/Member";
 import { CreateMemberUseCase } from "./useCases/CreateMemberUseCase";
 import { DeleteMemberUseCase } from "./useCases/DeleteMemberUseCase";
+import { GetOneMember } from "./useCases/GetOneMemberUseCase";
 import { ListMembers } from "./useCases/ListMembers";
 import { UpdateMemberUseCase } from "./useCases/UpdateMemberUseCase";
 
@@ -10,6 +11,7 @@ export class TeamsModuleController {
     private deleteMemberUseCase: DeleteMemberUseCase,
     private listMembersUseCase: ListMembers,
     private updateMemberUseCase: UpdateMemberUseCase,
+    private getOneMemberUseCase: GetOneMember
   ) {}
 
   /**
@@ -28,9 +30,27 @@ export class TeamsModuleController {
     };
   }
 
-  async createMember(memberRequestObj: MemberCreateDTO, image: File) {
+  async getOneMember(memberId: string) {
+    const result = await this.getOneMemberUseCase.execute(memberId);
+    return this.mapMemberToResponse(result);
+  }
+
+  async createMember(
+    firstname: string,
+    lastname: string,
+    role: string,
+    bio: string,
+    image: File,
+    middlename?: string,
+  ) {
     const result = await this.createMemberUseCase.execute(
-      memberRequestObj,
+      {
+        firstName: firstname,
+        lastName: lastname,
+        role: role,
+        bio: bio,
+        ...((middlename && { middleName: middlename }) || {}),
+      },
       image,
     );
     return this.mapMemberToResponse(result);
