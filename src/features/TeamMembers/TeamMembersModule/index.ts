@@ -1,4 +1,4 @@
-import { TeamsModuleController } from "./TeamsModuleController";
+import { TeamMembersModuleController } from "./TeamMembersModuleController";
 import { MemberRepository } from "./infrastructure/MemberRepository";
 import { ImageService } from "./infrastructure/ImageService"; // Assuming this is your implementation
 import { CreateMemberUseCase } from "./useCases/CreateMemberUseCase";
@@ -6,6 +6,7 @@ import { DeleteMemberUseCase } from "./useCases/DeleteMemberUseCase";
 import { ListMembers } from "./useCases/ListMembers";
 import { UpdateMemberUseCase } from "./useCases/UpdateMemberUseCase";
 import { filesModuleController } from "@/features/FileSystem/FileSystemModule";
+import { GetOneMember } from "./useCases/GetOneMemberUseCase";
 
 /**
  * 1. Infrastructure Dependencies
@@ -35,16 +36,19 @@ export const updateMemberUseCase = new UpdateMemberUseCase(
   imageService,
 );
 
+export const getOneMemberUseCase = new GetOneMember(memberRepository);
+
 /**
  * 3. Exporting Default Controller
  * The controller serves as the public API for this module
  */
-export const teamsModuleController = new TeamsModuleController(
+export const teamMembersModuleController = new TeamMembersModuleController(
   createMemberUseCase,
   deleteMemberUseCase,
   listMembersUseCase,
   updateMemberUseCase,
+  getOneMemberUseCase,
 );
 
 // Exporting the class type for type-safety in other modules
-export * from "./TeamsModuleController";
+export * from "./TeamMembersModuleController";

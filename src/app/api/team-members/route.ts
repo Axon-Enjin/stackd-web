@@ -1,16 +1,16 @@
-import { teamsModuleController } from "@/features/Team/TeamsModule";
+import { teamMembersModuleController } from "@/features/TeamMembers/TeamMembersModule";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
 
   const pageNumber = parseInt(searchParams.get("pageNumber") || "1");
-  const pageSize = parseInt(searchParams.get("pageNumber") || "10");
+  const pageSize = parseInt(searchParams.get("pageSize") || "10");
 
   const from = (pageNumber - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  const data = await teamsModuleController.listMembers(pageNumber, pageSize);
+  const data = await teamMembersModuleController.listMembers(pageNumber, pageSize);
 
   return NextResponse.json(
     {
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     }
 
     // 3. Call the controller
-    const newMember = await teamsModuleController.createMember(
+    const newMember = await teamMembersModuleController.createMember(
       firstname,
       lastname,
       role,

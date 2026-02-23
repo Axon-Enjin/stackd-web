@@ -5,7 +5,7 @@ import { GetOneMember } from "./useCases/GetOneMemberUseCase";
 import { ListMembers } from "./useCases/ListMembers";
 import { UpdateMemberUseCase } from "./useCases/UpdateMemberUseCase";
 
-export class TeamsModuleController {
+export class TeamMembersModuleController {
   constructor(
     private createMemberUseCase: CreateMemberUseCase,
     private deleteMemberUseCase: DeleteMemberUseCase,
