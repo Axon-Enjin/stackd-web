@@ -140,6 +140,39 @@ export type Database = {
         }
         Relationships: []
       }
+      testimonial: {
+        Row: {
+          body: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string
+          ranking_index: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          description: string
+          id?: string
+          image_url: string
+          ranking_index: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string
+          ranking_index?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
