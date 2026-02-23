@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ProviderCompose } from "@/providers/ProviderCompose";
+import { BreakpointIndicator } from "@/components/widgets/BreakpointIndicator";
+import { configs } from "@/configs/configs";
+import { NavbarDebugging } from "@/components/widgets/NavbarDebugging";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,13 +26,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isDev = configs.environment === "DEVELOPMENT";
+
   return (
     <ProviderCompose>
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          {isDev && <NavbarDebugging />}
+
           {children}
+
+          {isDev && <BreakpointIndicator />}
         </body>
       </html>
     </ProviderCompose>
