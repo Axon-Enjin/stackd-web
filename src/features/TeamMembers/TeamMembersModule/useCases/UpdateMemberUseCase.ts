@@ -35,7 +35,7 @@ export class UpdateMemberUseCase {
       member.setImageUrl(imageUrl);
     }
 
-    await this.memberRepository.persisUpdates(member);
+    await this.memberRepository.persistUpdates(member);
 
     return member;
   }

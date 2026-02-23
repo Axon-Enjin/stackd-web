@@ -54,7 +54,7 @@ export class MemberRepository implements IMemberRepository {
     return Member.hydrate(this.toDomain(data));
   }
 
-  async persisUpdates(member: Member): Promise<Member> {
+  async persistUpdates(member: Member): Promise<Member> {
     const { data, error } = await supabaseAdminClient
       .from(this.TABLE_NAME)
       .update(this.toDb(member.props))

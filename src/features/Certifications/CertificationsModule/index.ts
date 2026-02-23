@@ -19,26 +19,26 @@ const imageService = new ImageService(filesModuleController);
  * 2. Use Cases
  * Injecting the repository and service into the business logic layer
  */
-export const createCertificationUseCase = new CreateCertificationUseCase(
+const createCertificationUseCase = new CreateCertificationUseCase(
   certificationRepository,
   imageService,
 );
 
-export const deleteCertificationUseCase = new DeleteCertificationUseCase(
+const deleteCertificationUseCase = new DeleteCertificationUseCase(
   certificationRepository,
   imageService,
 );
 
-export const listCertificationsUseCase = new ListCertifications(
+const listCertificationsUseCase = new ListCertifications(
   certificationRepository,
 );
 
-export const updateCertificationUseCase = new UpdateCertificationUseCase(
+const updateCertificationUseCase = new UpdateCertificationUseCase(
   certificationRepository,
   imageService,
 );
 
-export const getOneCertificationUseCase = new GetOneCertificationUseCase(
+const getOneCertificationUseCase = new GetOneCertificationUseCase(
   certificationRepository,
 );
 
