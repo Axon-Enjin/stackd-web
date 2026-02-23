@@ -148,32 +148,32 @@ export const clientStackdTestResourceUpdateSchema = z.object({
 export const clientStackdTestimonialRowSchema = z.object({
   body: z.string(),
   created_at: z.string(),
-  description: z.string(),
   id: z.string(),
   image_url: z.string(),
+  name: z.string(),
   ranking_index: z.number(),
-  title: z.string(),
+  role: z.string(),
   updated_at: z.string(),
 });
 
 export const clientStackdTestimonialInsertSchema = z.object({
   body: z.string(),
   created_at: z.string().optional(),
-  description: z.string(),
   id: z.string().optional(),
   image_url: z.string(),
+  name: z.string(),
   ranking_index: z.number(),
-  title: z.string(),
+  role: z.string(),
   updated_at: z.string().optional(),
 });
 
 export const clientStackdTestimonialUpdateSchema = z.object({
   body: z.string().optional(),
   created_at: z.string().optional(),
-  description: z.string().optional(),
   id: z.string().optional(),
   image_url: z.string().optional(),
+  name: z.string().optional(),
   ranking_index: z.number().optional(),
-  title: z.string().optional(),
+  role: z.string().optional(),
   updated_at: z.string().optional(),
 });

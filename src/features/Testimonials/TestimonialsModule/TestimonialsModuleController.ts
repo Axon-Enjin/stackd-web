@@ -21,8 +21,8 @@ export class TestimonialsModuleController {
     return {
       id: testimonial.props.id,
       imageUrl: testimonial.props.image_url,
-      title: testimonial.props.title,
-      description: testimonial.props.description,
+      title: testimonial.props.name,
+      description: testimonial.props.role,
       body: testimonial.props.body,
       rankingIndex: testimonial.props.rankingIndex,
     };
@@ -37,8 +37,8 @@ export class TestimonialsModuleController {
   async createTestimonial(title: string, description: string, body: string, image: File) {
     const result = await this.createTestimonialUseCase.execute(
       {
-        title: title,
-        description: description,
+        name: title,
+        role: description,
         body: body,
       },
       image,

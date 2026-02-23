@@ -39,13 +39,13 @@ export async function POST(request: Request) {
     }
 
     // 2. Extract and validate text fields
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
+    const name = formData.get("name") as string;
+    const role = formData.get("role") as string;
     const body = formData.get("body") as string;
 
-    if (!title || !description || !body) {
+    if (!name || !role || !body) {
       return NextResponse.json(
-        { error: "Missing required fields (title, description, body)" },
+        { error: "Missing required fields (name, role, body)" },
         { status: 400 }
       );
     }
@@ -53,8 +53,8 @@ export async function POST(request: Request) {
     // 3. Call the controller
     const newTestimonial =
       await testimonialsModuleController.createTestimonial(
-        title,
-        description,
+        name,
+        role,
         body,
         image
       );
@@ -72,8 +72,8 @@ export async function POST(request: Request) {
 /**
  * Frontend POST example:
  * const formData = new FormData();
- * formData.append("title", "Jane Doe");
- * formData.append("description", "CEO at TechCorp");
+ * formData.append("name", "Jane Doe");
+ * formData.append("role", "CEO at TechCorp");
  * formData.append("body", "This service completely transformed our workflow!");
  * formData.append("image", fileInput.files[0]);
  *

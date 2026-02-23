@@ -18,8 +18,8 @@ export class TestimonialRepository implements ITestimonialRepository {
   private toDb(props: TestimonialProps): TestimonialInsert {
     return {
       id: props.id,
-      title: props.title,
-      description: props.description,
+      name: props.name,
+      role: props.role,
       body: props.body,
       image_url: props.image_url,
       ranking_index: props.rankingIndex,
@@ -31,8 +31,8 @@ export class TestimonialRepository implements ITestimonialRepository {
   private toDomain(row: TestimonialRow): TestimonialProps {
     return {
       id: row.id,
-      title: row.title,
-      description: row.description,
+      name: row.name,
+      role: row.role,
       body: row.body,
       image_url: row.image_url,
       rankingIndex: row.ranking_index,

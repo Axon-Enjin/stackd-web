@@ -40,7 +40,7 @@ export async function PATCH(
     const updateDTO: any = {};
 
     // Notice we added "body" here to support testimonial updates
-    const fields = ["title", "description", "body"];
+    const fields = ["name", "role", "body"];
     fields.forEach((field) => {
       const value = formData.get(field);
       if (value !== null) {
