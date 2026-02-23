@@ -11,6 +11,7 @@ export const configs = {
     publishableKey: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     secretKey: process.env.SUPABASE_SECRET_KEY,
     schema: process.env.SUPABASE_SCHEMA || "public",
+    storageBucket: process.env.SUPABASE_STORAGE_BUCKET || "public",
   },
   environment: process.env.NEXT_PUBLIC_ENVIRONMENT || "PRODUCTION",
 };
