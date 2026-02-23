@@ -14,7 +14,6 @@ export const ProviderCompose = (props: Props) => {
     <>
       <QueryProvider>{props.children}</QueryProvider>
       <ToastProvider />
-      {configs.environment === "DEVELOPMENT" && <BreakpointIndicator />}
     </>
   );
 };

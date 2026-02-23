@@ -10,7 +10,8 @@ export const configs = {
     projectUrl: process.env.NEXT_PUBLIC_SUPABASE_PROJECT_URL,
     publishableKey: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     secretKey: process.env.SUPABASE_SECRET_KEY,
-    schema: process.env.SUPABASE_SCHEMA || "public",
+    schema:  "client_stackd" as "client_stackd",
+    storageBucket: "client_stackd" as "client_stackd",
   },
   environment: process.env.NEXT_PUBLIC_ENVIRONMENT || "PRODUCTION",
 };

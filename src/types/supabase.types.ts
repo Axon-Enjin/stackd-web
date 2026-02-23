@@ -14,6 +14,81 @@ export type Database = {
   }
   client_stackd: {
     Tables: {
+      file_record: {
+        Row: {
+          created_at: string
+          deleted_at: string | null
+          file_description: string
+          file_name: string
+          file_path: string
+          id: string
+          preview_url: string
+          storage_ref: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          file_description: string
+          file_name: string
+          file_path: string
+          id?: string
+          preview_url: string
+          storage_ref: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          file_description?: string
+          file_name?: string
+          file_path?: string
+          id?: string
+          preview_url?: string
+          storage_ref?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      team_member: {
+        Row: {
+          bio: string
+          created_at: string
+          first_name: string
+          id: string
+          image_url: string
+          last_name: string
+          middle_name: string | null
+          ranking_index: number
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          bio: string
+          created_at?: string
+          first_name: string
+          id?: string
+          image_url: string
+          last_name: string
+          middle_name?: string | null
+          ranking_index: number
+          role: string
+          updated_at: string
+        }
+        Update: {
+          bio?: string
+          created_at?: string
+          first_name?: string
+          id?: string
+          image_url?: string
+          last_name?: string
+          middle_name?: string | null
+          ranking_index?: number
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       test_resource: {
         Row: {
           created_at: string

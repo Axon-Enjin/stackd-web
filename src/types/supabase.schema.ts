@@ -19,6 +19,81 @@ export const jsonSchema: z.ZodSchema<Json> = z.lazy(() =>
     .nullable(),
 );
 
+export const clientStackdFileRecordRowSchema = z.object({
+  created_at: z.string(),
+  deleted_at: z.string().nullable(),
+  file_description: z.string(),
+  file_name: z.string(),
+  file_path: z.string(),
+  id: z.string(),
+  preview_url: z.string(),
+  storage_ref: z.string(),
+  updated_at: z.string(),
+});
+
+export const clientStackdFileRecordInsertSchema = z.object({
+  created_at: z.string().optional(),
+  deleted_at: z.string().optional().nullable(),
+  file_description: z.string(),
+  file_name: z.string(),
+  file_path: z.string(),
+  id: z.string().optional(),
+  preview_url: z.string(),
+  storage_ref: z.string(),
+  updated_at: z.string().optional(),
+});
+
+export const clientStackdFileRecordUpdateSchema = z.object({
+  created_at: z.string().optional(),
+  deleted_at: z.string().optional().nullable(),
+  file_description: z.string().optional(),
+  file_name: z.string().optional(),
+  file_path: z.string().optional(),
+  id: z.string().optional(),
+  preview_url: z.string().optional(),
+  storage_ref: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+
+export const clientStackdTeamMemberRowSchema = z.object({
+  bio: z.string(),
+  created_at: z.string(),
+  first_name: z.string(),
+  id: z.string(),
+  image_url: z.string(),
+  last_name: z.string(),
+  middle_name: z.string().nullable(),
+  ranking_index: z.number(),
+  role: z.string(),
+  updated_at: z.string(),
+});
+
+export const clientStackdTeamMemberInsertSchema = z.object({
+  bio: z.string(),
+  created_at: z.string().optional(),
+  first_name: z.string(),
+  id: z.string().optional(),
+  image_url: z.string(),
+  last_name: z.string(),
+  middle_name: z.string().optional().nullable(),
+  ranking_index: z.number(),
+  role: z.string(),
+  updated_at: z.string(),
+});
+
+export const clientStackdTeamMemberUpdateSchema = z.object({
+  bio: z.string().optional(),
+  created_at: z.string().optional(),
+  first_name: z.string().optional(),
+  id: z.string().optional(),
+  image_url: z.string().optional(),
+  last_name: z.string().optional(),
+  middle_name: z.string().optional().nullable(),
+  ranking_index: z.number().optional(),
+  role: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+
 export const clientStackdTestResourceRowSchema = z.object({
   created_at: z.string(),
   description: z.string(),
