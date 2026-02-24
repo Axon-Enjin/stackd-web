@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
+import Link from "next/link";
 
 export const HomePage = () => {
   const { data, isLoading, isError, error } = useQuery({
@@ -17,6 +18,7 @@ export const HomePage = () => {
       <div className="flex h-screen w-full flex-col items-center justify-center gap-2">
         <div className="text-5xl font-bold">HomePage</div>
         <div className="text-xl">Welcome to stackd-web</div>
+        <Link className="border-2 border-blue-500 px-4 py-2 rounded-2xl" href="/mock">Go to Mock Page</Link>
 
         <div className="flex min-w-50 flex-col items-center justify-center gap-2 rounded-2xl border-2 px-8 py-4">
           <div className="text-xl">API Health Check</div>
