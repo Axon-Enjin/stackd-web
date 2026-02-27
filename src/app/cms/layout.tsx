@@ -16,28 +16,28 @@ export default function CMSLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
+      {/* Topbar — sticky at top */}
       <AdminTopbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-      <div className="flex h-screen flex-col overflow-hidden bg-gray-50">
-        {/* Topbar */}
 
-        {/* Body: Sidebar + Main */}
-        <div className="mx-auto flex w-full max-w-screen-2xl flex-1 overflow-hidden">
-          <AdminSidebar
-            isOpen={sidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-          />
+      {/* Body: Sidebar + Main */}
+      <div className="mx-auto flex max-w-screen-2xl">
+        <AdminSidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
 
-          {/* Main content area */}
-          <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-            <div className="flex-1 p-6 md:p-8">
-              {children}
-            </div>
-          </main>
-        </div>
-
+        {/* Main content area — fills at least the remaining viewport height */}
+        <main className="min-h-[calc(100vh-4rem)] flex-1 p-6 md:p-8">
+          <div className="mx-auto max-w-screen-2xl">
+            {children}
+          </div>
+        </main>
       </div>
-      <AdminFooter /></>
+
+      {/* Footer — full-width bg, visible on scroll */}
+      <AdminFooter />
+    </div>
   );
 }
 
