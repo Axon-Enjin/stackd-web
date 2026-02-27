@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export function AdminFooter() {
   const year = new Date().getFullYear();
 
@@ -10,14 +12,14 @@ export function AdminFooter() {
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           {/* Left: Brand */}
           <div>
-            <div className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#2F80ED] to-[#2FB7A8] text-[10px] font-black text-white shadow-md">
                 S
               </div>
               <span className="text-base font-bold tracking-[0.12em] text-white uppercase select-none">
                 STACKD
               </span>
-            </div>
+            </Link>
             <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/40">
               Content management system for your digital storefront.
             </p>
