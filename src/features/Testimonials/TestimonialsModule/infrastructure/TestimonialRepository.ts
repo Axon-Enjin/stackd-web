@@ -1,4 +1,4 @@
-import { supabaseAdminClient } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { ITestimonialRepository } from "../domain/ITestimonialRepository";
 import { Testimonial, TestimonialProps } from "../domain/Testimonial";
 import { Tables, TablesInsert } from "@/types/supabase.types";
@@ -9,7 +9,6 @@ type TestimonialInsert = TablesInsert<
   { schema: "client_stackd" },
   "testimonial"
 >;
-supabaseAdminClient;
 
 export class TestimonialRepository implements ITestimonialRepository {
   private readonly TABLE_NAME = "testimonial";
@@ -39,22 +38,21 @@ export class TestimonialRepository implements ITestimonialRepository {
     };
   }
 
-  async saveNew(
-    testimonial: Testimonial,
-  ): Promise<Testimonial> {
-    const { data, error } = await supabaseAdminClient
+  async saveNew(testimonial: Testimonial): Promise<Testimonial> {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .insert(this.toDb(testimonial.props))
       .select()
       .single();
 
-    if (error)
-      throw new Error(`Failed to save testimonial: ${error.message}`);
+    if (error) throw new Error(`Failed to save testimonial: ${error.message}`);
     return Testimonial.hydrate(this.toDomain(data));
   }
 
   async persistUpdates(testimonial: Testimonial): Promise<Testimonial> {
-    const { data, error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .update(this.toDb(testimonial.props))
       .eq("id", testimonial.props.id)
@@ -67,7 +65,8 @@ export class TestimonialRepository implements ITestimonialRepository {
   }
 
   async deleteById(id: string): Promise<boolean> {
-    const { error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase
       .from(this.TABLE_NAME)
       .delete()
       .eq("id", id);
@@ -78,14 +77,14 @@ export class TestimonialRepository implements ITestimonialRepository {
   }
 
   async findById(id: string): Promise<Testimonial | null> {
-    const { data, error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .select("*")
       .eq("id", id)
       .maybeSingle();
 
-    if (error)
-      throw new Error(`Failed to find testimonial: ${error.message}`);
+    if (error) throw new Error(`Failed to find testimonial: ${error.message}`);
     if (!data) return null;
 
     return Testimonial.hydrate(this.toDomain(data));
@@ -98,14 +97,14 @@ export class TestimonialRepository implements ITestimonialRepository {
     const from = (pageNumber - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    const { data, error, count } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error, count } = await supabase
       .from(this.TABLE_NAME)
       .select("*", { count: "exact" })
       .order("ranking_index", { ascending: true }) // Fixed: Use DB column name, not camelCase
       .range(from, to);
 
-    if (error)
-      throw new Error(`Failed to list testimonial: ${error.message}`);
+    if (error) throw new Error(`Failed to list testimonial: ${error.message}`);
 
     return {
       list: (data || []).map((item) =>

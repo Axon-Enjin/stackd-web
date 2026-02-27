@@ -7,11 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "gen-types:supabase": "supabase gen types typescript --project-id seoklegbbskvdqszyrby --schema client_stackd > src/types/supabase.types.ts",
-    "gen-types:zod": "supazod -i src/types/supabase.types.ts -o src/types/supabase.schema.ts",
-    "gen-types": "pnpm run gen-types:supabase && pnpm run gen-types:zod"
+    "gen-types:supabase": "npx supabase@latest gen types typescript --project-id seoklegbbskvdqszyrby --schema client_stackd > src/types/supabase.types.ts",
+    "gen-types:zod": "npx supazod@latest -i src/types/supabase.types.ts -o src/types/supabase.schema.ts",
+    "gen-types": "npm run gen-types:supabase && npm run gen-types:zod"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.97.0",
     "@tanstack/react-query": "^5.90.21",
     "clsx": "^2.1.1",
@@ -24,7 +25,8 @@
     "react-dom": "19.2.3",
     "react-toastify": "^11.0.5",
     "tailwind-merge": "^3.5.0",
-    "zod": "^4.3.6"
+    "zod": "^4.3.6",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
