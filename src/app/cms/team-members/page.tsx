@@ -102,7 +102,7 @@ export default function TeamAdminPage() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="flex items-center gap-3 text-2xl font-bold text-gray-900 sm:text-3xl">
-            <Users className="shrink-0 text-indigo-600" size={28} />
+            <Users className="shrink-0 text-[#2F80ED]" size={28} />
             Team Members
           </h1>
           <p className="mt-1 text-sm text-gray-500">
@@ -111,7 +111,7 @@ export default function TeamAdminPage() {
         </div>
         <button
           onClick={openCreate}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-indigo-700 sm:w-auto"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] sm:w-auto"
         >
           <Plus size={20} />
           Add Member
@@ -121,7 +121,7 @@ export default function TeamAdminPage() {
       {/* Content */}
       {loading ? (
         <div className="flex h-64 items-center justify-center">
-          <Loader2 className="animate-spin text-indigo-600" size={40} />
+          <Loader2 className="animate-spin text-[#2F80ED]" size={40} />
         </div>
       ) : (
         <>
@@ -258,7 +258,7 @@ function MemberRow({
         <img
           src={member.imageUrl || "/placeholder-avatar.png"}
           alt={fullName}
-          className="h-11 w-11 rounded-full border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-indigo-400 group-hover/avatar:ring-offset-1"
+          className="h-11 w-11 rounded-full border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-1"
         />
         {member.imageUrl && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-colors group-hover/avatar:bg-black/30">
@@ -357,7 +357,7 @@ function MemberDetailModal({
               <img
                 src={member.imageUrl || "/placeholder-avatar.png"}
                 alt={fullName}
-                className="h-28 w-28 rounded-full border-2 border-gray-100 object-cover shadow-sm transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-indigo-400 group-hover/avatar:ring-offset-2"
+                className="h-28 w-28 rounded-full border-2 border-gray-100 object-cover shadow-sm transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-2"
               />
               {member.imageUrl && (
                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-colors group-hover/avatar:bg-black/20">
@@ -387,7 +387,7 @@ function MemberDetailModal({
               <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
                 Role / Job Title
               </label>
-              <p className="mt-1 text-sm font-medium text-indigo-600">{member.role}</p>
+              <p className="mt-1 text-sm font-medium text-[#2F80ED]">{member.role}</p>
             </div>
             <div>
               <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
@@ -418,7 +418,7 @@ function MemberDetailModal({
             </button>
             <button
               onClick={onEdit}
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+              className="flex items-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2570d4]"
             >
               <Edit2 size={16} />
               Update
@@ -559,7 +559,7 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
                     name="firstname"
                     defaultValue={member?.firstName}
                     required
-                    className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-indigo-600"
+                    className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                   />
                 </div>
                 <div>
@@ -570,7 +570,7 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
                     name="lastname"
                     defaultValue={member?.lastName}
                     required
-                    className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-indigo-600"
+                    className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                   />
                 </div>
               </div>
@@ -582,7 +582,7 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
                 <input
                   name="middlename"
                   defaultValue={member?.middleName}
-                  className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                 />
               </div>
 
@@ -594,7 +594,7 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
                   name="role"
                   defaultValue={member?.role}
                   required
-                  className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                 />
               </div>
 
@@ -607,7 +607,7 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
                   defaultValue={member?.bio}
                   required
                   rows={3}
-                  className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                 ></textarea>
               </div>
             </div>
@@ -624,7 +624,7 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
             <button
               type="submit"
               disabled={submitting}
-              className="flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white transition-colors hover:bg-indigo-700 disabled:opacity-70"
+              className="flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] disabled:opacity-70"
             >
               {submitting ? (
                 <Loader2 size={18} className="animate-spin" />

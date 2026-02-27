@@ -84,7 +84,7 @@ export default function TestimonialsAdminPage() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="flex items-center gap-3 text-2xl font-bold text-gray-900 sm:text-3xl">
-            <MessageSquareQuote className="shrink-0 text-indigo-600" size={28} />
+            <MessageSquareQuote className="shrink-0 text-[#2F80ED]" size={28} />
             Testimonials
           </h1>
           <p className="mt-1 text-sm text-gray-500">
@@ -93,7 +93,7 @@ export default function TestimonialsAdminPage() {
         </div>
         <button
           onClick={openCreate}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 sm:w-auto"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-[#2570d4] sm:w-auto"
         >
           <Plus size={20} />
           Add Testimonial
@@ -103,7 +103,7 @@ export default function TestimonialsAdminPage() {
       {/* Content */}
       {isLoading ? (
         <div className="flex h-64 items-center justify-center">
-          <Loader2 className="animate-spin text-indigo-600" size={40} />
+          <Loader2 className="animate-spin text-[#2F80ED]" size={40} />
         </div>
       ) : (
         <>
@@ -239,7 +239,7 @@ function TestimonialRow({
         <img
           src={testimonial.imageUrl || "/placeholder-avatar.png"}
           alt={testimonial.name}
-          className="h-11 w-11 rounded-full border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-indigo-400 group-hover/avatar:ring-offset-1"
+          className="h-11 w-11 rounded-full border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-1"
         />
         {testimonial.imageUrl && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-colors group-hover/avatar:bg-black/30">
@@ -343,7 +343,7 @@ function TestimonialDetailModal({
               <img
                 src={testimonial.imageUrl || "/placeholder-avatar.png"}
                 alt={testimonial.name}
-                className="h-24 w-24 rounded-full border-2 border-gray-100 object-cover shadow-sm transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-indigo-400 group-hover/avatar:ring-offset-2"
+                className="h-24 w-24 rounded-full border-2 border-gray-100 object-cover shadow-sm transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-2"
               />
               {testimonial.imageUrl && (
                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-colors group-hover/avatar:bg-black/20">
@@ -367,7 +367,7 @@ function TestimonialDetailModal({
               <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
                 Role / Company
               </label>
-              <p className="mt-1 text-sm font-medium text-indigo-600">
+              <p className="mt-1 text-sm font-medium text-[#2F80ED]">
                 {testimonial.role}
               </p>
             </div>
@@ -400,7 +400,7 @@ function TestimonialDetailModal({
             </button>
             <button
               onClick={onEdit}
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+              className="flex items-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2570d4]"
             >
               <Edit2 size={16} />
               Update
@@ -502,7 +502,7 @@ function TestimonialModal({
                 Client Photo
               </label>
               <div
-                className="flex h-32 w-32 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-indigo-400 hover:bg-gray-100"
+                className="flex h-32 w-32 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-[#2F80ED] hover:bg-gray-100"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {preview ? (
@@ -547,7 +547,7 @@ function TestimonialModal({
                     name="name"
                     defaultValue={testimonial?.name}
                     required
-                    className="w-full rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    className="w-full rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
                     placeholder="e.g. Jane Doe"
                   />
                 </div>
@@ -560,7 +560,7 @@ function TestimonialModal({
                     name="role"
                     defaultValue={testimonial?.role}
                     required
-                    className="w-full rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    className="w-full rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
                     placeholder="e.g. CEO at TechCorp"
                   />
                 </div>
@@ -575,7 +575,7 @@ function TestimonialModal({
                   defaultValue={testimonial?.body}
                   required
                   rows={5}
-                  className="w-full resize-none rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                  className="w-full resize-none rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
                   placeholder="What did they say about your service?..."
                 />
               </div>
@@ -594,7 +594,7 @@ function TestimonialModal({
             <button
               type="submit"
               disabled={isPending}
-              className="flex min-w-[140px] items-center justify-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 disabled:opacity-70"
+              className="flex min-w-[140px] items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-5 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-[#2570d4] disabled:opacity-70"
             >
               {isPending ? (
                 <Loader2 size={18} className="animate-spin" />
