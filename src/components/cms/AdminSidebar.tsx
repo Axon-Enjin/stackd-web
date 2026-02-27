@@ -62,7 +62,7 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
           fixed top-16 left-0 z-30 flex h-[calc(100vh-4rem)] w-64 flex-col
           border-r border-gray-200/80 bg-white shadow-xl
           transition-transform duration-300 ease-in-out
-          md:static md:z-auto md:translate-x-0 md:shadow-none
+          md:static md:z-auto md:h-auto md:self-stretch md:translate-x-0 md:shadow-none
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
@@ -95,20 +95,18 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                 className={`
                   group flex items-center gap-3 rounded-xl px-3 py-2.5
                   text-sm font-medium transition-all duration-200
-                  ${
-                    active
-                      ? "bg-[#0B1F3B] text-white shadow-md shadow-[#0B1F3B]/20"
-                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  ${active
+                    ? "bg-[#0B1F3B] text-white shadow-md shadow-[#0B1F3B]/20"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   }
                 `}
               >
                 <Icon
                   size={20}
-                  className={`shrink-0 transition-colors ${
-                    active
+                  className={`shrink-0 transition-colors ${active
                       ? "text-[#2FB7A8]"
                       : "text-gray-400 group-hover:text-gray-600"
-                  }`}
+                    }`}
                 />
                 {item.label}
               </Link>
