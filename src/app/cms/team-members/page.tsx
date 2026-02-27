@@ -28,7 +28,7 @@ interface PaginationMeta {
   totalPages: number;
 }
 
-import { LogoutButton } from "@/components/cms/LogoutButton";
+
 
 export default function TeamAdminPage() {
   const [members, setMembers] = useState<Member[]>([]);
@@ -89,27 +89,23 @@ export default function TeamAdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Team Members</h1>
-            <p className="mt-1 text-gray-500">
-              Manage your organization's team directory.
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <LogoutButton />
-            <button
-              onClick={openCreate}
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-700"
-            >
-              <Plus size={20} />
-              Add Member
-            </button>
-          </div>
+    <div className="mx-auto max-w-6xl">
+      {/* Header */}
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Team Members</h1>
+          <p className="mt-1 text-gray-500">
+            Manage your organization's team directory.
+          </p>
         </div>
+        <button
+          onClick={openCreate}
+          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-700"
+        >
+          <Plus size={20} />
+          Add Member
+        </button>
+      </div>
 
         {/* Member Grid */}
         {loading ? (
@@ -184,7 +180,6 @@ export default function TeamAdminPage() {
             )}
           </>
         )}
-      </div>
 
       {/* Reusable Form Modal */}
       {isModalOpen && (

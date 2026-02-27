@@ -66,68 +66,66 @@ export default function CertificationsAdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
-              <Award className="text-indigo-600" size={32} />
-              Certifications
-            </h1>
-            <p className="mt-1 text-gray-500">
-              Manage technical and professional certifications.
-            </p>
-          </div>
-          <button
-            onClick={openCreate}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-700"
-          >
-            <Plus size={20} />
-            Add Certification
-          </button>
+    <div className="mx-auto max-w-6xl">
+      {/* Header */}
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
+            <Award className="text-indigo-600" size={32} />
+            Certifications
+          </h1>
+          <p className="mt-1 text-gray-500">
+            Manage technical and professional certifications.
+          </p>
         </div>
-
-        {/* Content State */}
-        {isLoading ? (
-          <div className="flex h-64 items-center justify-center">
-            <Loader2 className="animate-spin text-indigo-600" size={40} />
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {certifications.map((cert) => (
-                <CertificationCard
-                  key={cert.id}
-                  certification={cert}
-                  onEdit={() => openEdit(cert)}
-                  onDelete={() => handleDelete(cert.id)}
-                  isDeleting={
-                    deleteMutation.isPending &&
-                    deleteMutation.variables === cert.id
-                  }
-                />
-              ))}
-            </div>
-
-            {/* Empty State */}
-            {!isLoading && certifications.length === 0 && (
-              <div className="rounded-xl border border-gray-100 bg-white py-12 text-center text-gray-500 shadow-sm">
-                No certifications found. Add one to get started!
-              </div>
-            )}
-
-            {/* Pagination Controls */}
-            {meta && meta.totalPages > 1 && (
-              <Pagination
-                currentPage={meta.currentPage}
-                totalPages={meta.totalPages}
-                onPageChange={setPage}
-              />
-            )}
-          </>
-        )}
+        <button
+          onClick={openCreate}
+          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-700"
+        >
+          <Plus size={20} />
+          Add Certification
+        </button>
       </div>
+
+      {/* Content State */}
+      {isLoading ? (
+        <div className="flex h-64 items-center justify-center">
+          <Loader2 className="animate-spin text-indigo-600" size={40} />
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {certifications.map((cert) => (
+              <CertificationCard
+                key={cert.id}
+                certification={cert}
+                onEdit={() => openEdit(cert)}
+                onDelete={() => handleDelete(cert.id)}
+                isDeleting={
+                  deleteMutation.isPending &&
+                  deleteMutation.variables === cert.id
+                }
+              />
+            ))}
+          </div>
+
+          {/* Empty State */}
+          {!isLoading && certifications.length === 0 && (
+            <div className="rounded-xl border border-gray-100 bg-white py-12 text-center text-gray-500 shadow-sm">
+              No certifications found. Add one to get started!
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {meta && meta.totalPages > 1 && (
+            <Pagination
+              currentPage={meta.currentPage}
+              totalPages={meta.totalPages}
+              onPageChange={setPage}
+            />
+          )}
+        </>
+      )}
 
       {/* Modal */}
       {isModalOpen && (

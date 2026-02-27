@@ -72,77 +72,75 @@ export default function TestimonialsAdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
-              <MessageSquareQuote className="text-indigo-600" size={32} />
-              Testimonials
-            </h1>
-            <p className="mt-1 text-gray-500">
-              Manage client feedback, quotes, and success stories.
-            </p>
-          </div>
-          <button
-            onClick={openCreate}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
-          >
-            <Plus size={20} />
-            Add Testimonial
-          </button>
+    <div className="mx-auto max-w-6xl">
+      {/* Header */}
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
+            <MessageSquareQuote className="text-indigo-600" size={32} />
+            Testimonials
+          </h1>
+          <p className="mt-1 text-gray-500">
+            Manage client feedback, quotes, and success stories.
+          </p>
         </div>
-
-        {/* Content State */}
-        {isLoading ? (
-          <div className="flex h-64 items-center justify-center">
-            <Loader2 className="animate-spin text-indigo-600" size={40} />
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {testimonials.map((testimonial) => (
-                <TestimonialCard
-                  key={testimonial.id}
-                  testimonial={testimonial}
-                  onEdit={() => openEdit(testimonial)}
-                  onDelete={() => handleDelete(testimonial.id)}
-                  isDeleting={
-                    deleteMutation.isPending &&
-                    deleteMutation.variables === testimonial.id
-                  }
-                />
-              ))}
-            </div>
-
-            {/* Empty State */}
-            {!isLoading && testimonials.length === 0 && (
-              <div className="rounded-xl border border-gray-100 bg-white py-16 text-center shadow-sm">
-                <MessageSquareQuote
-                  className="mx-auto mb-3 text-gray-300"
-                  size={48}
-                />
-                <h3 className="text-lg font-medium text-gray-900">
-                  No testimonials yet
-                </h3>
-                <p className="mt-1 text-gray-500">
-                  Add some client feedback to build trust with your audience.
-                </p>
-              </div>
-            )}
-
-            {/* Pagination Controls */}
-            {meta && meta.totalPages > 1 && (
-              <Pagination
-                currentPage={meta.currentPage}
-                totalPages={meta.totalPages}
-                onPageChange={setPage}
-              />
-            )}
-          </>
-        )}
+        <button
+          onClick={openCreate}
+          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
+        >
+          <Plus size={20} />
+          Add Testimonial
+        </button>
       </div>
+
+      {/* Content State */}
+      {isLoading ? (
+        <div className="flex h-64 items-center justify-center">
+          <Loader2 className="animate-spin text-indigo-600" size={40} />
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {testimonials.map((testimonial) => (
+              <TestimonialCard
+                key={testimonial.id}
+                testimonial={testimonial}
+                onEdit={() => openEdit(testimonial)}
+                onDelete={() => handleDelete(testimonial.id)}
+                isDeleting={
+                  deleteMutation.isPending &&
+                  deleteMutation.variables === testimonial.id
+                }
+              />
+            ))}
+          </div>
+
+          {/* Empty State */}
+          {!isLoading && testimonials.length === 0 && (
+            <div className="rounded-xl border border-gray-100 bg-white py-16 text-center shadow-sm">
+              <MessageSquareQuote
+                className="mx-auto mb-3 text-gray-300"
+                size={48}
+              />
+              <h3 className="text-lg font-medium text-gray-900">
+                No testimonials yet
+              </h3>
+              <p className="mt-1 text-gray-500">
+                Add some client feedback to build trust with your audience.
+              </p>
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {meta && meta.totalPages > 1 && (
+            <Pagination
+              currentPage={meta.currentPage}
+              totalPages={meta.totalPages}
+              onPageChange={setPage}
+            />
+          )}
+        </>
+      )}
 
       {/* Modal */}
       {isModalOpen && (
