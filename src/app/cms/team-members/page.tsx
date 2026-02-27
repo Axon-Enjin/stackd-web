@@ -42,13 +42,14 @@ export default function TeamAdminPage() {
   const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [viewingMember, setViewingMember] = useState<Member | null>(null);
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
+  const [pageSize, setPageSize] = useState(10);
 
   const API_URL = "/api/team-members";
 
-  const fetchMembers = async (page = 1) => {
+  const fetchMembers = async (page = 1, size = pageSize) => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}?pageNumber=${page}&pageSize=10`);
+      const res = await fetch(`${API_URL}?pageNumber=${page}&pageSize=${size}`);
       if (res.ok) {
         const { data, meta } = await res.json();
         setMembers(data || []);
@@ -154,11 +155,17 @@ export default function TeamAdminPage() {
           </div>
 
           {/* Pagination */}
-          {meta && meta.totalPages > 1 && (
+          {meta && (
             <Pagination
               currentPage={meta.currentPage}
               totalPages={meta.totalPages}
+              pageSize={pageSize}
+              totalRecords={meta.totalRecords}
               onPageChange={(page) => fetchMembers(page)}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                fetchMembers(1, size);
+              }}
             />
           )}
         </>

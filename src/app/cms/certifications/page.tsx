@@ -35,6 +35,7 @@ export interface Certification {
 // ==========================================
 export default function CertificationsAdminPage() {
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCert, setEditingCert] = useState<Certification | null>(null);
   const [viewingCert, setViewingCert] = useState<Certification | null>(null);
@@ -43,7 +44,7 @@ export default function CertificationsAdminPage() {
   // TanStack Query Hooks
   const { data: response, isLoading } = usePaginatedCertificationsQuery(
     page,
-    10,
+    pageSize,
   );
   const deleteMutation = useDeleteCertificationMutation();
 
@@ -133,11 +134,17 @@ export default function CertificationsAdminPage() {
           </div>
 
           {/* Pagination Controls */}
-          {meta && meta.totalPages > 1 && (
+          {meta && (
             <Pagination
               currentPage={meta.currentPage}
               totalPages={meta.totalPages}
+              pageSize={pageSize}
+              totalRecords={meta.totalRecords}
               onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
             />
           )}
         </>

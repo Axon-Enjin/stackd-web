@@ -36,6 +36,7 @@ export interface Testimonial {
 // ==========================================
 export default function TestimonialsAdminPage() {
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] =
     useState<Testimonial | null>(null);
@@ -44,7 +45,7 @@ export default function TestimonialsAdminPage() {
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
 
   // TanStack Query Hooks
-  const { data: response, isLoading } = usePaginatedTestimonialsQuery(page, 10);
+  const { data: response, isLoading } = usePaginatedTestimonialsQuery(page, pageSize);
   const deleteMutation = useDeleteTestimonialMutation();
 
   const rawTestimonials = response?.data || [];
@@ -142,11 +143,17 @@ export default function TestimonialsAdminPage() {
           </div>
 
           {/* Pagination Controls */}
-          {meta && meta.totalPages > 1 && (
+          {meta && (
             <Pagination
               currentPage={meta.currentPage}
               totalPages={meta.totalPages}
+              pageSize={pageSize}
+              totalRecords={meta.totalRecords}
               onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
             />
           )}
         </>
