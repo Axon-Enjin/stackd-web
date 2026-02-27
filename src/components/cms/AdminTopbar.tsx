@@ -50,7 +50,8 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-white/10 bg-[#0B1F3B] px-4 shadow-lg shadow-black/10 md:px-6">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0B1F3B] shadow-lg shadow-black/10">
+      <div className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4 md:px-6">
       {/* Left: Hamburger + Logo */}
       <div className="flex items-center gap-3">
         <button
@@ -101,6 +102,7 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
             </button>
           </div>
         )}
+      </div>
       </div>
     </header>
   );

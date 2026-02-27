@@ -20,7 +20,7 @@ export default function CMSLayout({ children }: { children: React.ReactNode }) {
       <AdminTopbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Body: Sidebar + Main */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="mx-auto flex w-full max-w-screen-2xl flex-1 overflow-hidden">
         <AdminSidebar
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
