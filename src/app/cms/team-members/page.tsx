@@ -14,6 +14,8 @@ import {
   ZoomIn,
 } from "lucide-react";
 
+import { Pagination } from "@/components/cms/Pagination";
+
 // Types based on your domain
 interface Member {
   id: string;
@@ -153,25 +155,11 @@ export default function TeamAdminPage() {
 
           {/* Pagination */}
           {meta && meta.totalPages > 1 && (
-            <div className="mt-6 flex items-center justify-center gap-4">
-              <button
-                disabled={meta.currentPage === 1}
-                onClick={() => fetchMembers(meta.currentPage - 1)}
-                className="rounded-lg border bg-white px-4 py-2 text-sm disabled:opacity-50"
-              >
-                Previous
-              </button>
-              <span className="text-sm text-gray-600">
-                Page {meta.currentPage} of {meta.totalPages}
-              </span>
-              <button
-                disabled={meta.currentPage === meta.totalPages}
-                onClick={() => fetchMembers(meta.currentPage + 1)}
-                className="rounded-lg border bg-white px-4 py-2 text-sm disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
+            <Pagination
+              currentPage={meta.currentPage}
+              totalPages={meta.totalPages}
+              onPageChange={(page) => fetchMembers(page)}
+            />
           )}
         </>
       )}

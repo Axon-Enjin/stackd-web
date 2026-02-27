@@ -17,6 +17,7 @@ import { useCreateTestimonialMutation } from "@/features/Testimonials/hooks/useC
 import { useDeleteTestimonialMutation } from "@/features/Testimonials/hooks/useDeleteTestimonialMutation";
 import { usePaginatedTestimonialsQuery } from "@/features/Testimonials/hooks/usePaginatedTestimonialsQuery";
 import { useUpdateTestimonialMutation } from "@/features/Testimonials/hooks/useUpdateTestimonialMutation";
+import { Pagination } from "@/components/cms/Pagination";
 
 // ==========================================
 // Types
@@ -142,25 +143,11 @@ export default function TestimonialsAdminPage() {
 
           {/* Pagination Controls */}
           {meta && meta.totalPages > 1 && (
-            <div className="mt-6 flex items-center justify-center gap-4">
-              <button
-                disabled={meta.currentPage === 1}
-                onClick={() => setPage(meta.currentPage - 1)}
-                className="rounded-lg border bg-white px-4 py-2 text-sm transition-colors hover:bg-gray-50 disabled:opacity-50"
-              >
-                Previous
-              </button>
-              <span className="text-sm font-medium text-gray-600">
-                Page {meta.currentPage} of {meta.totalPages}
-              </span>
-              <button
-                disabled={meta.currentPage === meta.totalPages}
-                onClick={() => setPage(meta.currentPage + 1)}
-                className="rounded-lg border bg-white px-4 py-2 text-sm transition-colors hover:bg-gray-50 disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
+            <Pagination
+              currentPage={meta.currentPage}
+              totalPages={meta.totalPages}
+              onPageChange={setPage}
+            />
           )}
         </>
       )}
