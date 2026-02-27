@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   Plus,
   Edit2,
@@ -11,6 +11,7 @@ import {
   MoreVertical,
   Eye,
   Users,
+  ZoomIn,
 } from "lucide-react";
 
 // Types based on your domain
@@ -38,6 +39,7 @@ export default function TeamAdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [viewingMember, setViewingMember] = useState<Member | null>(null);
+  const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
 
   const API_URL = "/api/team-members";
 
@@ -94,19 +96,19 @@ export default function TeamAdminPage() {
   return (
     <div className="mx-auto max-w-6xl">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
-            <Users className="text-indigo-600" size={32} />
+          <h1 className="flex items-center gap-3 text-2xl font-bold text-gray-900 sm:text-3xl">
+            <Users className="shrink-0 text-indigo-600" size={28} />
             Team Members
           </h1>
-          <p className="mt-1 text-gray-500">
+          <p className="mt-1 text-sm text-gray-500">
             Manage your organization's team directory.
           </p>
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-700"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-indigo-700 sm:w-auto"
         >
           <Plus size={20} />
           Add Member
@@ -142,6 +144,7 @@ export default function TeamAdminPage() {
                     onView={() => setViewingMember(member)}
                     onEdit={() => openEdit(member)}
                     onDelete={() => handleDelete(member.id)}
+                    onPhotoClick={(url) => setPhotoViewerUrl(url)}
                   />
                 ))}
               </div>
@@ -184,6 +187,7 @@ export default function TeamAdminPage() {
             handleDelete(viewingMember.id);
             setViewingMember(null);
           }}
+          onPhotoClick={(url) => setPhotoViewerUrl(url)}
         />
       )}
 
@@ -200,6 +204,14 @@ export default function TeamAdminPage() {
           apiUrl={API_URL}
         />
       )}
+
+      {/* Photo Viewer Lightbox */}
+      {photoViewerUrl && (
+        <PhotoViewer
+          imageUrl={photoViewerUrl}
+          onClose={() => setPhotoViewerUrl(null)}
+        />
+      )}
     </div>
   );
 }
@@ -213,12 +225,14 @@ function MemberRow({
   onView,
   onEdit,
   onDelete,
+  onPhotoClick,
 }: {
   member: Member;
   fullName: string;
   onView: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onPhotoClick: (url: string) => void;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -239,11 +253,24 @@ function MemberRow({
       onClick={() => onView()}
     >
       {/* Avatar */}
-      <img
-        src={member.imageUrl || "/placeholder-avatar.png"}
-        alt={fullName}
-        className="h-11 w-11 shrink-0 rounded-full border border-gray-200 object-cover"
-      />
+      <div
+        className="group/avatar relative shrink-0"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (member.imageUrl) onPhotoClick(member.imageUrl);
+        }}
+      >
+        <img
+          src={member.imageUrl || "/placeholder-avatar.png"}
+          alt={fullName}
+          className="h-11 w-11 rounded-full border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-indigo-400 group-hover/avatar:ring-offset-1"
+        />
+        {member.imageUrl && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-colors group-hover/avatar:bg-black/30">
+            <ZoomIn size={14} className="text-white opacity-0 transition-opacity group-hover/avatar:opacity-100" />
+          </div>
+        )}
+      </div>
 
       {/* Text */}
       <div className="min-w-0 flex-1">
@@ -301,16 +328,18 @@ function MemberDetailModal({
   onClose,
   onEdit,
   onDelete,
+  onPhotoClick,
 }: {
   member: Member;
   fullName: string;
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onPhotoClick: (url: string) => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-      <div className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-lg sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b p-6">
           <h2 className="text-xl font-bold text-gray-900">Member Details</h2>
@@ -326,11 +355,21 @@ function MemberDetailModal({
         <div className="flex-1 overflow-y-auto p-6">
           {/* Avatar */}
           <div className="mb-6 flex justify-center">
-            <img
-              src={member.imageUrl || "/placeholder-avatar.png"}
-              alt={fullName}
-              className="h-28 w-28 rounded-full border-2 border-gray-100 object-cover shadow-sm"
-            />
+            <div
+              className={`group/avatar relative ${member.imageUrl ? "cursor-pointer" : ""}`}
+              onClick={() => { if (member.imageUrl) onPhotoClick(member.imageUrl); }}
+            >
+              <img
+                src={member.imageUrl || "/placeholder-avatar.png"}
+                alt={fullName}
+                className="h-28 w-28 rounded-full border-2 border-gray-100 object-cover shadow-sm transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-indigo-400 group-hover/avatar:ring-offset-2"
+              />
+              {member.imageUrl && (
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-colors group-hover/avatar:bg-black/20">
+                  <ZoomIn size={20} className="text-white opacity-0 transition-opacity group-hover/avatar:opacity-100" />
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Info */}
@@ -465,9 +504,9 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b p-6">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between border-b p-5 sm:p-6">
           <h2 className="text-xl font-bold">
             {isEditing ? "Edit Team Member" : "Add New Member"}
           </h2>
@@ -603,6 +642,56 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
           </div>
         </form>
       </div>
+    </div>
+  );
+}
+
+// ==========================================
+// Sub-Component: Photo Viewer Lightbox
+// ==========================================
+function PhotoViewer({
+  imageUrl,
+  onClose,
+}: {
+  imageUrl: string;
+  onClose: () => void;
+}) {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    },
+    [onClose],
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [handleKeyDown]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
+      onClick={onClose}
+    >
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/25"
+      >
+        <X size={24} />
+      </button>
+
+      {/* Image */}
+      <img
+        src={imageUrl}
+        alt="Full view"
+        className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl animate-in zoom-in-95 duration-300"
+        onClick={(e) => e.stopPropagation()}
+      />
     </div>
   );
 }

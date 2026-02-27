@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   Plus,
   Edit2,
@@ -11,6 +11,7 @@ import {
   MessageSquareQuote,
   MoreVertical,
   Eye,
+  ZoomIn,
 } from "lucide-react";
 import { useCreateTestimonialMutation } from "@/features/Testimonials/hooks/useCreateTestimonialMutation";
 import { useDeleteTestimonialMutation } from "@/features/Testimonials/hooks/useDeleteTestimonialMutation";
@@ -39,6 +40,7 @@ export default function TestimonialsAdminPage() {
     useState<Testimonial | null>(null);
   const [viewingTestimonial, setViewingTestimonial] =
     useState<Testimonial | null>(null);
+  const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
 
   // TanStack Query Hooks
   const { data: response, isLoading } = usePaginatedTestimonialsQuery(page, 10);
@@ -77,19 +79,19 @@ export default function TestimonialsAdminPage() {
   return (
     <div className="mx-auto max-w-6xl">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
-            <MessageSquareQuote className="text-indigo-600" size={32} />
+          <h1 className="flex items-center gap-3 text-2xl font-bold text-gray-900 sm:text-3xl">
+            <MessageSquareQuote className="shrink-0 text-indigo-600" size={28} />
             Testimonials
           </h1>
-          <p className="mt-1 text-gray-500">
+          <p className="mt-1 text-sm text-gray-500">
             Manage client feedback, quotes, and success stories.
           </p>
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 sm:w-auto"
         >
           <Plus size={20} />
           Add Testimonial
@@ -127,6 +129,7 @@ export default function TestimonialsAdminPage() {
                     onView={() => setViewingTestimonial(testimonial)}
                     onEdit={() => openEdit(testimonial)}
                     onDelete={() => handleDelete(testimonial.id)}
+                    onPhotoClick={(url) => setPhotoViewerUrl(url)}
                     isDeleting={
                       deleteMutation.isPending &&
                       deleteMutation.variables === testimonial.id
@@ -172,6 +175,7 @@ export default function TestimonialsAdminPage() {
             handleDelete(viewingTestimonial.id);
             setViewingTestimonial(null);
           }}
+          onPhotoClick={(url) => setPhotoViewerUrl(url)}
         />
       )}
 
@@ -180,6 +184,14 @@ export default function TestimonialsAdminPage() {
         <TestimonialModal
           onClose={() => setIsModalOpen(false)}
           testimonial={editingTestimonial}
+        />
+      )}
+
+      {/* Photo Viewer Lightbox */}
+      {photoViewerUrl && (
+        <PhotoViewer
+          imageUrl={photoViewerUrl}
+          onClose={() => setPhotoViewerUrl(null)}
         />
       )}
     </div>
@@ -194,12 +206,14 @@ function TestimonialRow({
   onView,
   onEdit,
   onDelete,
+  onPhotoClick,
   isDeleting,
 }: {
   testimonial: Testimonial;
   onView: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onPhotoClick: (url: string) => void;
   isDeleting: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -221,11 +235,24 @@ function TestimonialRow({
       onClick={() => !isDeleting && onView()}
     >
       {/* Avatar */}
-      <img
-        src={testimonial.imageUrl || "/placeholder-avatar.png"}
-        alt={testimonial.name}
-        className="h-11 w-11 shrink-0 rounded-full border border-gray-200 object-cover"
-      />
+      <div
+        className="group/avatar relative shrink-0"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (testimonial.imageUrl) onPhotoClick(testimonial.imageUrl);
+        }}
+      >
+        <img
+          src={testimonial.imageUrl || "/placeholder-avatar.png"}
+          alt={testimonial.name}
+          className="h-11 w-11 rounded-full border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-indigo-400 group-hover/avatar:ring-offset-1"
+        />
+        {testimonial.imageUrl && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-colors group-hover/avatar:bg-black/30">
+            <ZoomIn size={14} className="text-white opacity-0 transition-opacity group-hover/avatar:opacity-100" />
+          </div>
+        )}
+      </div>
 
       {/* Text */}
       <div className="min-w-0 flex-1">
@@ -289,15 +316,17 @@ function TestimonialDetailModal({
   onClose,
   onEdit,
   onDelete,
+  onPhotoClick,
 }: {
   testimonial: Testimonial;
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onPhotoClick: (url: string) => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-      <div className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-lg sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b p-6">
           <h2 className="text-xl font-bold text-gray-900">Testimonial Details</h2>
@@ -313,11 +342,21 @@ function TestimonialDetailModal({
         <div className="flex-1 overflow-y-auto p-6">
           {/* Avatar */}
           <div className="mb-6 flex justify-center">
-            <img
-              src={testimonial.imageUrl || "/placeholder-avatar.png"}
-              alt={testimonial.name}
-              className="h-24 w-24 rounded-full border-2 border-gray-100 object-cover shadow-sm"
-            />
+            <div
+              className={`group/avatar relative ${testimonial.imageUrl ? "cursor-pointer" : ""}`}
+              onClick={() => { if (testimonial.imageUrl) onPhotoClick(testimonial.imageUrl); }}
+            >
+              <img
+                src={testimonial.imageUrl || "/placeholder-avatar.png"}
+                alt={testimonial.name}
+                className="h-24 w-24 rounded-full border-2 border-gray-100 object-cover shadow-sm transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-indigo-400 group-hover/avatar:ring-offset-2"
+              />
+              {testimonial.imageUrl && (
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-colors group-hover/avatar:bg-black/20">
+                  <ZoomIn size={20} className="text-white opacity-0 transition-opacity group-hover/avatar:opacity-100" />
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Info */}
@@ -447,9 +486,9 @@ function TestimonialModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-      <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
-        <div className="flex shrink-0 items-center justify-between border-b bg-gray-50/50 p-6">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex shrink-0 items-center justify-between border-b bg-gray-50/50 p-5 sm:p-6">
           <h2 className="text-xl font-bold text-gray-900">
             {isEditing ? "Edit Testimonial" : "Add New Testimonial"}
           </h2>
@@ -574,6 +613,53 @@ function TestimonialModal({
           </div>
         </form>
       </div>
+    </div>
+  );
+}
+
+// ==========================================
+// Sub-Component: Photo Viewer Lightbox
+// ==========================================
+function PhotoViewer({
+  imageUrl,
+  onClose,
+}: {
+  imageUrl: string;
+  onClose: () => void;
+}) {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    },
+    [onClose],
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [handleKeyDown]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-md"
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/25"
+      >
+        <X size={24} />
+      </button>
+      <img
+        src={imageUrl}
+        alt="Full view"
+        className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      />
     </div>
   );
 }
