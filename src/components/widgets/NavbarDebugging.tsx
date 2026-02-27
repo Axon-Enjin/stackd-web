@@ -19,4 +19,6 @@ export const LINKS = {
   Home: "/",
   "api testing": "/api-testing",
   "cms:team member": "/cms/team-members",
+  "cms:certifications": "/cms/certifications",
+  "cms:testimonials": "/cms/testimonials",
 };

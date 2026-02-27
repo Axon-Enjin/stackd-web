@@ -19,23 +19,23 @@ const fileStorage = new SupabaseFileStorage();
 /**
  * use cases
  */
-export const deleteFileByIdUseCase: DeleteFileById = new DeleteFileById(
+const deleteFileByIdUseCase: DeleteFileById = new DeleteFileById(
   fileRepository,
   fileStorage,
 );
-export const getOneFileByIdUseCase: GetOneFileById = new GetOneFileById(
+const getOneFileByIdUseCase: GetOneFileById = new GetOneFileById(
   fileRepository,
 );
-export const listFIlesWithPaginationUseCase: ListFIlesWithPagination =
+const listFIlesWithPaginationUseCase: ListFIlesWithPagination =
   new ListFIlesWithPagination(fileRepository);
-export const updateFileByIdUseCase: UpdateFileById = new UpdateFileById(
+const updateFileByIdUseCase: UpdateFileById = new UpdateFileById(
   fileRepository,
 );
-export const uploadFileUseCase: UploadFile = new UploadFile(
+const uploadFileUseCase: UploadFile = new UploadFile(
   fileStorage,
   fileRepository,
 );
-export const deleteFileByPreviewUrlUseCase: DeleteFileByPreviewUrl =
+const deleteFileByPreviewUrlUseCase: DeleteFileByPreviewUrl =
   new DeleteFileByPreviewUrl(fileRepository, fileStorage);
 
 /**

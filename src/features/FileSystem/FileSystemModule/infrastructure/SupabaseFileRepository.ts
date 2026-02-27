@@ -1,4 +1,4 @@
-import { supabaseAdminClient } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   FileRecord,
   FileRecordPrototype,
@@ -67,7 +67,8 @@ export class SupabaseFileRepository implements IFileRepository {
     // Use the strict insert mapper here
     const dbPayload = this.toDbInsert(file.props);
 
-    const { data, error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .insert(dbPayload)
       .select()
@@ -78,7 +79,8 @@ export class SupabaseFileRepository implements IFileRepository {
   }
 
   async findById(id: string): Promise<FileRecord | null> {
-    const { data, error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .select("*")
       .eq("id", id)
@@ -89,7 +91,8 @@ export class SupabaseFileRepository implements IFileRepository {
   }
 
   async findByPreviewUrl(previewUrl: string): Promise<FileRecord | null> {
-    const { data, error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .select("*")
       .eq("preview_url", previewUrl)
@@ -103,7 +106,8 @@ export class SupabaseFileRepository implements IFileRepository {
     // Use the partial update mapper here
     const dbPayload = this.toDbUpdate(file.props);
 
-    const { data, error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .update(dbPayload)
       .eq("id", file.props.id)
@@ -122,7 +126,8 @@ export class SupabaseFileRepository implements IFileRepository {
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    const { data, error, count } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error, count } = await supabase
       .from(this.TABLE_NAME)
       .select("*", { count: "exact" })
       .order("created_at", { ascending: false })
@@ -139,7 +144,8 @@ export class SupabaseFileRepository implements IFileRepository {
   }
 
   async deleteById(id: string): Promise<boolean> {
-    const { error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase
       .from(this.TABLE_NAME)
       .delete()
       .eq("id", id);

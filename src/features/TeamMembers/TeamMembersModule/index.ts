@@ -19,24 +19,24 @@ const imageService = new ImageService(filesModuleController);
  * 2. Use Cases
  * Injecting the repository and service into the business logic layer
  */
-export const createMemberUseCase = new CreateMemberUseCase(
+const createMemberUseCase = new CreateMemberUseCase(
   memberRepository,
   imageService,
 );
 
-export const deleteMemberUseCase = new DeleteMemberUseCase(
+const deleteMemberUseCase = new DeleteMemberUseCase(
   memberRepository,
   imageService,
 );
 
-export const listMembersUseCase = new ListMembers(memberRepository);
+const listMembersUseCase = new ListMembers(memberRepository);
 
-export const updateMemberUseCase = new UpdateMemberUseCase(
+const updateMemberUseCase = new UpdateMemberUseCase(
   memberRepository,
   imageService,
 );
 
-export const getOneMemberUseCase = new GetOneMember(memberRepository);
+const getOneMemberUseCase = new GetOneMember(memberRepository);
 
 /**
  * 3. Exporting Default Controller

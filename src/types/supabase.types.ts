@@ -14,6 +14,36 @@ export type Database = {
   }
   client_stackd: {
     Tables: {
+      certification: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          image_url: string
+          ranking_index: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          image_url: string
+          ranking_index: number
+          title: string
+          updated_at: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string
+          ranking_index?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       file_record: {
         Row: {
           created_at: string
@@ -107,6 +137,60 @@ export type Database = {
           description?: string
           id?: string
           title?: string
+        }
+        Relationships: []
+      }
+      testimonial: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          image_url: string
+          name: string
+          ranking_index: number
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          image_url: string
+          name: string
+          ranking_index: number
+          role: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          name?: string
+          ranking_index?: number
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          role?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
