@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Plus,
   Edit2,
@@ -9,8 +9,9 @@ import {
   Image as ImageIcon,
   Loader2,
   MessageSquareQuote,
+  MoreVertical,
+  Eye,
 } from "lucide-react";
-// Adjust these imports to match your actual file structure
 import { useCreateTestimonialMutation } from "@/features/Testimonials/hooks/useCreateTestimonialMutation";
 import { useDeleteTestimonialMutation } from "@/features/Testimonials/hooks/useDeleteTestimonialMutation";
 import { usePaginatedTestimonialsQuery } from "@/features/Testimonials/hooks/usePaginatedTestimonialsQuery";
@@ -36,12 +37,13 @@ export default function TestimonialsAdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] =
     useState<Testimonial | null>(null);
+  const [viewingTestimonial, setViewingTestimonial] =
+    useState<Testimonial | null>(null);
 
   // TanStack Query Hooks
   const { data: response, isLoading } = usePaginatedTestimonialsQuery(page, 10);
   const deleteMutation = useDeleteTestimonialMutation();
 
-  // Map the backend API response (which might still use title/description) to our new UI model
   const rawTestimonials = response?.data || [];
   const testimonials: Testimonial[] = rawTestimonials.map((t: any) => ({
     ...t,
@@ -68,13 +70,14 @@ export default function TestimonialsAdminPage() {
 
   const openEdit = (testimonial: Testimonial) => {
     setEditingTestimonial(testimonial);
+    setViewingTestimonial(null);
     setIsModalOpen(true);
   };
 
   return (
     <div className="mx-auto max-w-6xl">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
             <MessageSquareQuote className="text-indigo-600" size={32} />
@@ -93,56 +96,86 @@ export default function TestimonialsAdminPage() {
         </button>
       </div>
 
-      {/* Content State */}
+      {/* Content */}
       {isLoading ? (
         <div className="flex h-64 items-center justify-center">
           <Loader2 className="animate-spin text-indigo-600" size={40} />
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {testimonials.map((testimonial) => (
-              <TestimonialCard
-                key={testimonial.id}
-                testimonial={testimonial}
-                onEdit={() => openEdit(testimonial)}
-                onDelete={() => handleDelete(testimonial.id)}
-                isDeleting={
-                  deleteMutation.isPending &&
-                  deleteMutation.variables === testimonial.id
-                }
-              />
-            ))}
+          {/* Row List */}
+          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            {testimonials.length === 0 ? (
+              <div className="py-16 text-center text-gray-500">
+                <MessageSquareQuote
+                  className="mx-auto mb-3 text-gray-300"
+                  size={48}
+                />
+                <h3 className="text-lg font-medium text-gray-900">
+                  No testimonials yet
+                </h3>
+                <p className="mt-1 text-gray-500">
+                  Add some client feedback to build trust with your audience.
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-100">
+                {testimonials.map((testimonial) => (
+                  <TestimonialRow
+                    key={testimonial.id}
+                    testimonial={testimonial}
+                    onView={() => setViewingTestimonial(testimonial)}
+                    onEdit={() => openEdit(testimonial)}
+                    onDelete={() => handleDelete(testimonial.id)}
+                    isDeleting={
+                      deleteMutation.isPending &&
+                      deleteMutation.variables === testimonial.id
+                    }
+                  />
+                ))}
+              </div>
+            )}
           </div>
-
-          {/* Empty State */}
-          {!isLoading && testimonials.length === 0 && (
-            <div className="rounded-xl border border-gray-100 bg-white py-16 text-center shadow-sm">
-              <MessageSquareQuote
-                className="mx-auto mb-3 text-gray-300"
-                size={48}
-              />
-              <h3 className="text-lg font-medium text-gray-900">
-                No testimonials yet
-              </h3>
-              <p className="mt-1 text-gray-500">
-                Add some client feedback to build trust with your audience.
-              </p>
-            </div>
-          )}
 
           {/* Pagination Controls */}
           {meta && meta.totalPages > 1 && (
-            <Pagination
-              currentPage={meta.currentPage}
-              totalPages={meta.totalPages}
-              onPageChange={setPage}
-            />
+            <div className="mt-6 flex items-center justify-center gap-4">
+              <button
+                disabled={meta.currentPage === 1}
+                onClick={() => setPage(meta.currentPage - 1)}
+                className="rounded-lg border bg-white px-4 py-2 text-sm transition-colors hover:bg-gray-50 disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <span className="text-sm font-medium text-gray-600">
+                Page {meta.currentPage} of {meta.totalPages}
+              </span>
+              <button
+                disabled={meta.currentPage === meta.totalPages}
+                onClick={() => setPage(meta.currentPage + 1)}
+                className="rounded-lg border bg-white px-4 py-2 text-sm transition-colors hover:bg-gray-50 disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
           )}
         </>
       )}
 
-      {/* Modal */}
+      {/* Detail View Modal */}
+      {viewingTestimonial && (
+        <TestimonialDetailModal
+          testimonial={viewingTestimonial}
+          onClose={() => setViewingTestimonial(null)}
+          onEdit={() => openEdit(viewingTestimonial)}
+          onDelete={() => {
+            handleDelete(viewingTestimonial.id);
+            setViewingTestimonial(null);
+          }}
+        />
+      )}
+
+      {/* Create/Edit Form Modal */}
       {isModalOpen && (
         <TestimonialModal
           onClose={() => setIsModalOpen(false)}
@@ -154,106 +187,194 @@ export default function TestimonialsAdminPage() {
 }
 
 // ==========================================
-// Sub-Component: Testimonial Card
+// Sub-Component: Row Item
 // ==========================================
-function TestimonialCard({
+function TestimonialRow({
   testimonial,
+  onView,
   onEdit,
   onDelete,
   isDeleting,
 }: {
   testimonial: Testimonial;
+  onView: () => void;
   onEdit: () => void;
   onDelete: () => void;
   isDeleting: boolean;
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
-      {isDeleting && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/60 backdrop-blur-sm">
-          <Loader2 className="animate-spin text-red-600" size={24} />
-        </div>
-      )}
+    <div
+      className={`group relative flex items-center gap-4 px-5 py-4 transition-colors hover:bg-gray-50 ${isDeleting ? "opacity-50" : "cursor-pointer"}`}
+      onClick={() => !isDeleting && onView()}
+    >
+      {/* Avatar */}
+      <img
+        src={testimonial.imageUrl || "/placeholder-avatar.png"}
+        alt={testimonial.name}
+        className="h-11 w-11 shrink-0 rounded-full border border-gray-200 object-cover"
+      />
 
-      {/* Header Row: Quote Icon + Actions */}
-      <div className="mb-4 flex items-start justify-between">
-        <MessageSquareQuote className="text-indigo-100" size={32} />
-
-        <div className="flex gap-2 opacity-0 transition-opacity group-hover:opacity-100 lg:opacity-100">
-          <button
-            onClick={onEdit}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 transition-colors hover:bg-indigo-100"
-          >
-            <Edit2 size={14} />
-          </button>
-          <button
-            onClick={onDelete}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600 transition-colors hover:bg-red-100"
-          >
-            <Trash2 size={14} />
-          </button>
-        </div>
-      </div>
-
-      {/* Quote Body (No more absolute positioning or weird padding needed) */}
-      <div className="flex-grow">
-        <p className="line-clamp-4 leading-relaxed font-medium text-gray-700 italic">
-          "{testimonial.body}"
+      {/* Text */}
+      <div className="min-w-0 flex-1">
+        <h3 className="truncate text-sm font-semibold text-gray-900">
+          {testimonial.name}
+        </h3>
+        <p className="mt-0.5 truncate text-xs text-gray-500">
+          {testimonial.role} — "{testimonial.body}"
         </p>
       </div>
 
-      {/* Author Info */}
-      <div className="mt-auto flex items-center gap-4 border-t border-gray-100 pt-5">
-        <img
-  src={testimonial.imageUrl || "/placeholder-avatar.png"}
-  alt={testimonial.name}
-  // aspect-square + object-cover + shrink-0 = Perfect circle
-  className="h-12 w-12 aspect-square shrink-0 rounded-full border border-gray-200 object-cover shadow-sm"
-/>
-        <div className="flex flex-col">
-          <h3 className="text-sm leading-tight font-bold text-gray-900">
-            {testimonial.name}
-          </h3>
-          <p className="mt-0.5 text-xs font-medium text-gray-500">
-            {testimonial.role}
-          </p>
-        </div>
+      {/* Loading spinner */}
+      {isDeleting && (
+        <Loader2 className="shrink-0 animate-spin text-red-500" size={18} />
+      )}
+
+      {/* Menu */}
+      <div className="relative shrink-0" ref={menuRef}>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuOpen(!menuOpen);
+          }}
+          className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+        >
+          <MoreVertical size={18} />
+        </button>
+
+        {menuOpen && (
+          <div className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-xl border border-gray-100 bg-white py-1 shadow-xl">
+            <button
+              onClick={(e) => { e.stopPropagation(); setMenuOpen(false); onView(); }}
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <Eye size={15} className="text-gray-400" /> View
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setMenuOpen(false); onEdit(); }}
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <Edit2 size={15} className="text-gray-400" /> Edit
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setMenuOpen(false); onDelete(); }}
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+            >
+              <Trash2 size={15} /> Delete
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 // ==========================================
-// Sub-Component: Pagination
+// Sub-Component: Detail View Modal
 // ==========================================
-function Pagination({
-  currentPage,
-  totalPages,
-  onPageChange,
+function TestimonialDetailModal({
+  testimonial,
+  onClose,
+  onEdit,
+  onDelete,
 }: {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+  testimonial: Testimonial;
+  onClose: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }) {
   return (
-    <div className="mt-8 flex items-center justify-center gap-4">
-      <button
-        disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
-        className="rounded-lg border bg-white px-4 py-2 transition-colors hover:bg-gray-50 disabled:opacity-50"
-      >
-        Previous
-      </button>
-      <span className="text-sm font-medium text-gray-600">
-        Page {currentPage} of {totalPages}
-      </span>
-      <button
-        disabled={currentPage === totalPages}
-        onClick={() => onPageChange(currentPage + 1)}
-        className="rounded-lg border bg-white px-4 py-2 transition-colors hover:bg-gray-50 disabled:opacity-50"
-      >
-        Next
-      </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
+      <div className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
+        {/* Header */}
+        <div className="flex shrink-0 items-center justify-between border-b p-6">
+          <h2 className="text-xl font-bold text-gray-900">Testimonial Details</h2>
+          <button
+            onClick={onClose}
+            className="rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+          >
+            <X size={22} />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto p-6">
+          {/* Avatar */}
+          <div className="mb-6 flex justify-center">
+            <img
+              src={testimonial.imageUrl || "/placeholder-avatar.png"}
+              alt={testimonial.name}
+              className="h-24 w-24 rounded-full border-2 border-gray-100 object-cover shadow-sm"
+            />
+          </div>
+
+          {/* Info */}
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                Name
+              </label>
+              <p className="mt-1 text-base font-medium text-gray-900">
+                {testimonial.name}
+              </p>
+            </div>
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                Role / Company
+              </label>
+              <p className="mt-1 text-sm font-medium text-indigo-600">
+                {testimonial.role}
+              </p>
+            </div>
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                Testimonial Quote
+              </label>
+              <p className="mt-1 text-sm leading-relaxed text-gray-700 italic whitespace-pre-wrap">
+                "{testimonial.body}"
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="flex items-center justify-between border-t px-6 py-4">
+          <button
+            onClick={onDelete}
+            className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
+          >
+            <Trash2 size={16} />
+            Delete
+          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+            >
+              Close
+            </button>
+            <button
+              onClick={onEdit}
+              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+            >
+              <Edit2 size={16} />
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -274,7 +395,6 @@ function TestimonialModal({
     testimonial?.imageUrl || null,
   );
 
-  // Mutations
   const createMutation = useCreateTestimonialMutation();
   const updateMutation = useUpdateTestimonialMutation();
 
@@ -288,8 +408,6 @@ function TestimonialModal({
 
     const apiFormData = new FormData();
 
-    // Safety Net: Append both the new terms (name/role) and the old terms
-    // (title/description) so the backend API accepts it either way!
     const nameVal = rawFormData.get("name") as string;
     const roleVal = rawFormData.get("role") as string;
 
@@ -315,7 +433,7 @@ function TestimonialModal({
       } else {
         await createMutation.mutateAsync(apiFormData);
       }
-      onClose(); // Close modal on success
+      onClose();
     } catch (error: any) {
       alert(error.message || "Failed to save testimonial.");
     }
@@ -351,7 +469,6 @@ function TestimonialModal({
                 Client Photo
               </label>
               <div
-                // shrink-0 fixes the oval stretching issue entirely
                 className="flex h-32 w-32 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-indigo-400 hover:bg-gray-100"
                 onClick={() => fileInputRef.current?.click()}
               >
