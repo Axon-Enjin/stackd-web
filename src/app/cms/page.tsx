@@ -1,6 +1,11 @@
 import { redirect } from "next/navigation";
 
 export default function CMSPage() {
-  // Directly redirect /cms to a specific dashboard page (e.g., team-members)
-  redirect("/cms/team-members");
+  return <>
+    <div>
+      <h1>CMS Page</h1>
+
+    </div>
+  
+  </>
 }

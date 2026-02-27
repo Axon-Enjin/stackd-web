@@ -67,6 +67,7 @@ export const DebugNavigator = () => {
 
 export const LINKS = {
   Home: "/",
+  "cms": "/cms",
   "cms:team member": "/cms/team-members",
   "cms:certifications": "/cms/certifications",
   "cms:testimonials": "/cms/testimonials",
