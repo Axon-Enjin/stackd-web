@@ -177,3 +177,24 @@ export const clientStackdTestimonialUpdateSchema = z.object({
   role: z.string().optional(),
   updated_at: z.string().optional(),
 });
+
+export const clientStackdUsersRowSchema = z.object({
+  created_at: z.string().nullable(),
+  id: z.string(),
+  role: z.string(),
+  updated_at: z.string().nullable(),
+});
+
+export const clientStackdUsersInsertSchema = z.object({
+  created_at: z.string().optional().nullable(),
+  id: z.string(),
+  role: z.string().optional(),
+  updated_at: z.string().optional().nullable(),
+});
+
+export const clientStackdUsersUpdateSchema = z.object({
+  created_at: z.string().optional().nullable(),
+  id: z.string().optional(),
+  role: z.string().optional(),
+  updated_at: z.string().optional().nullable(),
+});

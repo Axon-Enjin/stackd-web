@@ -1,4 +1,4 @@
-import { supabaseAdminClient } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { IMemberRepository } from "../domain/IMemberRepository";
 import { Member, MemberProps } from "../domain/Member";
 import { Tables, TablesInsert } from "@/types/supabase.types";
@@ -9,7 +9,6 @@ type TeamMemberInsert = TablesInsert<
   { schema: "client_stackd" },
   "team_member"
 >;
-supabaseAdminClient;
 
 export class MemberRepository implements IMemberRepository {
   private readonly TABLE_NAME = "team_member";
@@ -44,7 +43,8 @@ export class MemberRepository implements IMemberRepository {
   }
 
   async saveNewMember(member: Member): Promise<Member> {
-    const { data, error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .insert(this.toDb(member.props))
       .select()
@@ -55,7 +55,8 @@ export class MemberRepository implements IMemberRepository {
   }
 
   async persistUpdates(member: Member): Promise<Member> {
-    const { data, error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .update(this.toDb(member.props))
       .eq("id", member.props.id)
@@ -67,7 +68,8 @@ export class MemberRepository implements IMemberRepository {
   }
 
   async deleteById(id: string): Promise<boolean> {
-    const { error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase
       .from(this.TABLE_NAME)
       .delete()
       .eq("id", id);
@@ -77,7 +79,8 @@ export class MemberRepository implements IMemberRepository {
   }
 
   async findById(id: string): Promise<Member | null> {
-    const { data, error } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .select("*")
       .eq("id", id)
@@ -96,7 +99,8 @@ export class MemberRepository implements IMemberRepository {
     const from = (pageNumber - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    const { data, error, count } = await supabaseAdminClient
+    const supabase = await createSupabaseServerClient();
+    const { data, error, count } = await supabase
       .from(this.TABLE_NAME)
       .select("*", { count: "exact" })
       .order("ranking_index", { ascending: true }) // Fixed: Use DB column name, not camelCase

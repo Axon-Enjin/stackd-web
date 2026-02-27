@@ -1,4 +1,4 @@
-import { supabaseAdminClient } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { FileBuffer } from "../domain/FileBuffer";
 import { IFileStorage } from "../domain/IFileStorage";
 import { UploadedFileBuffer } from "../domain/UploadedFileBuffer";
@@ -15,7 +15,8 @@ export class SupabaseFileStorage implements IFileStorage {
     const storagePath = `uploads/${fileName}`;
 
     // 2. Upload the ArrayBuffer to Supabase Storage
-    const { data, error } = await supabaseAdminClient.storage
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase.storage
       .from(this.BUCKET_NAME)
       .upload(storagePath, file.arraybuffer, {
         contentType: file.type,
@@ -27,7 +28,7 @@ export class SupabaseFileStorage implements IFileStorage {
     }
 
     // 3. Get the Public URL
-    const { data: publicUrlData } = supabaseAdminClient.storage
+    const { data: publicUrlData } = supabase.storage
       .from(this.BUCKET_NAME)
       .getPublicUrl(data.path);
 
@@ -39,7 +40,8 @@ export class SupabaseFileStorage implements IFileStorage {
   }
 
   async deleteFile(storageReference: string): Promise<boolean> {
-    const { error } = await supabaseAdminClient.storage
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.storage
       .from(this.BUCKET_NAME)
       .remove([storageReference]);
 
