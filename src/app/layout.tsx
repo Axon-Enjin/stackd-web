@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ProviderCompose } from "@/providers/ProviderCompose";
 import { BreakpointIndicator } from "@/components/widgets/BreakpointIndicator";
-import { configs } from "@/configs/configs";
-import { NavbarDebugging } from "@/components/widgets/NavbarDebugging";
+import { configs } from "@/configs/configs"; 
+import { DebugNavigator } from "@/components/widgets/DebugNavigator";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -37,9 +37,9 @@ export default function RootLayout({
     <ProviderCompose>
       <html lang="en">
         <body className={`${inter.variable} antialiased`}>
-          {isDev && <NavbarDebugging />}
           {children}
           {isDev && <BreakpointIndicator />}
+          {isDev && <DebugNavigator />}
         </body>
       </html>
     </ProviderCompose>

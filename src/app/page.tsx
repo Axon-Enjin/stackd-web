@@ -1,36 +1,27 @@
-"use client";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { ProblemSection } from "@/components/sections/ProblemSection";
+import { SolutionSection } from "@/components/sections/SolutionSection";
+import { DifferentiatorSection } from "@/components/sections/DifferentiatorSection";
+import { ProcessSection } from "@/components/sections/ProcessSection";
+import { IdealClientSection } from "@/components/sections/IdealClientSection";
+import { FinalCTASection } from "@/components/sections/FinalCTASection";
 
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
-import Link from "next/link";
-
-export const HomePage = () => {
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["hello"],
-    queryFn: async () => {
-      const response = await fetch("/api/");
-      return response.json();
-    },
-  });
-
+export default function LandingPage() {
   return (
     <>
-      <div className="flex h-screen w-full flex-col items-center justify-center gap-2">
-        <div className="text-5xl font-bold">HomePage</div>
-        <div className="text-xl">Welcome to stackd-web</div>
-        <Link className="border-2 border-blue-500 px-4 py-2 rounded-2xl" href="/mock">Go to Mock Page</Link>
-
-        <div className="flex min-w-50 flex-col items-center justify-center gap-2 rounded-2xl border-2 px-8 py-4">
-          <div className="text-xl">API Health Check</div>
-          <div className="w-full rounded-2xl bg-gray-100 p-4">
-            {isLoading && <div>Loading...</div>}
-            {isError && <div>{error.message}</div>}
-            {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
-          </div>
-        </div>
-      </div>
+      <Navbar />
+      <main>
+        <HeroSection />
+        <ProblemSection />
+        <SolutionSection />
+        <DifferentiatorSection />
+        <ProcessSection />
+        <IdealClientSection />
+        <FinalCTASection />
+      </main>
+      <Footer />
     </>
   );
-};
-
-export default HomePage;
+}
