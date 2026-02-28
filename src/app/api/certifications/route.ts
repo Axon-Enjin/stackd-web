@@ -4,6 +4,19 @@ import { certificationsModuleController } from "@/features/Certifications/Certif
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
 
+  // Support ?all=true for fetching all items (used by sort modal)
+  if (searchParams.get("all") === "true") {
+    const data = await certificationsModuleController.listAllCertifications();
+    return NextResponse.json(
+      {
+        status: "success",
+        message: "GET all certifications",
+        data,
+      },
+      { status: 200 }
+    );
+  }
+
   const pageNumber = parseInt(searchParams.get("pageNumber") || "1");
   const pageSize = parseInt(searchParams.get("pageSize") || "10");
 

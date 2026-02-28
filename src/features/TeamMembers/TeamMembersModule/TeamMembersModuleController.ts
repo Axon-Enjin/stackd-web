@@ -12,7 +12,7 @@ export class TeamMembersModuleController {
     private listMembersUseCase: ListMembers,
     private updateMemberUseCase: UpdateMemberUseCase,
     private getOneMemberUseCase: GetOneMember
-  ) {}
+  ) { }
 
   /**
    * Helper method to map the Domain Entity to a plain object
@@ -60,11 +60,13 @@ export class TeamMembersModuleController {
     memberId: string,
     memberRequestObj: MemberUpdateDTO,
     newImage?: File,
+    rankingIndex?: number,
   ) {
     const result = await this.updateMemberUseCase.execute(
       memberId,
       memberRequestObj,
       newImage,
+      rankingIndex,
     );
     return this.mapMemberToResponse(result);
   }
@@ -81,5 +83,11 @@ export class TeamMembersModuleController {
       list: result.list.map((member) => this.mapMemberToResponse(member)),
       count: result.count,
     };
+  }
+
+  async listAllMembers() {
+    const result = await this.listMembersUseCase.executeAll();
+
+    return result.map((member) => this.mapMemberToResponse(member));
   }
 }

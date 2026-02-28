@@ -1,7 +1,7 @@
-import { ICertificationRepository } from "../domain/ICertificationRepository"; 
+import { ICertificationRepository } from "../domain/ICertificationRepository";
 
 export class ListCertifications {
-  constructor(private readonly certificationRepository: ICertificationRepository) {}
+  constructor(private readonly certificationRepository: ICertificationRepository) { }
 
   async execute(pageNumber: number, pageSize: number) {
     const result = await this.certificationRepository.listPaginated(
@@ -10,5 +10,9 @@ export class ListCertifications {
     );
 
     return result;
+  }
+
+  async executeAll() {
+    return this.certificationRepository.listAll();
   }
 }

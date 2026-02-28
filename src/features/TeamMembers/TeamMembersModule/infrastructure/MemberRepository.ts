@@ -113,4 +113,17 @@ export class MemberRepository implements IMemberRepository {
       count: count || 0,
     };
   }
+
+  async listAll(): Promise<Member[]> {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from(this.TABLE_NAME)
+      .select("*")
+      .order("ranking_index", { ascending: true });
+
+    if (error)
+      throw new Error(`Failed to list all members: ${error.message}`);
+
+    return (data || []).map((item) => Member.hydrate(this.toDomain(item)));
+  }
 }

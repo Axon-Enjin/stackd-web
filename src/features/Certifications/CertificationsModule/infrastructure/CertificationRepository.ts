@@ -116,4 +116,19 @@ export class CertificationRepository implements ICertificationRepository {
       count: count || 0,
     };
   }
+
+  async listAll(): Promise<Certification[]> {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from(this.TABLE_NAME)
+      .select("*")
+      .order("ranking_index", { ascending: true });
+
+    if (error)
+      throw new Error(`Failed to list all certifications: ${error.message}`);
+
+    return (data || []).map((item) =>
+      Certification.hydrate(this.toDomain(item)),
+    );
+  }
 }

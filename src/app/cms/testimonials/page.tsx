@@ -12,12 +12,15 @@ import {
   MoreVertical,
   Eye,
   ZoomIn,
+  ArrowUpDown,
 } from "lucide-react";
 import { useCreateTestimonialMutation } from "@/features/Testimonials/hooks/useCreateTestimonialMutation";
 import { useDeleteTestimonialMutation } from "@/features/Testimonials/hooks/useDeleteTestimonialMutation";
 import { usePaginatedTestimonialsQuery } from "@/features/Testimonials/hooks/usePaginatedTestimonialsQuery";
 import { useUpdateTestimonialMutation } from "@/features/Testimonials/hooks/useUpdateTestimonialMutation";
 import { Pagination } from "@/components/cms/Pagination";
+import { SortContentsModal } from "@/components/cms/SortContentsModal";
+import { useQueryClient } from "@tanstack/react-query";
 
 // ==========================================
 // Types
@@ -43,6 +46,8 @@ export default function TestimonialsAdminPage() {
   const [viewingTestimonial, setViewingTestimonial] =
     useState<Testimonial | null>(null);
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   // TanStack Query Hooks
   const { data: response, isLoading } = usePaginatedTestimonialsQuery(page, pageSize);
@@ -91,13 +96,22 @@ export default function TestimonialsAdminPage() {
             Manage client feedback, quotes, and success stories.
           </p>
         </div>
-        <button
-          onClick={openCreate}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-[#2570d4] sm:w-auto"
-        >
-          <Plus size={20} />
-          Add Testimonial
-        </button>
+        <div className="flex w-full gap-2 sm:w-auto">
+          <button
+            onClick={() => setIsSortModalOpen(true)}
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
+          >
+            <ArrowUpDown size={18} />
+            Sort
+          </button>
+          <button
+            onClick={openCreate}
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-[#2570d4] sm:flex-initial"
+          >
+            <Plus size={20} />
+            Add Testimonial
+          </button>
+        </div>
       </div>
 
       {/* Content */}
@@ -186,6 +200,21 @@ export default function TestimonialsAdminPage() {
         <PhotoViewer
           imageUrl={photoViewerUrl}
           onClose={() => setPhotoViewerUrl(null)}
+        />
+      )}
+
+      {/* Sort Modal */}
+      {isSortModalOpen && (
+        <SortContentsModal
+          apiPath="/api/testimonials"
+          labelKey="title"
+          subLabelKey="description"
+          imageKey="imageUrl"
+          title="Sort Testimonials"
+          onClose={() => setIsSortModalOpen(false)}
+          onSortComplete={() => {
+            queryClient.invalidateQueries({ queryKey: ["testimonials"] });
+          }}
         />
       )}
     </div>
