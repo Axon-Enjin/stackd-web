@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { format, isBefore, startOfDay } from "date-fns";
-import { Loader2, CheckCircle2, ChevronLeft, AlertCircle } from "lucide-react";
+import { Loader2, CheckCircle2, ChevronLeft, AlertCircle, Globe, ChevronDown, Search, Check } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export function CalendarBookingUI() {
@@ -21,7 +21,28 @@ export function CalendarBookingUI() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
 
+  const [timezone, setTimezone] = useState<string>(() =>
+    typeof window !== "undefined"
+      ? Intl.DateTimeFormat().resolvedOptions().timeZone
+      : "UTC"
+  );
+  const [showTzPicker, setShowTzPicker] = useState(false);
+  const [tzSearch, setTzSearch] = useState("");
+  const tzDropdownRef = useRef<HTMLDivElement>(null);
+
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  // Close timezone picker on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (tzDropdownRef.current && !tzDropdownRef.current.contains(e.target as Node)) {
+        setShowTzPicker(false);
+        setTzSearch("");
+      }
+    }
+    if (showTzPicker) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showTzPicker]);
 
   useEffect(() => {
     const checkPendingBooking = async () => {
@@ -136,7 +157,7 @@ export function CalendarBookingUI() {
     setLoadingSlots(true);
     try {
       const res = await fetch(
-        `/api/booking/available?date=${date.toISOString()}`,
+        `/api/booking/available?date=${date.toISOString()}&timezone=${encodeURIComponent(timezone)}`,
       );
       if (res.ok) {
         const data = await res.json();
@@ -160,6 +181,7 @@ export function CalendarBookingUI() {
 
     localStorage.setItem("stackd_pending_booking_name", name);
     localStorage.setItem("stackd_pending_booking_email", email);
+    localStorage.setItem("stackd_pending_booking_timezone", timezone);
     localStorage.setItem(
       "stackd_pending_booking_time",
       selectedSlot.toISOString(),
@@ -206,12 +228,104 @@ export function CalendarBookingUI() {
         <h3 className="mb-4 self-start text-lg font-bold text-gray-900">
           Select a Date
         </h3>
+
+        {/* Timezone selector */}
+        <div className="relative mb-4 w-full" ref={tzDropdownRef}>
+          {/* Trigger pill */}
+          <button
+            type="button"
+            onClick={() => {
+              setShowTzPicker((v) => !v);
+              setTzSearch("");
+            }}
+            className="group flex w-full items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-left text-xs font-medium text-gray-600 shadow-sm transition-all hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700"
+          >
+            <Globe size={13} className="shrink-0 text-indigo-400 group-hover:text-indigo-600" />
+            <span className="flex-1 truncate">{timezone}</span>
+            <span className="shrink-0 text-indigo-500 group-hover:text-indigo-600">
+              Verify your timezone
+            </span>
+            <ChevronDown
+              size={13}
+              className={`shrink-0 text-gray-400 transition-transform duration-200 ${
+                showTzPicker ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {/* Floating dropdown */}
+          {showTzPicker && (
+            <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl ring-1 ring-black/5">
+              {/* Search header */}
+              <div className="border-b border-gray-100 p-3">
+                <div className="flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2 ring-1 ring-gray-200 focus-within:ring-2 focus-within:ring-indigo-500">
+                  <Search size={13} className="shrink-0 text-gray-400" />
+                  <input
+                    autoFocus
+                    type="text"
+                    placeholder="Search timezones…"
+                    value={tzSearch}
+                    onChange={(e) => setTzSearch(e.target.value)}
+                    className="w-full bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Scrollable list */}
+              <ul className="max-h-52 overflow-y-auto py-1 text-sm">
+                {(() => {
+                  const filtered = Intl.supportedValuesOf("timeZone").filter((tz) =>
+                    tz.toLowerCase().includes(tzSearch.toLowerCase())
+                  );
+                  if (filtered.length === 0) {
+                    return (
+                      <li className="px-4 py-6 text-center text-sm text-gray-400">
+                        No timezones match &ldquo;{tzSearch}&rdquo;
+                      </li>
+                    );
+                  }
+                  return filtered.map((tz) => (
+                    <li key={tz}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTimezone(tz);
+                          setShowTzPicker(false);
+                          setTzSearch("");
+                          setSelectedDate(undefined);
+                          setSelectedSlot(null);
+                          setAvailableSlots([]);
+                        }}
+                        className={`flex w-full items-center gap-2 px-4 py-2.5 text-left transition-colors ${
+                          tz === timezone
+                            ? "bg-indigo-50 font-semibold text-indigo-700"
+                            : "text-gray-700 hover:bg-gray-50"
+                        }`}
+                      >
+                        {tz === timezone ? (
+                          <Check size={13} className="shrink-0 text-indigo-500" />
+                        ) : (
+                          <span className="w-[13px] shrink-0" />
+                        )}
+                        <span>{tz}</span>
+                      </button>
+                    </li>
+                  ));
+                })()}
+              </ul>
+            </div>
+          )}
+        </div>
+
         <DayPicker
           mode="single"
           selected={selectedDate}
           onSelect={handleDateSelect}
           disabled={[{ before: startOfDay(new Date()) }, { dayOfWeek: [0, 6] }]}
           className="rounded-xl bg-gray-50 p-4"
+          formatters={{
+            formatCaption: (month) => format(month, "MMMM yyyy"),
+          }}
           classNames={{
             day_selected:
               "bg-indigo-600 text-white font-bold hover:bg-indigo-700",
@@ -223,8 +337,8 @@ export function CalendarBookingUI() {
               "absolute left-2 p-1 hover:bg-gray-200 rounded-full",
             nav_button_next:
               "absolute right-2 p-1 hover:bg-gray-200 rounded-full",
-            caption: "relative flex justify-center pt-1 pb-4 items-center",
-            caption_label: "font-semibold text-gray-900 hidden",
+            caption: "relative flex justify-between pt-1 pb-4 items-center px-2",
+            caption_label: "font-semibold text-gray-900 text-base",
           }}
         />
       </div>

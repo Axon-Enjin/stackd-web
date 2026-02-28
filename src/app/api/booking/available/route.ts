@@ -5,6 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const dateStr = searchParams.get("date");
+    const timezone = searchParams.get("timezone") ?? "UTC";
 
     if (!dateStr) {
       return NextResponse.json(
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     const availableSlots =
-      await bookingModuleController.getAvailableSlots(dateStr);
+      await bookingModuleController.getAvailableSlots(dateStr, timezone);
 
     return NextResponse.json({ slots: availableSlots }, { status: 200 });
   } catch (error: any) {
