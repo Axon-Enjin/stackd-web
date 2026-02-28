@@ -12,7 +12,7 @@ export class TestimonialsModuleController {
     private listTestimonialsUseCase: ListTestimonials,
     private updateTestimonialUseCase: UpdateTestimonialUseCase,
     private getOneTestimonialUseCase: GetOneTestimonialUseCase,
-  ) {}
+  ) { }
 
   /**
    * Helper method to map the Domain Entity to a plain object
@@ -50,11 +50,13 @@ export class TestimonialsModuleController {
     testimonialId: string,
     testimonialRequestObj: TestimonialUpdateDTO,
     newImage?: File,
+    rankingIndex?: number,
   ) {
     const result = await this.updateTestimonialUseCase.execute(
       testimonialId,
       testimonialRequestObj,
       newImage,
+      rankingIndex,
     );
     return this.mapTestimonialToResponse(result);
   }
@@ -74,5 +76,13 @@ export class TestimonialsModuleController {
       ),
       count: result.count,
     };
+  }
+
+  async listAllTestimonials() {
+    const result = await this.listTestimonialsUseCase.executeAll();
+
+    return result.map((testimonial) =>
+      this.mapTestimonialToResponse(testimonial),
+    );
   }
 }

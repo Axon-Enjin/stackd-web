@@ -113,4 +113,19 @@ export class TestimonialRepository implements ITestimonialRepository {
       count: count || 0,
     };
   }
+
+  async listAll(): Promise<Testimonial[]> {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from(this.TABLE_NAME)
+      .select("*")
+      .order("ranking_index", { ascending: true });
+
+    if (error)
+      throw new Error(`Failed to list all testimonials: ${error.message}`);
+
+    return (data || []).map((item) =>
+      Testimonial.hydrate(this.toDomain(item)),
+    );
+  }
 }

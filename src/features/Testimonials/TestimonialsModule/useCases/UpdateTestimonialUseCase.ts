@@ -6,12 +6,13 @@ export class UpdateTestimonialUseCase {
   constructor(
     private readonly testimonialRepository: ITestimonialRepository,
     private readonly imageService: IImageService,
-  ) {}
+  ) { }
 
   async execute(
     testimonialId: string,
     testimonialRequestObj: TestimonialUpdateDTO,
     newImage?: File,
+    rankingIndex?: number,
   ) {
     /**
      * get testimonial
@@ -29,6 +30,10 @@ export class UpdateTestimonialUseCase {
     }
 
     testimonial.update(testimonialRequestObj);
+
+    if (rankingIndex !== undefined) {
+      testimonial.setRankingIndex(rankingIndex);
+    }
 
     let oldImageUrl: string | null = null;
     if (newImage) {

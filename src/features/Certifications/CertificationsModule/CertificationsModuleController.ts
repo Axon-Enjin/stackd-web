@@ -12,7 +12,7 @@ export class CertificationsModuleController {
     private listCertificationsUseCase: ListCertifications,
     private updateCertificationUseCase: UpdateCertificationUseCase,
     private getOneCertificationUseCase: GetOneCertificationUseCase,
-  ) {}
+  ) { }
 
   /**
    * Helper method to map the Domain Entity to a plain object
@@ -48,11 +48,13 @@ export class CertificationsModuleController {
     certificationId: string,
     certificationRequestObj: CertificationUpdateDTO,
     newImage?: File,
+    rankingIndex?: number,
   ) {
     const result = await this.updateCertificationUseCase.execute(
       certificationId,
       certificationRequestObj,
       newImage,
+      rankingIndex,
     );
     return this.mapCertificationToResponse(result);
   }
@@ -72,5 +74,13 @@ export class CertificationsModuleController {
       ),
       count: result.count,
     };
+  }
+
+  async listAllCertifications() {
+    const result = await this.listCertificationsUseCase.executeAll();
+
+    return result.map((certification) =>
+      this.mapCertificationToResponse(certification),
+    );
   }
 }

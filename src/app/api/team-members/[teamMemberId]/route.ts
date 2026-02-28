@@ -41,11 +41,16 @@ export async function PATCH(
       }
     });
 
-    // 3. Execute the update via controller
+    // 3. Extract optional rankingIndex for sort operations
+    const rankingIndexRaw = formData.get("rankingIndex");
+    const rankingIndex = rankingIndexRaw !== null ? parseFloat(rankingIndexRaw as string) : undefined;
+
+    // 4. Execute the update via controller
     const updatedMember = await teamMembersModuleController.updateMember(
       teamMemberId,
       updateDTO,
       newImage || undefined,
+      rankingIndex,
     );
 
     return NextResponse.json(

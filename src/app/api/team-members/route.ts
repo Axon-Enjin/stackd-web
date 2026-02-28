@@ -4,6 +4,19 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
 
+  // Support ?all=true for fetching all items (used by sort modal)
+  if (searchParams.get("all") === "true") {
+    const data = await teamMembersModuleController.listAllMembers();
+    return NextResponse.json(
+      {
+        status: "success",
+        message: "GET all team members",
+        data,
+      },
+      { status: 200 }
+    );
+  }
+
   const pageNumber = parseInt(searchParams.get("pageNumber") || "1");
   const pageSize = parseInt(searchParams.get("pageSize") || "10");
 

@@ -6,12 +6,13 @@ export class UpdateCertificationUseCase {
   constructor(
     private readonly certificationRepository: ICertificationRepository,
     private readonly imageService: IImageService,
-  ) {}
+  ) { }
 
   async execute(
     certificationId: string,
     certificationRequestObj: CertificationUpdateDTO,
     newImage?: File,
+    rankingIndex?: number,
   ) {
     /**
      * get certification
@@ -29,6 +30,10 @@ export class UpdateCertificationUseCase {
     }
 
     certification.update(certificationRequestObj);
+
+    if (rankingIndex !== undefined) {
+      certification.setRankingIndex(rankingIndex);
+    }
 
     if (newImage) {
       await this.imageService.deleteFile(certification.props.image_url);

@@ -1,7 +1,7 @@
-import { ITestimonialRepository } from "../domain/ITestimonialRepository"; 
+import { ITestimonialRepository } from "../domain/ITestimonialRepository";
 
 export class ListTestimonials {
-  constructor(private readonly testimonialRepository: ITestimonialRepository) {}
+  constructor(private readonly testimonialRepository: ITestimonialRepository) { }
 
   async execute(pageNumber: number, pageSize: number) {
     const result = await this.testimonialRepository.listPaginated(
@@ -10,5 +10,9 @@ export class ListTestimonials {
     );
 
     return result;
+  }
+
+  async executeAll() {
+    return this.testimonialRepository.listAll();
   }
 }
