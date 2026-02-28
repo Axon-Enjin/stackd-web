@@ -12,12 +12,15 @@ import {
   MoreVertical,
   Eye,
   ZoomIn,
+  ArrowUpDown,
 } from "lucide-react";
 import { useCreateCertificationMutation } from "@/features/Certifications/hooks/useCreateCertificationMutation";
 import { useDeleteCertificationMutation } from "@/features/Certifications/hooks/useDeleteCertificationMutation";
 import { usePaginatedCertificationsQuery } from "@/features/Certifications/hooks/usePaginatedCertificationsQuery";
 import { useUpdateCertificationMutation } from "@/features/Certifications/hooks/useUpdateCertificationMutation";
 import { Pagination } from "@/components/cms/Pagination";
+import { SortContentsModal } from "@/components/cms/SortContentsModal";
+import { useQueryClient } from "@tanstack/react-query";
 
 // ==========================================
 // Types
@@ -40,6 +43,8 @@ export default function CertificationsAdminPage() {
   const [editingCert, setEditingCert] = useState<Certification | null>(null);
   const [viewingCert, setViewingCert] = useState<Certification | null>(null);
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   // TanStack Query Hooks
   const { data: response, isLoading } = usePaginatedCertificationsQuery(
@@ -85,13 +90,22 @@ export default function CertificationsAdminPage() {
             Manage technical and professional certifications.
           </p>
         </div>
-        <button
-          onClick={openCreate}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] sm:w-auto"
-        >
-          <Plus size={20} />
-          Add Certification
-        </button>
+        <div className="flex w-full gap-2 sm:w-auto">
+          <button
+            onClick={() => setIsSortModalOpen(true)}
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
+          >
+            <ArrowUpDown size={18} />
+            Sort
+          </button>
+          <button
+            onClick={openCreate}
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] sm:flex-initial"
+          >
+            <Plus size={20} />
+            Add Certification
+          </button>
+        </div>
       </div>
 
       {/* Content */}
@@ -177,6 +191,21 @@ export default function CertificationsAdminPage() {
         <PhotoViewer
           imageUrl={photoViewerUrl}
           onClose={() => setPhotoViewerUrl(null)}
+        />
+      )}
+
+      {/* Sort Modal */}
+      {isSortModalOpen && (
+        <SortContentsModal
+          apiPath="/api/certifications"
+          labelKey="title"
+          subLabelKey="description"
+          imageKey="imageUrl"
+          title="Sort Certifications"
+          onClose={() => setIsSortModalOpen(false)}
+          onSortComplete={() => {
+            queryClient.invalidateQueries({ queryKey: ["certifications"] });
+          }}
         />
       )}
     </div>

@@ -6,12 +6,13 @@ export class UpdateMemberUseCase {
   constructor(
     private readonly memberRepository: IMemberRepository,
     private readonly imageService: IImageService,
-  ) {}
+  ) { }
 
   async execute(
     memberId: string,
     memberRequestObj: MemberUpdateDTO,
     newImage?: File,
+    rankingIndex?: number,
   ) {
     /**
      * get member
@@ -28,6 +29,10 @@ export class UpdateMemberUseCase {
     }
 
     member.update(memberRequestObj);
+
+    if (rankingIndex !== undefined) {
+      member.setRankingIndex(rankingIndex);
+    }
 
     if (newImage) {
       await this.imageService.deleteFile(member.props.image_url);

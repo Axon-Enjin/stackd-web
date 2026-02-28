@@ -9,4 +9,5 @@ export abstract class IMemberRepository {
     pageNumber: number,
     pageSize: number,
   ): Promise<{ list: Member[]; count: number }>;
+  abstract listAll(): Promise<Member[]>;
 }

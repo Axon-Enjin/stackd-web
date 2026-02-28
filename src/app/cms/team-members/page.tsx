@@ -12,9 +12,11 @@ import {
   Eye,
   Users,
   ZoomIn,
+  ArrowUpDown,
 } from "lucide-react";
 
 import { Pagination } from "@/components/cms/Pagination";
+import { SortContentsModal } from "@/components/cms/SortContentsModal";
 
 // Types based on your domain
 interface Member {
@@ -42,6 +44,7 @@ export default function TeamAdminPage() {
   const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [viewingMember, setViewingMember] = useState<Member | null>(null);
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
   const [pageSize, setPageSize] = useState(10);
 
   const API_URL = "/api/team-members";
@@ -109,13 +112,22 @@ export default function TeamAdminPage() {
             Manage your organization's team directory.
           </p>
         </div>
-        <button
-          onClick={openCreate}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] sm:w-auto"
-        >
-          <Plus size={20} />
-          Add Member
-        </button>
+        <div className="flex w-full gap-2 sm:w-auto">
+          <button
+            onClick={() => setIsSortModalOpen(true)}
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
+          >
+            <ArrowUpDown size={18} />
+            Sort
+          </button>
+          <button
+            onClick={openCreate}
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] sm:flex-initial"
+          >
+            <Plus size={20} />
+            Add Member
+          </button>
+        </div>
       </div>
 
       {/* Content */}
@@ -205,6 +217,19 @@ export default function TeamAdminPage() {
         <PhotoViewer
           imageUrl={photoViewerUrl}
           onClose={() => setPhotoViewerUrl(null)}
+        />
+      )}
+
+      {/* Sort Modal */}
+      {isSortModalOpen && (
+        <SortContentsModal
+          apiPath="/api/team-members"
+          labelKey="firstName"
+          subLabelKey="role"
+          imageKey="imageUrl"
+          title="Sort Team Members"
+          onClose={() => setIsSortModalOpen(false)}
+          onSortComplete={() => fetchMembers(meta?.currentPage || 1)}
         />
       )}
     </div>

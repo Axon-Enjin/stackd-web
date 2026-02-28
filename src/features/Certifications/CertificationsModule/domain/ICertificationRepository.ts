@@ -9,4 +9,5 @@ export abstract class ICertificationRepository {
     pageNumber: number,
     pageSize: number,
   ): Promise<{ list: Certification[]; count: number }>;
+  abstract listAll(): Promise<Certification[]>;
 }

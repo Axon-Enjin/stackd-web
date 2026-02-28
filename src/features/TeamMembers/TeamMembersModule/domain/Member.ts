@@ -51,4 +51,8 @@ export class Member {
   setImageUrl(imageUrl: string) {
     this._props.image_url = imageUrl;
   }
+
+  setRankingIndex(rankingIndex: number) {
+    this._props.rankingIndex = rankingIndex;
+  }
 }
