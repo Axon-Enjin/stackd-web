@@ -39,7 +39,7 @@ export class GoogleCalendarRepository implements IBookingRepository {
     return google.calendar({ version: "v3", auth: oAuth2Client });
   }
 
-  async getAvailableSlots(date: Date): Promise<Date[]> {
+  async getAvailableSlots(date: Date, timezone: string = "UTC"): Promise<Date[]> {
     const calendar = this.getCalendarClient();
 
     // 1. Define the search window

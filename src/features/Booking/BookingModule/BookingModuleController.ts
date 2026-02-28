@@ -8,13 +8,13 @@ export class BookingModuleController {
     private createBookingUseCase: CreateBookingUseCase,
   ) {}
 
-  async getAvailableSlots(dateString: string) {
+  async getAvailableSlots(dateString: string, timezone: string = "UTC") {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
       throw new Error("Invalid date format.");
     }
 
-    return this.getAvailableSlotsUseCase.execute(date);
+    return this.getAvailableSlotsUseCase.execute(date, timezone);
   }
 
   async createBooking(name: string, email: string, startTimeString: string) {
