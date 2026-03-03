@@ -4,136 +4,60 @@ import React, { useState, useEffect, useRef } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { format, isBefore, startOfDay } from "date-fns";
-import { Loader2, CheckCircle2, ChevronLeft, AlertCircle, Globe, ChevronDown, Search, Check } from "lucide-react";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import {
+  Loader2,
+  CheckCircle2,
+  ChevronLeft,
+  AlertCircle,
+  Globe,
+  ChevronDown,
+  Search,
+  Check,
+} from "lucide-react";
+import { useCalendarBooking } from "@/features/Booking/hooks/useCalendarBooking";
 
 export function CalendarBookingUI() {
-  const supabase = createSupabaseBrowserClient();
+  const {
+    selectedDate,
+    setSelectedDate,
+    availableSlots,
+    setAvailableSlots,
+    loadingSlots,
+    selectedSlot,
+    setSelectedSlot,
+    name,
+    setName,
+    email,
+    setEmail,
+    submitting,
+    isSuccess,
+    authError,
+    timezone,
+    setTimezone,
+    isInitialLoad,
+    handleDateSelect,
+    handleBookingSubmit,
+  } = useCalendarBooking();
 
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [availableSlots, setAvailableSlots] = useState<Date[]>([]);
-  const [loadingSlots, setLoadingSlots] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
-
-  const [timezone, setTimezone] = useState<string>(() =>
-    typeof window !== "undefined"
-      ? Intl.DateTimeFormat().resolvedOptions().timeZone
-      : "UTC"
-  );
   const [showTzPicker, setShowTzPicker] = useState(false);
   const [tzSearch, setTzSearch] = useState("");
   const tzDropdownRef = useRef<HTMLDivElement>(null);
 
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-
   // Close timezone picker on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (tzDropdownRef.current && !tzDropdownRef.current.contains(e.target as Node)) {
+      if (
+        tzDropdownRef.current &&
+        !tzDropdownRef.current.contains(e.target as Node)
+      ) {
         setShowTzPicker(false);
         setTzSearch("");
       }
     }
-    if (showTzPicker) document.addEventListener("mousedown", handleClickOutside);
+    if (showTzPicker)
+      document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showTzPicker]);
-
-  useEffect(() => {
-    const checkPendingBooking = async () => {
-      const pendingEmail = localStorage.getItem("stackd_pending_booking_email");
-      if (!pendingEmail) {
-        setIsInitialLoad(false);
-        return;
-      }
-
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
-        setIsInitialLoad(false);
-        return;
-      }
-
-      const pendingName = localStorage.getItem("stackd_pending_booking_name");
-      const pendingTime = localStorage.getItem("stackd_pending_booking_time");
-
-      setSubmitting(true);
-      setAuthError(null);
-
-      // Verification Step
-      if (session.user.email?.toLowerCase() !== pendingEmail.toLowerCase()) {
-        setAuthError(
-          `The Google account selected (${session.user.email}) does not match the email requested (${pendingEmail}).`,
-        );
-
-        // Delete mismatched user silently
-        await fetch("/api/auth/delete-user", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: session.user.id }),
-        }).catch(console.error);
-
-        await supabase.auth.signOut();
-
-        localStorage.removeItem("stackd_pending_booking_email");
-        localStorage.removeItem("stackd_pending_booking_name");
-        localStorage.removeItem("stackd_pending_booking_time");
-        setSubmitting(false);
-        setIsInitialLoad(false);
-        return;
-      }
-
-      // Success path
-      try {
-        const res = await fetch("/api/booking", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: pendingName,
-            startTime: pendingTime,
-          }),
-        });
-
-        if (res.ok) {
-          setName(pendingName || "");
-          if (pendingTime) setSelectedSlot(new Date(pendingTime));
-          setIsSuccess(true);
-        } else {
-          const err = await res.json();
-          setAuthError(`Failed to book: ${err.error}`);
-        }
-      } catch (error) {
-        console.error(error);
-        setAuthError("Network error while booking.");
-      } finally {
-        localStorage.removeItem("stackd_pending_booking_email");
-        localStorage.removeItem("stackd_pending_booking_name");
-        localStorage.removeItem("stackd_pending_booking_time");
-        setSubmitting(false);
-        setIsInitialLoad(false);
-      }
-    };
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === "SIGNED_IN" && session) {
-          checkPendingBooking();
-        }
-      },
-    );
-
-    checkPendingBooking();
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
 
   if (isInitialLoad) {
     return (
@@ -145,60 +69,6 @@ export function CalendarBookingUI() {
       </div>
     );
   }
-
-  const handleDateSelect = async (date: Date | undefined) => {
-    setSelectedDate(date);
-    setSelectedSlot(null);
-    setAvailableSlots([]);
-    setAuthError(null);
-
-    if (!date) return;
-
-    setLoadingSlots(true);
-    try {
-      const res = await fetch(
-        `/api/booking/available?date=${date.toISOString()}&timezone=${encodeURIComponent(timezone)}`,
-      );
-      if (res.ok) {
-        const data = await res.json();
-        setAvailableSlots(data.slots.map((s: string) => new Date(s)));
-      } else {
-        console.error("Failed to fetch slots");
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingSlots(false);
-    }
-  };
-
-  const handleBookingSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedSlot || !name || !email) return;
-
-    setSubmitting(true);
-    setAuthError(null);
-
-    localStorage.setItem("stackd_pending_booking_name", name);
-    localStorage.setItem("stackd_pending_booking_email", email);
-    localStorage.setItem("stackd_pending_booking_timezone", timezone);
-    localStorage.setItem(
-      "stackd_pending_booking_time",
-      selectedSlot.toISOString(),
-    );
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/api/auth/callback?next=/cta`,
-      },
-    });
-
-    if (error) {
-      setAuthError(`Failed to authenticate with Google: ${error.message}`);
-      setSubmitting(false);
-    }
-  };
 
   if (isSuccess) {
     return (
@@ -240,7 +110,10 @@ export function CalendarBookingUI() {
             }}
             className="group flex w-full items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-left text-xs font-medium text-gray-600 shadow-sm transition-all hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700"
           >
-            <Globe size={13} className="shrink-0 text-indigo-400 group-hover:text-indigo-600" />
+            <Globe
+              size={13}
+              className="shrink-0 text-indigo-400 group-hover:text-indigo-600"
+            />
             <span className="flex-1 truncate">{timezone}</span>
             <span className="shrink-0 text-indigo-500 group-hover:text-indigo-600">
               Verify your timezone
@@ -255,7 +128,7 @@ export function CalendarBookingUI() {
 
           {/* Floating dropdown */}
           {showTzPicker && (
-            <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl ring-1 ring-black/5">
+            <div className="absolute top-full right-0 left-0 z-50 mt-2 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl ring-1 ring-black/5">
               {/* Search header */}
               <div className="border-b border-gray-100 p-3">
                 <div className="flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2 ring-1 ring-gray-200 focus-within:ring-2 focus-within:ring-indigo-500">
@@ -274,8 +147,8 @@ export function CalendarBookingUI() {
               {/* Scrollable list */}
               <ul className="max-h-52 overflow-y-auto py-1 text-sm">
                 {(() => {
-                  const filtered = Intl.supportedValuesOf("timeZone").filter((tz) =>
-                    tz.toLowerCase().includes(tzSearch.toLowerCase())
+                  const filtered = Intl.supportedValuesOf("timeZone").filter(
+                    (tz) => tz.toLowerCase().includes(tzSearch.toLowerCase()),
                   );
                   if (filtered.length === 0) {
                     return (
@@ -303,7 +176,10 @@ export function CalendarBookingUI() {
                         }`}
                       >
                         {tz === timezone ? (
-                          <Check size={13} className="shrink-0 text-indigo-500" />
+                          <Check
+                            size={13}
+                            className="shrink-0 text-indigo-500"
+                          />
                         ) : (
                           <span className="w-[13px] shrink-0" />
                         )}
@@ -337,7 +213,8 @@ export function CalendarBookingUI() {
               "absolute left-2 p-1 hover:bg-gray-200 rounded-full",
             nav_button_next:
               "absolute right-2 p-1 hover:bg-gray-200 rounded-full",
-            caption: "relative flex justify-between pt-1 pb-4 items-center px-2",
+            caption:
+              "relative flex justify-between pt-1 pb-4 items-center px-2",
             caption_label: "font-semibold text-gray-900 text-base",
           }}
         />
