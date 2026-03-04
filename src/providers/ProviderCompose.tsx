@@ -3,6 +3,7 @@ import { QueryProvider } from "./QueryProvider";
 import { ToastProvider } from "./ToastProvider";
 import { configs } from "@/configs/configs";
 import { BreakpointIndicator } from "@/components/widgets/BreakpointIndicator";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 type Props = {
   children: React.ReactNode;
@@ -11,9 +12,11 @@ type Props = {
 export const ProviderCompose = (props: Props) => {
   console.log(configs.environment);
   return (
-    <>
+    <GoogleOAuthProvider
+      clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+    >
       <QueryProvider>{props.children}</QueryProvider>
       <ToastProvider />
-    </>
+    </GoogleOAuthProvider>
   );
 };
