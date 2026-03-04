@@ -21,6 +21,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { X, GripVertical, Loader2, ArrowUpDown, AlertTriangle } from "lucide-react";
+import { extractApiError } from "@/lib/apiError";
 
 // ==========================================
 // Types
@@ -89,7 +90,7 @@ export function SortContentsModal({
                 const json = await res.json();
                 setItems(json.data || []);
             } catch (err: any) {
-                setError(err.message);
+                setError("We couldn't load the items for sorting. Please close this window and try again.");
             } finally {
                 setLoading(false);
             }
@@ -125,7 +126,7 @@ export function SortContentsModal({
             });
 
             if (!res.ok) {
-                throw new Error(`Failed to update ranking for item ${id}`);
+                throw await extractApiError(res, "We couldn't save the new order. Please try moving the item again.");
             }
         },
         [apiPath],
@@ -147,7 +148,7 @@ export function SortContentsModal({
 
                 setItems(updates);
             } catch (err: any) {
-                setError(err.message);
+                setError("Something went wrong while reordering all items. Please close this window and try again.");
             } finally {
                 setSaving(false);
             }
@@ -219,7 +220,7 @@ export function SortContentsModal({
         try {
             await updateRankingIndex(active.id as string, newRankingIndex);
         } catch (err: any) {
-            setError(err.message);
+            setError(err.message || "We couldn't save the new position. The order has been reverted — please try again.");
             // Revert on failure
             setItems(items);
         } finally {
@@ -272,14 +273,17 @@ export function SortContentsModal({
 
                 {/* Error Banner */}
                 {error && (
-                    <div className="mx-6 mt-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-                        <AlertTriangle size={16} className="shrink-0" />
-                        <span>{error}</span>
+                    <div className="mx-6 mt-4 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+                        <AlertTriangle size={18} className="mt-0.5 shrink-0 text-red-500" />
+                        <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-red-800">Couldn&apos;t update order</p>
+                            <p className="mt-0.5 text-sm text-red-600">{error}</p>
+                        </div>
                         <button
                             onClick={() => setError(null)}
-                            className="ml-auto text-red-400 hover:text-red-600"
+                            className="shrink-0 text-red-400 hover:text-red-600"
                         >
-                            <X size={14} />
+                            <X size={16} />
                         </button>
                     </div>
                 )}

@@ -117,138 +117,124 @@ export default function TestimonialsAdminPage() {
         </div>
       </div>
 
-    </div>
-
-      {/* Page Error Banner */ }
-  {
-    pageError && (
-      <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
-        <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-red-800">Action failed</p>
-          <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{pageError}</p>
+      {/* Page Error Banner */}
+      {pageError && (
+        <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+          <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-red-800">Couldn&apos;t complete action</p>
+            <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{pageError}</p>
+          </div>
+          <button onClick={() => setPageError(null)} className="shrink-0 text-red-400 hover:text-red-600">
+            <X size={18} />
+          </button>
         </div>
-        <button onClick={() => setPageError(null)} className="shrink-0 text-red-400 hover:text-red-600">
-          <X size={18} />
-        </button>
-      </div>
-    )
-  }
+      )}
 
-  {/* Content */ }
-  {
-    isLoading ? (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="animate-spin text-[#2F80ED]" size={40} />
-      </div>
-    ) : (
-      <>
-        {/* Row List */}
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-          {testimonials.length === 0 ? (
-            <div className="py-16 text-center text-gray-500">
-              <MessageSquareQuote
-                className="mx-auto mb-3 text-gray-300"
-                size={48}
-              />
-              <h3 className="text-lg font-medium text-gray-900">
-                No testimonials yet
-              </h3>
-              <p className="mt-1 text-gray-500">
-                Add some client feedback to build trust with your audience.
-              </p>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-100">
-              {testimonials.map((testimonial) => (
-                <TestimonialRow
-                  key={testimonial.id}
-                  testimonial={testimonial}
-                  onView={() => setViewingTestimonial(testimonial)}
-                  onEdit={() => openEdit(testimonial)}
-                  onDelete={() => handleDelete(testimonial.id)}
-                  onPhotoClick={(url) => setPhotoViewerUrl(url)}
-                  isDeleting={
-                    deleteMutation.isPending &&
-                    deleteMutation.variables === testimonial.id
-                  }
+      {/* Content */}
+      {isLoading ? (
+        <div className="flex h-64 items-center justify-center">
+          <Loader2 className="animate-spin text-[#2F80ED]" size={40} />
+        </div>
+      ) : (
+        <>
+          {/* Row List */}
+          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            {testimonials.length === 0 ? (
+              <div className="py-16 text-center text-gray-500">
+                <MessageSquareQuote
+                  className="mx-auto mb-3 text-gray-300"
+                  size={48}
                 />
-              ))}
-            </div>
+                <h3 className="text-lg font-medium text-gray-900">
+                  No testimonials yet
+                </h3>
+                <p className="mt-1 text-gray-500">
+                  Add some client feedback to build trust with your audience.
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-100">
+                {testimonials.map((testimonial) => (
+                  <TestimonialRow
+                    key={testimonial.id}
+                    testimonial={testimonial}
+                    onView={() => setViewingTestimonial(testimonial)}
+                    onEdit={() => openEdit(testimonial)}
+                    onDelete={() => handleDelete(testimonial.id)}
+                    onPhotoClick={(url) => setPhotoViewerUrl(url)}
+                    isDeleting={
+                      deleteMutation.isPending &&
+                      deleteMutation.variables === testimonial.id
+                    }
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Pagination Controls */}
+          {meta && (
+            <Pagination
+              currentPage={meta.currentPage}
+              totalPages={meta.totalPages}
+              pageSize={pageSize}
+              totalRecords={meta.totalRecords}
+              onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
+            />
           )}
-        </div>
+        </>
+      )}
 
-        {/* Pagination Controls */}
-        {meta && (
-          <Pagination
-            currentPage={meta.currentPage}
-            totalPages={meta.totalPages}
-            pageSize={pageSize}
-            totalRecords={meta.totalRecords}
-            onPageChange={setPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setPage(1);
-            }}
-          />
-        )}
-      </>
-    )
-  }
+      {/* Detail View Modal */}
+      {viewingTestimonial && (
+        <TestimonialDetailModal
+          testimonial={viewingTestimonial}
+          onClose={() => setViewingTestimonial(null)}
+          onEdit={() => openEdit(viewingTestimonial)}
+          onDelete={() => {
+            handleDelete(viewingTestimonial.id);
+            setViewingTestimonial(null);
+          }}
+          onPhotoClick={(url) => setPhotoViewerUrl(url)}
+        />
+      )}
 
-  {/* Detail View Modal */ }
-  {
-    viewingTestimonial && (
-      <TestimonialDetailModal
-        testimonial={viewingTestimonial}
-        onClose={() => setViewingTestimonial(null)}
-        onEdit={() => openEdit(viewingTestimonial)}
-        onDelete={() => {
-          handleDelete(viewingTestimonial.id);
-          setViewingTestimonial(null);
-        }}
-        onPhotoClick={(url) => setPhotoViewerUrl(url)}
-      />
-    )
-  }
+      {/* Create/Edit Form Modal */}
+      {isModalOpen && (
+        <TestimonialModal
+          onClose={() => setIsModalOpen(false)}
+          testimonial={editingTestimonial}
+        />
+      )}
 
-  {/* Create/Edit Form Modal */ }
-  {
-    isModalOpen && (
-      <TestimonialModal
-        onClose={() => setIsModalOpen(false)}
-        testimonial={editingTestimonial}
-      />
-    )
-  }
+      {/* Photo Viewer Lightbox */}
+      {photoViewerUrl && (
+        <PhotoViewer
+          imageUrl={photoViewerUrl}
+          onClose={() => setPhotoViewerUrl(null)}
+        />
+      )}
 
-  {/* Photo Viewer Lightbox */ }
-  {
-    photoViewerUrl && (
-      <PhotoViewer
-        imageUrl={photoViewerUrl}
-        onClose={() => setPhotoViewerUrl(null)}
-      />
-    )
-  }
-
-  {/* Sort Modal */ }
-  {
-    isSortModalOpen && (
-      <SortContentsModal
-        apiPath="/api/testimonials"
-        labelKey="title"
-        subLabelKey="description"
-        imageKey="imageUrl"
-        title="Sort Testimonials"
-        onClose={() => setIsSortModalOpen(false)}
-        onSortComplete={() => {
-          queryClient.invalidateQueries({ queryKey: ["testimonials"] });
-        }}
-      />
-    )
-  }
-    </div >
+      {/* Sort Modal */}
+      {isSortModalOpen && (
+        <SortContentsModal
+          apiPath="/api/testimonials"
+          labelKey="title"
+          subLabelKey="description"
+          imageKey="imageUrl"
+          title="Sort Testimonials"
+          onClose={() => setIsSortModalOpen(false)}
+          onSortComplete={() => {
+            queryClient.invalidateQueries({ queryKey: ["testimonials"] });
+          }}
+        />
+      )}
+    </div>
   );
 }
 
@@ -528,206 +514,207 @@ function TestimonialModal({
       } else {
         await createMutation.mutateAsync(apiFormData);
         onClose();
-      } catch (error: any) {
-        setFormError(error.message || "Failed to save testimonial.");
       }
-    };
+    } catch (error: any) {
+      setFormError(error.message || "Failed to save testimonial.");
+    }
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        setPreview(URL.createObjectURL(file));
-      }
-    };
+  }
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  };
 
-    return (
-      <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
-        <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
-          <div className="flex shrink-0 items-center justify-between border-b bg-gray-50/50 p-5 sm:p-6">
-            <h2 className="text-xl font-bold text-gray-900">
-              {isEditing ? "Edit Testimonial" : "Add New Testimonial"}
-            </h2>
-            <button
-              onClick={onClose}
-              className="text-gray-400 transition-colors hover:text-gray-600"
-            >
-              <X size={24} />
-            </button>
-          </div>
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex shrink-0 items-center justify-between border-b bg-gray-50/50 p-5 sm:p-6">
+          <h2 className="text-xl font-bold text-gray-900">
+            {isEditing ? "Edit Testimonial" : "Add New Testimonial"}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 transition-colors hover:text-gray-600"
+          >
+            <X size={24} />
+          </button>
+        </div>
 
-          <form onSubmit={handleSubmit} className="overflow-y-auto p-6">
-            {formError && (
-              <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
-                <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-red-800">Couldn&apos;t save changes</p>
-                  <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{formError}</p>
-                </div>
-                <button type="button" onClick={() => setFormError(null)} className="shrink-0 text-red-400 hover:text-red-600">
-                  <X size={18} />
-                </button>
+        <form onSubmit={handleSubmit} className="overflow-y-auto p-6">
+          {formError && (
+            <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+              <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-red-800">Couldn&apos;t save changes</p>
+                <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{formError}</p>
               </div>
-            )}
+              <button type="button" onClick={() => setFormError(null)} className="shrink-0 text-red-400 hover:text-red-600">
+                <X size={18} />
+              </button>
+            </div>
+          )}
 
-            <div className="flex flex-col gap-6 md:flex-row">
-              {/* Image Upload Section */}
-              <div className="flex flex-col items-center gap-3 md:w-1/3">
-                <label className="w-full text-center text-sm font-medium text-gray-700">
-                  Client Photo
-                </label>
-                <div
-                  className="flex h-32 w-32 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-[#2F80ED] hover:bg-gray-100"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  {preview ? (
-                    <img
-                      src={preview}
-                      alt="Preview"
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center text-gray-400">
-                      <ImageIcon size={32} className="mb-1 text-gray-300" />
-                      <span className="px-2 text-center text-xs">
-                        Upload Avatar
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  name="image"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageChange}
-                  required={!isEditing}
-                />
-                <p className="text-center text-xs text-gray-500">
-                  Square image recommended.
-                  <br />
-                  Max 2MB.
-                </p>
+          <div className="flex flex-col gap-6 md:flex-row">
+            {/* Image Upload Section */}
+            <div className="flex flex-col items-center gap-3 md:w-1/3">
+              <label className="w-full text-center text-sm font-medium text-gray-700">
+                Client Photo
+              </label>
+              <div
+                className="flex h-32 w-32 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-[#2F80ED] hover:bg-gray-100"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {preview ? (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center text-gray-400">
+                    <ImageIcon size={32} className="mb-1 text-gray-300" />
+                    <span className="px-2 text-center text-xs">
+                      Upload Avatar
+                    </span>
+                  </div>
+                )}
               </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                name="image"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
+                required={!isEditing}
+              />
+              <p className="text-center text-xs text-gray-500">
+                Square image recommended.
+                <br />
+                Max 2MB.
+              </p>
+            </div>
 
-              {/* Text Fields Section */}
-              <div className="flex-1 space-y-4">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Name *
-                    </label>
-                    <input
-                      name="name"
-                      defaultValue={testimonial?.name}
-                      required
-                      className="w-full rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
-                      placeholder="e.g. Jane Doe"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Role / Company *
-                    </label>
-                    <input
-                      name="role"
-                      defaultValue={testimonial?.role}
-                      required
-                      className="w-full rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
-                      placeholder="e.g. CEO at TechCorp"
-                    />
-                  </div>
+            {/* Text Fields Section */}
+            <div className="flex-1 space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Name *
+                  </label>
+                  <input
+                    name="name"
+                    defaultValue={testimonial?.name}
+                    required
+                    className="w-full rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
+                    placeholder="e.g. Jane Doe"
+                  />
                 </div>
 
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Quote / Testimonial *
+                    Role / Company *
                   </label>
-                  <textarea
-                    name="body"
-                    defaultValue={testimonial?.body}
+                  <input
+                    name="role"
+                    defaultValue={testimonial?.role}
                     required
-                    rows={5}
-                    className="w-full resize-none rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
-                    placeholder="What did they say about your service?..."
+                    className="w-full rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
+                    placeholder="e.g. CEO at TechCorp"
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="mt-8 flex justify-end gap-3 border-t pt-6">
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={isPending}
-                className="rounded-lg px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isPending}
-                className="flex min-w-[140px] items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-5 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-[#2570d4] disabled:opacity-70"
-              >
-                {isPending ? (
-                  <Loader2 size={18} className="animate-spin" />
-                ) : isEditing ? (
-                  "Save Changes"
-                ) : (
-                  "Create Testimonial"
-                )}
-              </button>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Quote / Testimonial *
+                </label>
+                <textarea
+                  name="body"
+                  defaultValue={testimonial?.body}
+                  required
+                  rows={5}
+                  className="w-full resize-none rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
+                  placeholder="What did they say about your service?..."
+                />
+              </div>
             </div>
-          </form>
-        </div>
+          </div>
+
+          <div className="mt-8 flex justify-end gap-3 border-t pt-6">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isPending}
+              className="rounded-lg px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-100"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isPending}
+              className="flex min-w-[140px] items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-5 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-[#2570d4] disabled:opacity-70"
+            >
+              {isPending ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : isEditing ? (
+                "Save Changes"
+              ) : (
+                "Create Testimonial"
+              )}
+            </button>
+          </div>
+        </form>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
-  // ==========================================
-  // Sub-Component: Photo Viewer Lightbox
-  // ==========================================
-  function PhotoViewer({
-    imageUrl,
-    onClose,
-  }: {
-    imageUrl: string;
-    onClose: () => void;
-  }) {
-    const handleKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        if (e.key === "Escape") onClose();
-      },
-      [onClose],
-    );
+// ==========================================
+// Sub-Component: Photo Viewer Lightbox
+// ==========================================
+function PhotoViewer({
+  imageUrl,
+  onClose,
+}: {
+  imageUrl: string;
+  onClose: () => void;
+}) {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    },
+    [onClose],
+  );
 
-    useEffect(() => {
-      document.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-        document.body.style.overflow = "";
-      };
-    }, [handleKeyDown]);
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [handleKeyDown]);
 
-    return (
-      <div
-        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-md"
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-md"
+      onClick={onClose}
+    >
+      <button
         onClick={onClose}
+        className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/25"
       >
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/25"
-        >
-          <X size={24} />
-        </button>
-        <img
-          src={imageUrl}
-          alt="Full view"
-          className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-    );
-  }
+        <X size={24} />
+      </button>
+      <img
+        src={imageUrl}
+        alt="Full view"
+        className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      />
+    </div>
+  );
+}
