@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const ProviderCompose = (props: Props) => {
-  console.log(configs.environment);
+
   return (
     <GoogleOAuthProvider
       clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}

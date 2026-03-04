@@ -68,7 +68,9 @@ export class EmailService {
           </div>
         `,
       });
-      console.log(`Admin notification sent to ${targetEmail}`);
+      if(configs.environment === "DEVELOPMENT") {
+        console.log(`Admin notification sent to ${targetEmail}`);
+      }
     } catch (error) {
       console.error("Failed to send admin email notification:", error);
     }
