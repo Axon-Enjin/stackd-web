@@ -10,4 +10,5 @@ export abstract class IMemberRepository {
     pageSize: number,
   ): Promise<{ list: Member[]; count: number }>;
   abstract listAll(): Promise<Member[]>;
+  abstract countAll(): Promise<number>;
 }

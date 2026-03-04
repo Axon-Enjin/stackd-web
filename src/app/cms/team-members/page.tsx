@@ -13,10 +13,16 @@ import {
   Users,
   ZoomIn,
   ArrowUpDown,
+  AlertTriangle,
 } from "lucide-react";
 
 import { Pagination } from "@/components/cms/Pagination";
 import { SortContentsModal } from "@/components/cms/SortContentsModal";
+import { usePaginatedTeamMembersQuery } from "@/features/TeamMembers/hooks/usePaginatedTeamMembersQuery";
+import { useCreateTeamMemberMutation } from "@/features/TeamMembers/hooks/useCreateTeamMemberMutation";
+import { useUpdateTeamMemberMutation } from "@/features/TeamMembers/hooks/useUpdateTeamMemberMutation";
+import { useDeleteTeamMemberMutation } from "@/features/TeamMembers/hooks/useDeleteTeamMemberMutation";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Types based on your domain
 interface Member {
@@ -29,57 +35,31 @@ interface Member {
   bio: string;
 }
 
-interface PaginationMeta {
-  totalRecords: number;
-  currentPage: number;
-  pageSize: number;
-  totalPages: number;
-}
-
 export default function TeamAdminPage() {
-  const [members, setMembers] = useState<Member[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [viewingMember, setViewingMember] = useState<Member | null>(null);
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageError, setPageError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const API_URL = "/api/team-members";
+  // TanStack Query Hooks
+  const { data: response, isLoading } = usePaginatedTeamMembersQuery(page, pageSize);
+  const deleteMutation = useDeleteTeamMemberMutation();
 
-  const fetchMembers = async (page = 1, size = pageSize) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_URL}?pageNumber=${page}&pageSize=${size}`);
-      if (res.ok) {
-        const { data, meta } = await res.json();
-        setMembers(data || []);
-        setMeta(meta);
-      }
-    } catch (error) {
-      console.error("Failed to fetch members", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchMembers();
-  }, []);
+  const members: Member[] = response?.data || [];
+  const meta = response?.meta;
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this team member?")) return;
+    setPageError(null);
     try {
-      const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        fetchMembers(meta?.currentPage || 1);
-      } else {
-        alert("Failed to delete member.");
-      }
-    } catch (error) {
-      console.error(error);
+      await deleteMutation.mutateAsync(id);
+    } catch (error: any) {
+      setPageError(error.message || "Failed to delete member.");
     }
   };
 
@@ -130,15 +110,29 @@ export default function TeamAdminPage() {
         </div>
       </div>
 
+      {/* Page Error Banner */}
+      {pageError && (
+        <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+          <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-red-800">Couldn&apos;t complete action</p>
+            <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{pageError}</p>
+          </div>
+          <button onClick={() => setPageError(null)} className="shrink-0 text-red-400 hover:text-red-600">
+            <X size={18} />
+          </button>
+        </div>
+      )}
+
       {/* Content */}
-      {loading ? (
+      {isLoading ? (
         <div className="flex h-64 items-center justify-center">
           <Loader2 className="animate-spin text-[#2F80ED]" size={40} />
         </div>
       ) : (
         <>
           {/* Row List */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
             {members.length === 0 ? (
               <div className="py-16 text-center text-gray-500">
                 <Users className="mx-auto mb-3 text-gray-300" size={48} />
@@ -173,10 +167,10 @@ export default function TeamAdminPage() {
               totalPages={meta.totalPages}
               pageSize={pageSize}
               totalRecords={meta.totalRecords}
-              onPageChange={(page) => fetchMembers(page)}
+              onPageChange={setPage}
               onPageSizeChange={(size) => {
                 setPageSize(size);
-                fetchMembers(1, size);
+                setPage(1);
               }}
             />
           )}
@@ -201,14 +195,8 @@ export default function TeamAdminPage() {
       {/* Create/Edit Form Modal */}
       {isModalOpen && (
         <MemberModal
-          isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           member={editingMember}
-          onSuccess={() => {
-            setIsModalOpen(false);
-            fetchMembers(meta?.currentPage || 1);
-          }}
-          apiUrl={API_URL}
         />
       )}
 
@@ -229,7 +217,9 @@ export default function TeamAdminPage() {
           imageKey="imageUrl"
           title="Sort Team Members"
           onClose={() => setIsSortModalOpen(false)}
-          onSortComplete={() => fetchMembers(meta?.currentPage || 1)}
+          onSortComplete={() => {
+            queryClient.invalidateQueries({ queryKey: ["team-members"] });
+          }}
         />
       )}
     </div>
@@ -458,18 +448,30 @@ function MemberDetailModal({
 // ==========================================
 // Form Modal Sub-Component
 // ==========================================
-function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
-  const [submitting, setSubmitting] = useState(false);
+function MemberModal({
+  onClose,
+  member,
+}: {
+  onClose: () => void;
+  member: Member | null;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(
     member?.imageUrl || null,
   );
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const isEditing = !!member;
 
+  // Mutations
+  const createMutation = useCreateTeamMemberMutation();
+  const updateMutation = useUpdateTeamMemberMutation();
+
+  const isPending = createMutation.isPending || updateMutation.isPending;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitting(true);
+    setFormError(null);
 
     const form = e.currentTarget;
     const rawFormData = new FormData(form);
@@ -497,22 +499,17 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
     }
 
     try {
-      const res = await fetch(isEditing ? `${apiUrl}/${member.id}` : apiUrl, {
-        method: isEditing ? "PATCH" : "POST",
-        body: apiFormData,
-      });
-
-      if (res.ok) {
-        onSuccess();
+      if (isEditing && member) {
+        await updateMutation.mutateAsync({
+          id: member.id,
+          formData: apiFormData,
+        });
       } else {
-        const err = await res.json();
-        alert(err.error || err.message || "Something went wrong.");
+        await createMutation.mutateAsync(apiFormData);
       }
-    } catch (error) {
-      console.error(error);
-      alert("Network error.");
-    } finally {
-      setSubmitting(false);
+      onClose();
+    } catch (error: any) {
+      setFormError(error.message || "Failed to save team member.");
     }
   };
 
@@ -538,7 +535,20 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
+        <form onSubmit={handleSubmit} className="overflow-y-auto p-6">
+          {formError && (
+            <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+              <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-red-800">Couldn&apos;t save changes</p>
+                <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{formError}</p>
+              </div>
+              <button type="button" onClick={() => setFormError(null)} className="shrink-0 text-red-400 hover:text-red-600">
+                <X size={18} />
+              </button>
+            </div>
+          )}
+
           <div className="flex flex-col gap-6 md:flex-row">
             {/* Image Upload Section */}
             <div className="flex flex-col items-center gap-3 md:w-1/3">
@@ -642,16 +652,17 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
             <button
               type="button"
               onClick={onClose}
+              disabled={isPending}
               className="rounded-lg px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-100"
             >
               Cancel
             </button>
             <button
               type="submit"
-              disabled={submitting}
+              disabled={isPending}
               className="flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] disabled:opacity-70"
             >
-              {submitting ? (
+              {isPending ? (
                 <Loader2 size={18} className="animate-spin" />
               ) : isEditing ? (
                 "Save Changes"

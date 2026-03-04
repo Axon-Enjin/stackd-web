@@ -13,6 +13,7 @@ import {
   Eye,
   ZoomIn,
   ArrowUpDown,
+  AlertTriangle,
 } from "lucide-react";
 import { useCreateTestimonialMutation } from "@/features/Testimonials/hooks/useCreateTestimonialMutation";
 import { useDeleteTestimonialMutation } from "@/features/Testimonials/hooks/useDeleteTestimonialMutation";
@@ -47,6 +48,7 @@ export default function TestimonialsAdminPage() {
     useState<Testimonial | null>(null);
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+  const [pageError, setPageError] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   // TanStack Query Hooks
@@ -65,10 +67,11 @@ export default function TestimonialsAdminPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this testimonial?"))
       return;
+    setPageError(null);
     try {
       await deleteMutation.mutateAsync(id);
-    } catch (error) {
-      alert("Failed to delete testimonial.");
+    } catch (error: any) {
+      setPageError(error.message || "Failed to delete testimonial.");
     }
   };
 
@@ -114,6 +117,20 @@ export default function TestimonialsAdminPage() {
         </div>
       </div>
 
+      {/* Page Error Banner */}
+      {pageError && (
+        <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+          <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-red-800">Couldn&apos;t complete action</p>
+            <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{pageError}</p>
+          </div>
+          <button onClick={() => setPageError(null)} className="shrink-0 text-red-400 hover:text-red-600">
+            <X size={18} />
+          </button>
+        </div>
+      )}
+
       {/* Content */}
       {isLoading ? (
         <div className="flex h-64 items-center justify-center">
@@ -122,7 +139,7 @@ export default function TestimonialsAdminPage() {
       ) : (
         <>
           {/* Row List */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
             {testimonials.length === 0 ? (
               <div className="py-16 text-center text-gray-500">
                 <MessageSquareQuote
@@ -456,6 +473,7 @@ function TestimonialModal({
   const [preview, setPreview] = useState<string | null>(
     testimonial?.imageUrl || null,
   );
+  const [formError, setFormError] = useState<string | null>(null);
 
   const createMutation = useCreateTestimonialMutation();
   const updateMutation = useUpdateTestimonialMutation();
@@ -464,6 +482,7 @@ function TestimonialModal({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setFormError(null);
 
     const form = e.currentTarget;
     const rawFormData = new FormData(form);
@@ -494,13 +513,13 @@ function TestimonialModal({
         });
       } else {
         await createMutation.mutateAsync(apiFormData);
+        onClose();
       }
-      onClose();
     } catch (error: any) {
-      alert(error.message || "Failed to save testimonial.");
+      setFormError(error.message || "Failed to save testimonial.");
     }
-  };
 
+  }
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -524,6 +543,19 @@ function TestimonialModal({
         </div>
 
         <form onSubmit={handleSubmit} className="overflow-y-auto p-6">
+          {formError && (
+            <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+              <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-red-800">Couldn&apos;t save changes</p>
+                <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{formError}</p>
+              </div>
+              <button type="button" onClick={() => setFormError(null)} className="shrink-0 text-red-400 hover:text-red-600">
+                <X size={18} />
+              </button>
+            </div>
+          )}
+
           <div className="flex flex-col gap-6 md:flex-row">
             {/* Image Upload Section */}
             <div className="flex flex-col items-center gap-3 md:w-1/3">
