@@ -1,28 +1,32 @@
+import { teamMembersModuleController } from "@/features/TeamMembers/TeamMembersModule";
+import { createRegularHandler } from "@/lib/api/createHandler";
 import {
-  TeamMembersModuleController,
-  teamMembersModuleController,
-} from "@/features/TeamMembers/TeamMembersModule";
+  NotFoundError,
+  UnprocessableEntityError,
+} from "@/lib/errors/HttpError";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ teamMemberId: string }> },
-) {
-  const { teamMemberId } = await params;
+export const GET = createRegularHandler(
+  async (
+    request: NextRequest,
+    { params }: { params: Promise<{ teamMemberId: string }> },
+  ) => {
+    const { teamMemberId } = await params;
 
-  const data = await teamMembersModuleController.getOneMember(teamMemberId);
+    const data = await teamMembersModuleController.getOneMember(teamMemberId);
 
-  return NextResponse.json(
-    { message: "GET teamMember", data: data },
-    { status: 200 },
-  );
-}
+    return NextResponse.json(
+      { message: "GET teamMember", data: data },
+      { status: 200 },
+    );
+  },
+);
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ teamMemberId: string }> },
-) {
-  try {
+export const PATCH = createRegularHandler(
+  async (
+    request: NextRequest,
+    { params }: { params: Promise<{ teamMemberId: string }> },
+  ) => {
     const { teamMemberId } = await params;
     const formData = await request.formData();
 
@@ -30,7 +34,6 @@ export async function PATCH(
     const newImage = formData.get("image") as File | null;
 
     // 2. Extract the update fields
-    // We filter out nulls to ensure we only pass provided values to the Partial DTO
     const updateDTO: any = {};
 
     const fields = ["firstName", "lastName", "middleName", "role", "bio"];
@@ -43,7 +46,12 @@ export async function PATCH(
 
     // 3. Extract optional rankingIndex for sort operations
     const rankingIndexRaw = formData.get("rankingIndex");
-    const rankingIndex = rankingIndexRaw !== null ? parseFloat(rankingIndexRaw as string) : undefined;
+    let rankingIndex: number | undefined;
+    if (rankingIndexRaw !== null) {
+      rankingIndex = parseFloat(rankingIndexRaw as string);
+      if (isNaN(rankingIndex))
+        throw new UnprocessableEntityError("rankingIndex must be a valid number");
+    }
 
     // 4. Execute the update via controller
     const updatedMember = await teamMembersModuleController.updateMember(
@@ -57,36 +65,24 @@ export async function PATCH(
       { message: "Member updated successfully", data: updatedMember },
       { status: 200 },
     );
-  } catch (error: any) {
-    console.error("PATCH Member Error:", error);
+  },
+);
 
-    // Check for specific domain errors if you've defined them
-    const status = error.message.includes("not found") ? 404 : 500;
+export const DELETE = createRegularHandler(
+  async (
+    request: NextRequest,
+    { params }: { params: Promise<{ teamMemberId: string }> },
+  ) => {
+    const { teamMemberId } = await params;
+
+    const data =
+      await teamMembersModuleController.deleteMember(teamMemberId);
+
+    if (!data) throw new NotFoundError("Resource not found");
 
     return NextResponse.json(
-      { message: error.message || "Internal Server Error" },
-      { status },
+      { message: "ok", status: "success" },
+      { status: 200 },
     );
-  }
-}
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ teamMemberId: string }> },
-) {
-  const { teamMemberId } = await params;
-
-  const data = await teamMembersModuleController.deleteMember(teamMemberId);
-
-  if (!data) {
-    return NextResponse.json(
-      { message: "An error occured", status: "Error" },
-      { status: 404 },
-    );
-  }
-
-  return NextResponse.json(
-    { message: "DELETE testResource", status: "Success" },
-    { status: 200 },
-  );
-}
+  },
+);
