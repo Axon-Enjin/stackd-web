@@ -95,14 +95,14 @@ export default function TeamAdminPage() {
         <div className="flex w-full gap-2 sm:w-auto">
           <button
             onClick={() => setIsSortModalOpen(true)}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
+            className="flex flex-1 items-center justify-center gap-2 rounded-sm border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
           >
             <ArrowUpDown size={18} />
             Sort
           </button>
           <button
             onClick={openCreate}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] sm:flex-initial"
+            className="flex flex-1 items-center justify-center gap-2 rounded-sm bg-[#2F80ED] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] sm:flex-initial"
           >
             <Plus size={20} />
             Add Member
@@ -112,7 +112,7 @@ export default function TeamAdminPage() {
 
       {/* Page Error Banner */}
       {pageError && (
-        <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+        <div className="mb-6 flex items-start gap-3 rounded-sm border border-red-200 bg-red-50 p-4">
           <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-red-800">Couldn&apos;t complete action</p>
@@ -132,7 +132,7 @@ export default function TeamAdminPage() {
       ) : (
         <>
           {/* Row List */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div className="rounded border border-gray-200 bg-white shadow-sm">
             {members.length === 0 ? (
               <div className="py-16 text-center text-gray-500">
                 <Users className="mx-auto mb-3 text-gray-300" size={48} />
@@ -297,13 +297,13 @@ function MemberRow({
             e.stopPropagation();
             setMenuOpen(!menuOpen);
           }}
-          className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+          className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
         >
           <MoreVertical size={18} />
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-xl border border-gray-100 bg-white py-1 shadow-xl">
+          <div className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded border border-gray-100 bg-white py-1 shadow-xl">
             <button
               onClick={(e) => { e.stopPropagation(); setMenuOpen(false); onView(); }}
               className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
@@ -349,13 +349,13 @@ function MemberDetailModal({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
-      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-lg sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-lg sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b p-6">
           <h2 className="text-xl font-bold text-gray-900">Member Details</h2>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-sm p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
           >
             <X size={22} />
           </button>
@@ -419,7 +419,7 @@ function MemberDetailModal({
         <div className="flex items-center justify-between border-t px-6 py-4">
           <button
             onClick={onDelete}
-            className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
+            className="flex items-center gap-2 rounded-sm px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
           >
             <Trash2 size={16} />
             Delete
@@ -427,13 +427,13 @@ function MemberDetailModal({
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+              className="rounded-sm px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
             >
               Close
             </button>
             <button
               onClick={onEdit}
-              className="flex items-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2570d4]"
+              className="flex items-center gap-2 rounded-sm bg-[#2F80ED] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2570d4]"
             >
               <Edit2 size={16} />
               Update
@@ -522,7 +522,7 @@ function MemberModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
-      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b p-5 sm:p-6">
           <h2 className="text-xl font-bold">
             {isEditing ? "Edit Team Member" : "Add New Member"}
@@ -537,7 +537,7 @@ function MemberModal({
 
         <form onSubmit={handleSubmit} className="overflow-y-auto p-6">
           {formError && (
-            <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+            <div className="mb-6 flex items-start gap-3 rounded-sm border border-red-200 bg-red-50 p-4">
               <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-red-800">Couldn&apos;t save changes</p>
@@ -594,7 +594,7 @@ function MemberModal({
                     name="firstname"
                     defaultValue={member?.firstName}
                     required
-                    className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                    className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                   />
                 </div>
                 <div>
@@ -605,7 +605,7 @@ function MemberModal({
                     name="lastname"
                     defaultValue={member?.lastName}
                     required
-                    className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                    className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                   />
                 </div>
               </div>
@@ -617,7 +617,7 @@ function MemberModal({
                 <input
                   name="middlename"
                   defaultValue={member?.middleName}
-                  className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                  className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                 />
               </div>
 
@@ -629,7 +629,7 @@ function MemberModal({
                   name="role"
                   defaultValue={member?.role}
                   required
-                  className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                  className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                 />
               </div>
 
@@ -642,7 +642,7 @@ function MemberModal({
                   defaultValue={member?.bio}
                   required
                   rows={3}
-                  className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                  className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                 ></textarea>
               </div>
             </div>
@@ -653,14 +653,14 @@ function MemberModal({
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="rounded-lg px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-100"
+              className="rounded-sm px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-100"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending}
-              className="flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] disabled:opacity-70"
+              className="flex min-w-[120px] items-center justify-center gap-2 rounded-sm bg-[#2F80ED] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] disabled:opacity-70"
             >
               {isPending ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -720,7 +720,7 @@ function PhotoViewer({
       <img
         src={imageUrl}
         alt="Full view"
-        className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl animate-in zoom-in-95 duration-300"
+        className="max-h-[85vh] max-w-[90vw] rounded-sm object-contain shadow-2xl animate-in zoom-in-95 duration-300"
         onClick={(e) => e.stopPropagation()}
       />
     </div>

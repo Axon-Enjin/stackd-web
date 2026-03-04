@@ -96,14 +96,14 @@ export default function CertificationsAdminPage() {
         <div className="flex w-full gap-2 sm:w-auto">
           <button
             onClick={() => setIsSortModalOpen(true)}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
+            className="flex flex-1 items-center justify-center gap-2 rounded-sm border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
           >
             <ArrowUpDown size={18} />
             Sort
           </button>
           <button
             onClick={openCreate}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] sm:flex-initial"
+            className="flex flex-1 items-center justify-center gap-2 rounded-sm bg-[#2F80ED] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] sm:flex-initial"
           >
             <Plus size={20} />
             Add Certification
@@ -113,7 +113,7 @@ export default function CertificationsAdminPage() {
 
       {/* Page Error Banner */}
       {pageError && (
-        <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+        <div className="mb-6 flex items-start gap-3 rounded-sm border border-red-200 bg-red-50 p-4">
           <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-red-800">Couldn&apos;t complete action</p>
@@ -133,7 +133,7 @@ export default function CertificationsAdminPage() {
       ) : (
         <>
           {/* Row List */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div className="rounded border border-gray-200 bg-white shadow-sm">
             {certifications.length === 0 ? (
               <div className="py-16 text-center text-gray-500">
                 <Award className="mx-auto mb-3 text-gray-300" size={48} />
@@ -276,10 +276,10 @@ function CertificationRow({
         <img
           src={certification.imageUrl || "/placeholder-cert.png"}
           alt={certification.title}
-          className="h-12 w-12 rounded-lg border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-1"
+          className="h-12 w-12 rounded-sm border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-1"
         />
         {certification.imageUrl && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-lg bg-black/0 transition-colors group-hover/avatar:bg-black/30">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-sm bg-black/0 transition-colors group-hover/avatar:bg-black/30">
             <ZoomIn size={14} className="text-white opacity-0 transition-opacity group-hover/avatar:opacity-100" />
           </div>
         )}
@@ -307,13 +307,13 @@ function CertificationRow({
             e.stopPropagation();
             setMenuOpen(!menuOpen);
           }}
-          className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+          className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
         >
           <MoreVertical size={18} />
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-xl border border-gray-100 bg-white py-1 shadow-xl">
+          <div className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded border border-gray-100 bg-white py-1 shadow-xl">
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -372,13 +372,13 @@ function CertificationDetailModal({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
-      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-lg sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-lg sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b p-6">
           <h2 className="text-xl font-bold text-gray-900">Certification Details</h2>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-sm p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
           >
             <X size={22} />
           </button>
@@ -395,10 +395,10 @@ function CertificationDetailModal({
               <img
                 src={certification.imageUrl || "/placeholder-cert.png"}
                 alt={certification.title}
-                className="h-28 w-28 rounded-xl border-2 border-gray-100 object-cover shadow-sm transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-2"
+                className="h-28 w-28 rounded border-2 border-gray-100 object-cover shadow-sm transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-2"
               />
               {certification.imageUrl && (
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-xl bg-black/0 transition-colors group-hover/avatar:bg-black/20">
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded bg-black/0 transition-colors group-hover/avatar:bg-black/20">
                   <ZoomIn size={20} className="text-white opacity-0 transition-opacity group-hover/avatar:opacity-100" />
                 </div>
               )}
@@ -430,7 +430,7 @@ function CertificationDetailModal({
         <div className="flex items-center justify-between border-t px-6 py-4">
           <button
             onClick={onDelete}
-            className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
+            className="flex items-center gap-2 rounded-sm px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
           >
             <Trash2 size={16} />
             Delete
@@ -438,13 +438,13 @@ function CertificationDetailModal({
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+              className="rounded-sm px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
             >
               Close
             </button>
             <button
               onClick={onEdit}
-              className="flex items-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2570d4]"
+              className="flex items-center gap-2 rounded-sm bg-[#2F80ED] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2570d4]"
             >
               <Edit2 size={16} />
               Update
@@ -520,7 +520,7 @@ function CertificationModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
-      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
         <div className="flex shrink-0 items-center justify-between border-b p-5 sm:p-6">
           <h2 className="text-xl font-bold">
             {isEditing ? "Edit Certification" : "Add New Certification"}
@@ -535,7 +535,7 @@ function CertificationModal({
 
         <form onSubmit={handleSubmit} className="overflow-y-auto p-6">
           {formError && (
-            <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+            <div className="mb-6 flex items-start gap-3 rounded-sm border border-red-200 bg-red-50 p-4">
               <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-red-800">Couldn&apos;t save changes</p>
@@ -551,7 +551,7 @@ function CertificationModal({
             {/* Image Upload Section */}
             <div className="flex flex-col items-center gap-3 md:w-1/3">
               <div
-                className="flex h-32 w-32 cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition hover:bg-gray-100"
+                className="flex h-32 w-32 cursor-pointer items-center justify-center overflow-hidden rounded-sm border-2 border-dashed border-gray-300 bg-gray-50 transition hover:bg-gray-100"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {preview ? (
@@ -593,7 +593,7 @@ function CertificationModal({
                   name="title"
                   defaultValue={certification?.title}
                   required
-                  className="w-full rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                  className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                   placeholder="e.g. AWS Certified Solutions Architect"
                 />
               </div>
@@ -607,7 +607,7 @@ function CertificationModal({
                   defaultValue={certification?.description}
                   required
                   rows={5}
-                  className="w-full resize-none rounded-lg border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                  className="w-full resize-none rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                   placeholder="Describe the skills validated by this certification..."
                 />
               </div>
@@ -619,14 +619,14 @@ function CertificationModal({
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="rounded-lg px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-100"
+              className="rounded-sm px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-100"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending}
-              className="flex min-w-[140px] items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] disabled:opacity-70"
+              className="flex min-w-[140px] items-center justify-center gap-2 rounded-sm bg-[#2F80ED] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] disabled:opacity-70"
             >
               {isPending ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -683,7 +683,7 @@ function PhotoViewer({
       <img
         src={imageUrl}
         alt="Full view"
-        className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+        className="max-h-[85vh] max-w-[90vw] rounded-sm object-contain shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       />
     </div>

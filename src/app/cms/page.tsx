@@ -54,11 +54,11 @@ export default function CMSDashboardPage() {
             <Link
               key={section.href}
               href={section.href}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              className="group relative flex flex-col overflow-hidden rounded-sm border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
             >
               {/* Icon */}
               <div
-                className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${section.bgLight}`}
+                className={`mb-4 flex h-12 w-12 items-center justify-center rounded ${section.bgLight}`}
               >
                 <Icon size={24} className={section.textColor} />
               </div>
