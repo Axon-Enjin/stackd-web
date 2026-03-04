@@ -20,32 +20,32 @@ export class HttpError extends Error {
 }
 
 export class BadRequestError extends HttpError {
-  constructor(description: string) {
-    super(400, "Bad Request", description);
+  constructor(description: string, cause?: unknown) {
+    super(400, "Bad Request", description, cause);
   }
 }
 
 export class NotFoundError extends HttpError {
-  constructor(description: string) {
-    super(404, "Not Found", description);
+  constructor(description: string, cause?: unknown) {
+    super(404, "Not Found", description, cause);
   }
 }
 
 export class TooManyRequest extends HttpError {
-  constructor(description: string) {
-    super(429, "Too Many Requests", description);
+  constructor(description: string, cause?: unknown) {
+    super(429, "Too Many Requests", description, cause);
   }
 }
 
 export class UnprocessableEntityError extends HttpError {
-  constructor(description: string) {
-    super(422, "Unprocessable Entity", description);
+  constructor(description: string, cause?: unknown) {
+    super(422, "Unprocessable Entity", description, cause);
   }
 }
 
 export class InternalServerError extends HttpError {
-  constructor(description: string) {
-    super(500, "Internal Server Error", description);
+  constructor(description: string, cause?: unknown) {
+    super(500, "Internal Server Error", description, cause);
   }
 }
 

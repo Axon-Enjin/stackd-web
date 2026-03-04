@@ -131,4 +131,16 @@ export class CertificationRepository implements ICertificationRepository {
       Certification.hydrate(this.toDomain(item)),
     );
   }
+
+  async countAll(): Promise<number> {
+    const supabase = await createSupabaseServerClient();
+    const { count, error } = await supabase
+      .from(this.TABLE_NAME)
+      .select("*", { count: "exact", head: true });
+
+    if (error)
+      throw new Error(`Failed to count certifications: ${error.message}`);
+
+    return count || 0;
+  }
 }

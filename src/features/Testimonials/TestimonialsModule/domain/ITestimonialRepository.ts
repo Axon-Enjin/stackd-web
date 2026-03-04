@@ -10,4 +10,5 @@ export abstract class ITestimonialRepository {
     pageSize: number,
   ): Promise<{ list: Testimonial[]; count: number }>;
   abstract listAll(): Promise<Testimonial[]>;
+  abstract countAll(): Promise<number>;
 }
