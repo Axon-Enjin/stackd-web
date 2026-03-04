@@ -372,15 +372,20 @@ function CertificationDetailModal({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
-      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-lg sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-sm border border-gray-200 bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-lg sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between border-b p-6">
-          <h2 className="text-xl font-bold text-gray-900">Certification Details</h2>
+        <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50/80 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-[#2F80ED]/10">
+              <Award size={16} className="text-[#2F80ED]" />
+            </div>
+            <h2 className="text-lg font-semibold text-gray-900">Certification Details</h2>
+          </div>
           <button
             onClick={onClose}
-            className="rounded-sm p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600"
           >
-            <X size={22} />
+            <X size={20} />
           </button>
         </div>
 
@@ -406,17 +411,17 @@ function CertificationDetailModal({
           </div>
 
           {/* Info */}
-          <div className="space-y-4">
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <div className="space-y-3">
+            <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
                 Title
               </label>
-              <p className="mt-1 text-base font-medium text-gray-900">
+              <p className="mt-1 text-sm font-medium text-gray-900">
                 {certification.title}
               </p>
             </div>
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
                 Description
               </label>
               <p className="mt-1 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
@@ -427,26 +432,26 @@ function CertificationDetailModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between border-t px-6 py-4">
+        <div className="flex items-center justify-between border-t border-gray-200 bg-gray-50/50 px-6 py-3">
           <button
             onClick={onDelete}
-            className="flex items-center gap-2 rounded-sm px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
+            className="flex items-center gap-2 rounded-sm border border-transparent px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:border-red-200 hover:bg-red-50"
           >
-            <Trash2 size={16} />
+            <Trash2 size={15} />
             Delete
           </button>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="rounded-sm px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+              className="rounded-sm border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50"
             >
               Close
             </button>
             <button
               onClick={onEdit}
-              className="flex items-center gap-2 rounded-sm bg-[#2F80ED] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2570d4]"
+              className="flex items-center gap-2 rounded-sm bg-[#0B1F3B] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0B1F3B]/90"
             >
-              <Edit2 size={16} />
+              <Edit2 size={15} />
               Update
             </button>
           </div>
@@ -520,16 +525,21 @@ function CertificationModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
-      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
-        <div className="flex shrink-0 items-center justify-between border-b p-5 sm:p-6">
-          <h2 className="text-xl font-bold">
-            {isEditing ? "Edit Certification" : "Add New Certification"}
-          </h2>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-sm border border-gray-200 bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
+        <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50/80 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-[#2F80ED]/10">
+              <Award size={16} className="text-[#2F80ED]" />
+            </div>
+            <h2 className="text-lg font-semibold text-gray-900">
+              {isEditing ? "Edit Certification" : "Add New Certification"}
+            </h2>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
 
@@ -614,19 +624,19 @@ function CertificationModal({
             </div>
           </div>
 
-          <div className="mt-8 flex justify-end gap-3 border-t pt-6">
+          <div className="mt-8 flex justify-end gap-2 border-t border-gray-200 pt-6">
             <button
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="rounded-sm px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-100"
+              className="rounded-sm border border-gray-200 bg-white px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending}
-              className="flex min-w-[140px] items-center justify-center gap-2 rounded-sm bg-[#2F80ED] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[#2570d4] disabled:opacity-70"
+              className="flex min-w-[140px] items-center justify-center gap-2 rounded-sm bg-[#0B1F3B] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[#0B1F3B]/90 disabled:opacity-70"
             >
               {isPending ? (
                 <Loader2 size={18} className="animate-spin" />
