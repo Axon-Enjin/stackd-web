@@ -23,6 +23,7 @@ import { useCreateTeamMemberMutation } from "@/features/TeamMembers/hooks/useCre
 import { useUpdateTeamMemberMutation } from "@/features/TeamMembers/hooks/useUpdateTeamMemberMutation";
 import { useDeleteTeamMemberMutation } from "@/features/TeamMembers/hooks/useDeleteTeamMemberMutation";
 import { useQueryClient } from "@tanstack/react-query";
+import { truncateWithEllipsis } from "@/lib/utils";
 
 // Types based on your domain
 interface Member {
@@ -92,7 +93,7 @@ export default function TeamAdminPage() {
             Manage your organization's team directory.
           </p>
         </div>
-        <div className="flex w-full gap-2 sm:w-auto">
+        <div className="flex w-full gap-2 sm:w-auto max-sm:flex-col-reverse max-sm:items-start">
           <button
             onClick={() => setIsSortModalOpen(true)}
             className="flex flex-1 items-center justify-center gap-2 rounded-sm border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
@@ -284,10 +285,10 @@ function MemberRow({
 
       {/* Text */}
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-sm font-semibold text-gray-900">
-          {fullName}
+        <h3 className="  text-sm font-semibold text-gray-900">
+          {truncateWithEllipsis(fullName, 30)}
         </h3>
-        <p className="mt-0.5 truncate text-xs text-gray-500">{member.role}</p>
+        <p className="mt-0.5   text-xs text-gray-500">{truncateWithEllipsis(member.role, 30)}</p>
       </div>
 
       {/* Menu */}

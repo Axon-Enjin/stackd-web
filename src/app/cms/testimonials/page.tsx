@@ -22,6 +22,7 @@ import { useUpdateTestimonialMutation } from "@/features/Testimonials/hooks/useU
 import { Pagination } from "@/components/cms/Pagination";
 import { SortContentsModal } from "@/components/cms/SortContentsModal";
 import { useQueryClient } from "@tanstack/react-query";
+import { truncateWithEllipsis } from "@/lib/utils";
 
 // ==========================================
 // Types
@@ -99,7 +100,7 @@ export default function TestimonialsAdminPage() {
             Manage client feedback, quotes, and success stories.
           </p>
         </div>
-        <div className="flex w-full gap-2 sm:w-auto">
+        <div className="flex w-full gap-2 sm:w-auto max-sm:flex-col-reverse max-sm:items-start">
           <button
             onClick={() => setIsSortModalOpen(true)}
             className="flex flex-1 items-center justify-center gap-2 rounded-sm border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
@@ -296,11 +297,11 @@ function TestimonialRow({
 
       {/* Text */}
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-sm font-semibold text-gray-900">
-          {testimonial.name}
+        <h3 className="  text-sm font-semibold text-gray-900">
+          {truncateWithEllipsis(testimonial.name, 30)}
         </h3>
-        <p className="mt-0.5 truncate text-xs text-gray-500">
-          {testimonial.role} — "{testimonial.body}"
+        <p className="mt-0.5   text-xs text-gray-500">
+          {truncateWithEllipsis(testimonial.role, 30)} — "{truncateWithEllipsis(testimonial.body, 30)}"
         </p>
       </div>
 
