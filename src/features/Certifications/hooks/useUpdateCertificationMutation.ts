@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { extractApiError } from "@/lib/apiError";
 
 export const useUpdateCertificationMutation = () => {
   const queryClient = useQueryClient();
@@ -8,25 +9,20 @@ export const useUpdateCertificationMutation = () => {
       const res = await fetch(`/api/certifications/${id}`, {
         method: "PATCH",
         body: formData,
-        // Note: Do NOT set Content-Type header manually when using FormData
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to update certification");
+        throw await extractApiError(res, "Failed to update certification");
       }
 
       return res.json();
     },
     onSuccess: (data, variables) => {
-      // 1. Invalidate the specific item query
-      queryClient.invalidateQueries({ 
-        queryKey: ["certifications", variables.id] 
+      queryClient.invalidateQueries({
+        queryKey: ["certifications", variables.id],
       });
-      
-      // 2. Invalidate the list query to reflect changes in the table/list
-      queryClient.invalidateQueries({ 
-        queryKey: ["certifications"] 
+      queryClient.invalidateQueries({
+        queryKey: ["certifications"],
       });
     },
   });

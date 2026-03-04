@@ -13,10 +13,12 @@ import {
   Users,
   ZoomIn,
   ArrowUpDown,
+  AlertTriangle,
 } from "lucide-react";
 
 import { Pagination } from "@/components/cms/Pagination";
 import { SortContentsModal } from "@/components/cms/SortContentsModal";
+import { extractApiError } from "@/lib/apiError";
 
 // Types based on your domain
 interface Member {
@@ -46,6 +48,7 @@ export default function TeamAdminPage() {
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
   const [pageSize, setPageSize] = useState(10);
+  const [pageError, setPageError] = useState<string | null>(null);
 
   const API_URL = "/api/team-members";
 
@@ -71,15 +74,17 @@ export default function TeamAdminPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this team member?")) return;
+    setPageError(null);
     try {
       const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
       if (res.ok) {
         fetchMembers(meta?.currentPage || 1);
       } else {
-        alert("Failed to delete member.");
+        const err = await extractApiError(res, "Failed to delete member.");
+        setPageError(err.message);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      setPageError(error.message || "Network error.");
     }
   };
 
@@ -129,6 +134,20 @@ export default function TeamAdminPage() {
           </button>
         </div>
       </div>
+
+      {/* Page Error Banner */}
+      {pageError && (
+        <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+          <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-red-800">Couldn&apos;t complete action</p>
+            <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{pageError}</p>
+          </div>
+          <button onClick={() => setPageError(null)} className="shrink-0 text-red-400 hover:text-red-600">
+            <X size={18} />
+          </button>
+        </div>
+      )}
 
       {/* Content */}
       {loading ? (
@@ -460,6 +479,7 @@ function MemberDetailModal({
 // ==========================================
 function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
   const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(
     member?.imageUrl || null,
   );
@@ -470,6 +490,7 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
+    setFormError(null);
 
     const form = e.currentTarget;
     const rawFormData = new FormData(form);
@@ -505,12 +526,11 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
       if (res.ok) {
         onSuccess();
       } else {
-        const err = await res.json();
-        alert(err.error || err.message || "Something went wrong.");
+        const err = await extractApiError(res, "Something went wrong.");
+        setFormError(err.message);
       }
-    } catch (error) {
-      console.error(error);
-      alert("Network error.");
+    } catch (error: any) {
+      setFormError(error.message || "Network error.");
     } finally {
       setSubmitting(false);
     }
@@ -538,7 +558,20 @@ function MemberModal({ isOpen, onClose, member, onSuccess, apiUrl }: any) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
+        <form onSubmit={handleSubmit} className="overflow-y-auto p-6">
+          {formError && (
+            <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+              <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-red-800">Couldn&apos;t save changes</p>
+                <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{formError}</p>
+              </div>
+              <button type="button" onClick={() => setFormError(null)} className="shrink-0 text-red-400 hover:text-red-600">
+                <X size={18} />
+              </button>
+            </div>
+          )}
+
           <div className="flex flex-col gap-6 md:flex-row">
             {/* Image Upload Section */}
             <div className="flex flex-col items-center gap-3 md:w-1/3">

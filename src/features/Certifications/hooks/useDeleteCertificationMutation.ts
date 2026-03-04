@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { extractApiError } from "@/lib/apiError";
 
 export const useDeleteCertificationMutation = () => {
   const queryClient = useQueryClient();
@@ -10,14 +11,12 @@ export const useDeleteCertificationMutation = () => {
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to delete certification");
+        throw await extractApiError(res, "Failed to delete certification");
       }
 
       return res.json();
     },
     onSuccess: () => {
-      // Invalidate the list so the deleted item disappears from the UI
       queryClient.invalidateQueries({ queryKey: ["certifications"] });
     },
   });

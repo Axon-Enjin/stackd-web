@@ -13,6 +13,7 @@ import {
   Eye,
   ZoomIn,
   ArrowUpDown,
+  AlertTriangle,
 } from "lucide-react";
 import { useCreateCertificationMutation } from "@/features/Certifications/hooks/useCreateCertificationMutation";
 import { useDeleteCertificationMutation } from "@/features/Certifications/hooks/useDeleteCertificationMutation";
@@ -44,6 +45,7 @@ export default function CertificationsAdminPage() {
   const [viewingCert, setViewingCert] = useState<Certification | null>(null);
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+  const [pageError, setPageError] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   // TanStack Query Hooks
@@ -59,10 +61,11 @@ export default function CertificationsAdminPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this certification?"))
       return;
+    setPageError(null);
     try {
       await deleteMutation.mutateAsync(id);
-    } catch (error) {
-      alert("Failed to delete certification.");
+    } catch (error: any) {
+      setPageError(error.message || "Failed to delete certification.");
     }
   };
 
@@ -107,6 +110,20 @@ export default function CertificationsAdminPage() {
           </button>
         </div>
       </div>
+
+      {/* Page Error Banner */}
+      {pageError && (
+        <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+          <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-red-800">Couldn&apos;t complete action</p>
+            <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{pageError}</p>
+          </div>
+          <button onClick={() => setPageError(null)} className="shrink-0 text-red-400 hover:text-red-600">
+            <X size={18} />
+          </button>
+        </div>
+      )}
 
       {/* Content */}
       {isLoading ? (
@@ -455,6 +472,7 @@ function CertificationModal({
   const [preview, setPreview] = useState<string | null>(
     certification?.imageUrl || null,
   );
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Mutations
   const createMutation = useCreateCertificationMutation();
@@ -464,6 +482,7 @@ function CertificationModal({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setFormError(null);
 
     const form = e.currentTarget;
     const rawFormData = new FormData(form);
@@ -488,7 +507,7 @@ function CertificationModal({
       }
       onClose();
     } catch (error: any) {
-      alert(error.message || "Failed to save certification.");
+      setFormError(error.message || "Failed to save certification.");
     }
   };
 
@@ -515,6 +534,19 @@ function CertificationModal({
         </div>
 
         <form onSubmit={handleSubmit} className="overflow-y-auto p-6">
+          {formError && (
+            <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+              <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-red-800">Couldn&apos;t save changes</p>
+                <p className="mt-0.5 whitespace-pre-wrap text-sm text-red-600">{formError}</p>
+              </div>
+              <button type="button" onClick={() => setFormError(null)} className="shrink-0 text-red-400 hover:text-red-600">
+                <X size={18} />
+              </button>
+            </div>
+          )}
+
           <div className="flex flex-col gap-6 md:flex-row">
             {/* Image Upload Section */}
             <div className="flex flex-col items-center gap-3 md:w-1/3">
