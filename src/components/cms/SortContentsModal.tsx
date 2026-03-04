@@ -6,6 +6,7 @@ import {
     closestCenter,
     KeyboardSensor,
     PointerSensor,
+    TouchSensor,
     useSensor,
     useSensors,
     DragEndEvent,
@@ -75,6 +76,7 @@ export function SortContentsModal({
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         }),
@@ -393,7 +395,7 @@ function SortableCard({
     return (
         <div
             ref={setNodeRef}
-            style={style}
+            style={{ ...style, touchAction: "none" }}
             className={`group relative flex flex-col items-center gap-2.5 rounded border-2 p-3 transition-all ${isDragging
                 ? "z-10 border-[#2F80ED] bg-blue-50/50 opacity-40"
                 : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-md"
@@ -401,7 +403,7 @@ function SortableCard({
         >
             {/* Drag Handle */}
             <button
-                className="absolute right-1.5 top-1.5 cursor-grab rounded-sm p-1 text-gray-300 opacity-0 transition-all hover:bg-gray-100 hover:text-gray-500 group-hover:opacity-100 active:cursor-grabbing"
+                className="absolute right-1.5 top-1.5 cursor-grab rounded-sm p-1 text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-500 active:cursor-grabbing"
                 {...attributes}
                 {...listeners}
             >
