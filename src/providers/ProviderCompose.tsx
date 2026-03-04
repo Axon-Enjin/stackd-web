@@ -3,17 +3,20 @@ import { QueryProvider } from "./QueryProvider";
 import { ToastProvider } from "./ToastProvider";
 import { configs } from "@/configs/configs";
 import { BreakpointIndicator } from "@/components/widgets/BreakpointIndicator";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 type Props = {
   children: React.ReactNode;
 };
 
 export const ProviderCompose = (props: Props) => {
-  console.log(configs.environment);
+
   return (
-    <>
+    <GoogleOAuthProvider
+      clientId={configs.googleAuth.clientId!}
+    >
       <QueryProvider>{props.children}</QueryProvider>
       <ToastProvider />
-    </>
+    </GoogleOAuthProvider>
   );
 };
