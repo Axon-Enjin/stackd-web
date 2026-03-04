@@ -55,7 +55,7 @@ export function Pagination({
                 <select
                     value={pageSize}
                     onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                    className="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 outline-none transition-colors hover:border-gray-300 focus:border-[#0B1F3B] focus:ring-1 focus:ring-[#0B1F3B]"
+                    className="rounded-sm border border-gray-200 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 outline-none transition-colors hover:border-gray-300 focus:border-[#0B1F3B] focus:ring-1 focus:ring-[#0B1F3B]"
                 >
                     {PAGE_SIZE_OPTIONS.map((size) => (
                         <option key={size} value={size}>
@@ -76,7 +76,7 @@ export function Pagination({
                 <button
                     disabled={currentPage === 1}
                     onClick={() => onPageChange(1)}
-                    className="rounded-lg border border-gray-200 bg-white p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-40"
+                    className="rounded-sm border border-gray-200 bg-white p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-40"
                     title="First page"
                 >
                     <ChevronsLeft size={16} />
@@ -86,7 +86,7 @@ export function Pagination({
                 <button
                     disabled={currentPage === 1}
                     onClick={() => onPageChange(currentPage - 1)}
-                    className="rounded-lg border border-gray-200 bg-white p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-40"
+                    className="rounded-sm border border-gray-200 bg-white p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-40"
                     title="Previous page"
                 >
                     <ChevronLeft size={16} />
@@ -103,9 +103,9 @@ export function Pagination({
                             <button
                                 key={page}
                                 onClick={() => onPageChange(page as number)}
-                                className={`min-w-[36px] rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors ${currentPage === page
-                                        ? "bg-[#0B1F3B] text-white shadow-sm"
-                                        : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                className={`min-w-[36px] rounded-sm px-2.5 py-1.5 text-sm font-medium transition-colors ${currentPage === page
+                                    ? "bg-[#0B1F3B] text-white shadow-sm"
+                                    : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                                     }`}
                             >
                                 {page}
@@ -118,7 +118,7 @@ export function Pagination({
                 <button
                     disabled={currentPage === effectiveTotalPages}
                     onClick={() => onPageChange(currentPage + 1)}
-                    className="rounded-lg border border-gray-200 bg-white p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-40"
+                    className="rounded-sm border border-gray-200 bg-white p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-40"
                     title="Next page"
                 >
                     <ChevronRight size={16} />
@@ -128,7 +128,7 @@ export function Pagination({
                 <button
                     disabled={currentPage === effectiveTotalPages}
                     onClick={() => onPageChange(effectiveTotalPages)}
-                    className="rounded-lg border border-gray-200 bg-white p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-40"
+                    className="rounded-sm border border-gray-200 bg-white p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-40"
                     title="Last page"
                 >
                     <ChevronsRight size={16} />

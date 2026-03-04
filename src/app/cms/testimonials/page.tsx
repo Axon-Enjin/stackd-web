@@ -22,6 +22,7 @@ import { useUpdateTestimonialMutation } from "@/features/Testimonials/hooks/useU
 import { Pagination } from "@/components/cms/Pagination";
 import { SortContentsModal } from "@/components/cms/SortContentsModal";
 import { useQueryClient } from "@tanstack/react-query";
+import { truncateWithEllipsis } from "@/lib/utils";
 
 // ==========================================
 // Types
@@ -99,17 +100,17 @@ export default function TestimonialsAdminPage() {
             Manage client feedback, quotes, and success stories.
           </p>
         </div>
-        <div className="flex w-full gap-2 sm:w-auto">
+        <div className="flex w-full gap-2 sm:w-auto max-sm:flex-col-reverse max-sm:items-start">
           <button
             onClick={() => setIsSortModalOpen(true)}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
+            className="flex flex-1 items-center justify-center gap-2 rounded-sm border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 sm:flex-initial"
           >
             <ArrowUpDown size={18} />
             Sort
           </button>
           <button
             onClick={openCreate}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-[#2570d4] sm:flex-initial"
+            className="flex flex-1 items-center justify-center gap-2 rounded-sm bg-[#2F80ED] px-4 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-[#2570d4] sm:flex-initial"
           >
             <Plus size={20} />
             Add Testimonial
@@ -119,7 +120,7 @@ export default function TestimonialsAdminPage() {
 
       {/* Page Error Banner */}
       {pageError && (
-        <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+        <div className="mb-6 flex items-start gap-3 rounded-sm border border-red-200 bg-red-50 p-4">
           <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-red-800">Couldn&apos;t complete action</p>
@@ -139,7 +140,7 @@ export default function TestimonialsAdminPage() {
       ) : (
         <>
           {/* Row List */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div className="rounded border border-gray-200 bg-white shadow-sm">
             {testimonials.length === 0 ? (
               <div className="py-16 text-center text-gray-500">
                 <MessageSquareQuote
@@ -296,11 +297,11 @@ function TestimonialRow({
 
       {/* Text */}
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-sm font-semibold text-gray-900">
-          {testimonial.name}
+        <h3 className="  text-sm font-semibold text-gray-900">
+          {truncateWithEllipsis(testimonial.name, 30)}
         </h3>
-        <p className="mt-0.5 truncate text-xs text-gray-500">
-          {testimonial.role} — "{testimonial.body}"
+        <p className="mt-0.5   text-xs text-gray-500">
+          {truncateWithEllipsis(testimonial.role, 30)} — "{truncateWithEllipsis(testimonial.body, 30)}"
         </p>
       </div>
 
@@ -316,13 +317,13 @@ function TestimonialRow({
             e.stopPropagation();
             setMenuOpen(!menuOpen);
           }}
-          className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+          className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
         >
           <MoreVertical size={18} />
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-xl border border-gray-100 bg-white py-1 shadow-xl">
+          <div className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded border border-gray-100 bg-white py-1 shadow-xl">
             <button
               onClick={(e) => { e.stopPropagation(); setMenuOpen(false); onView(); }}
               className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
@@ -366,15 +367,20 @@ function TestimonialDetailModal({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
-      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-lg sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-sm border border-gray-200 bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-lg sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between border-b p-6">
-          <h2 className="text-xl font-bold text-gray-900">Testimonial Details</h2>
+        <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50/80 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-[#2F80ED]/10">
+              <MessageSquareQuote size={16} className="text-[#2F80ED]" />
+            </div>
+            <h2 className="text-lg font-semibold text-gray-900">Testimonial Details</h2>
+          </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600"
           >
-            <X size={22} />
+            <X size={20} />
           </button>
         </div>
 
@@ -400,25 +406,25 @@ function TestimonialDetailModal({
           </div>
 
           {/* Info */}
-          <div className="space-y-4">
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <div className="space-y-3">
+            <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
                 Name
               </label>
-              <p className="mt-1 text-base font-medium text-gray-900">
+              <p className="mt-1 text-sm font-medium text-gray-900">
                 {testimonial.name}
               </p>
             </div>
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
                 Role / Company
               </label>
               <p className="mt-1 text-sm font-medium text-[#2F80ED]">
                 {testimonial.role}
               </p>
             </div>
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
                 Testimonial Quote
               </label>
               <p className="mt-1 text-sm leading-relaxed text-gray-700 italic whitespace-pre-wrap">
@@ -429,26 +435,26 @@ function TestimonialDetailModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between border-t px-6 py-4">
+        <div className="flex items-center justify-between border-t border-gray-200 bg-gray-50/50 px-6 py-3">
           <button
             onClick={onDelete}
-            className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
+            className="flex items-center gap-2 rounded-sm border border-transparent px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:border-red-200 hover:bg-red-50"
           >
-            <Trash2 size={16} />
+            <Trash2 size={15} />
             Delete
           </button>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+              className="rounded-sm border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50"
             >
               Close
             </button>
             <button
               onClick={onEdit}
-              className="flex items-center gap-2 rounded-lg bg-[#2F80ED] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2570d4]"
+              className="flex items-center gap-2 rounded-sm bg-[#0B1F3B] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0B1F3B]/90"
             >
-              <Edit2 size={16} />
+              <Edit2 size={15} />
               Update
             </button>
           </div>
@@ -529,22 +535,27 @@ function TestimonialModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
-      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
-        <div className="flex shrink-0 items-center justify-between border-b bg-gray-50/50 p-5 sm:p-6">
-          <h2 className="text-xl font-bold text-gray-900">
-            {isEditing ? "Edit Testimonial" : "Add New Testimonial"}
-          </h2>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-sm border border-gray-200 bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
+        <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50/80 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-[#2F80ED]/10">
+              <MessageSquareQuote size={16} className="text-[#2F80ED]" />
+            </div>
+            <h2 className="text-lg font-semibold text-gray-900">
+              {isEditing ? "Edit Testimonial" : "Add New Testimonial"}
+            </h2>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 transition-colors hover:text-gray-600"
+            className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="overflow-y-auto p-6">
           {formError && (
-            <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+            <div className="mb-6 flex items-start gap-3 rounded-sm border border-red-200 bg-red-50 p-4">
               <AlertTriangle size={20} className="mt-0.5 shrink-0 text-red-500" />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-red-800">Couldn&apos;t save changes</p>
@@ -608,7 +619,7 @@ function TestimonialModal({
                     name="name"
                     defaultValue={testimonial?.name}
                     required
-                    className="w-full rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
+                    className="w-full rounded-sm border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
                     placeholder="e.g. Jane Doe"
                   />
                 </div>
@@ -621,7 +632,7 @@ function TestimonialModal({
                     name="role"
                     defaultValue={testimonial?.role}
                     required
-                    className="w-full rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
+                    className="w-full rounded-sm border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
                     placeholder="e.g. CEO at TechCorp"
                   />
                 </div>
@@ -636,26 +647,26 @@ function TestimonialModal({
                   defaultValue={testimonial?.body}
                   required
                   rows={5}
-                  className="w-full resize-none rounded-lg border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
+                  className="w-full resize-none rounded-sm border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
                   placeholder="What did they say about your service?..."
                 />
               </div>
             </div>
           </div>
 
-          <div className="mt-8 flex justify-end gap-3 border-t pt-6">
+          <div className="mt-8 flex justify-end gap-2 border-t border-gray-200 pt-6">
             <button
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="rounded-lg px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-100"
+              className="rounded-sm border border-gray-200 bg-white px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending}
-              className="flex min-w-[140px] items-center justify-center gap-2 rounded-lg bg-[#2F80ED] px-5 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-[#2570d4] disabled:opacity-70"
+              className="flex min-w-[140px] items-center justify-center gap-2 rounded-sm bg-[#0B1F3B] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[#0B1F3B]/90 disabled:opacity-70"
             >
               {isPending ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -712,7 +723,7 @@ function PhotoViewer({
       <img
         src={imageUrl}
         alt="Full view"
-        className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+        className="max-h-[85vh] max-w-[90vw] rounded-sm object-contain shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       />
     </div>
