@@ -1,10 +1,7 @@
-import { useState, useEffect } from "react";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { AuthChangeEvent, Session } from "@supabase/supabase-js";
+import { useState } from "react";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export function useCalendarBooking() {
-  const supabase = createSupabaseBrowserClient();
-
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [availableSlots, setAvailableSlots] = useState<Date[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
@@ -14,6 +11,7 @@ export function useCalendarBooking() {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [confirmedBooking, setConfirmedBooking] = useState<any>(null);
   const [authError, setAuthError] = useState<string | null>(null);
 
   const [timezone, setTimezone] = useState<string>(() =>
@@ -22,67 +20,26 @@ export function useCalendarBooking() {
       : "UTC",
   );
 
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-
-  useEffect(() => {
-    const checkPendingBooking = async () => {
-      const pendingEmail = localStorage.getItem("stackd_pending_booking_email");
-      if (!pendingEmail) {
-        setIsInitialLoad(false);
-        return;
-      }
-
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
-        setIsInitialLoad(false);
-        return;
-      }
-
-      const pendingName = localStorage.getItem("stackd_pending_booking_name");
-      const pendingTime = localStorage.getItem("stackd_pending_booking_time");
-
-      setSubmitting(true);
-      setAuthError(null);
-
-      // Verification Step
-      if (session.user.email?.toLowerCase() !== pendingEmail.toLowerCase()) {
-        setAuthError(
-          `The Google account selected (${session.user.email}) does not match the email requested (${pendingEmail}).`,
-        );
-
-        // Delete mismatched user silently
-        await fetch("/api/auth/delete-user", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: session.user.id }),
-        }).catch(console.error);
-
-        await supabase.auth.signOut();
-
-        localStorage.removeItem("stackd_pending_booking_email");
-        localStorage.removeItem("stackd_pending_booking_name");
-        localStorage.removeItem("stackd_pending_booking_time");
-        setSubmitting(false);
-        setIsInitialLoad(false);
-        return;
-      }
-
-      // Success path
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
       try {
         const res = await fetch("/api/booking", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${tokenResponse.access_token}`,
+          },
           body: JSON.stringify({
-            name: pendingName,
-            startTime: pendingTime,
+            name,
+            email,
+            startTime: selectedSlot?.toISOString(),
+            timezone,
           }),
         });
 
         if (res.ok) {
-          setName(pendingName || "");
-          if (pendingTime) setSelectedSlot(new Date(pendingTime));
+          const { booking } = await res.json();
+          setConfirmedBooking(booking);
           setIsSuccess(true);
         } else {
           const err = await res.json();
@@ -92,28 +49,16 @@ export function useCalendarBooking() {
         console.error(error);
         setAuthError("Network error while booking.");
       } finally {
-        localStorage.removeItem("stackd_pending_booking_email");
-        localStorage.removeItem("stackd_pending_booking_name");
-        localStorage.removeItem("stackd_pending_booking_time");
         setSubmitting(false);
-        setIsInitialLoad(false);
       }
-    };
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event: AuthChangeEvent, session: Session | null) => {
-        if (event === "SIGNED_IN" && session) {
-          checkPendingBooking();
-        }
-      },
-    );
-
-    checkPendingBooking();
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
+    },
+    onError: (error) => {
+      setAuthError(
+        `Failed to authenticate with Google: ${error.error_description || "Unknown error"}`,
+      );
+      setSubmitting(false);
+    },
+  });
 
   const handleDateSelect = async (date: Date | undefined) => {
     setSelectedDate(date);
@@ -148,25 +93,8 @@ export function useCalendarBooking() {
     setSubmitting(true);
     setAuthError(null);
 
-    localStorage.setItem("stackd_pending_booking_name", name);
-    localStorage.setItem("stackd_pending_booking_email", email);
-    localStorage.setItem("stackd_pending_booking_timezone", timezone);
-    localStorage.setItem(
-      "stackd_pending_booking_time",
-      selectedSlot.toISOString(),
-    );
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/api/auth/callback?next=/cta`,
-      },
-    });
-
-    if (error) {
-      setAuthError(`Failed to authenticate with Google: ${error.message}`);
-      setSubmitting(false);
-    }
+    // Call the googleLogin function to trigger the popup
+    googleLogin();
   };
 
   return {
@@ -183,10 +111,11 @@ export function useCalendarBooking() {
     setEmail,
     submitting,
     isSuccess,
+    confirmedBooking,
     authError,
     timezone,
     setTimezone,
-    isInitialLoad,
+    isInitialLoad: false, // Set to false since we don't do initial loading checks anymore
     handleDateSelect,
     handleBookingSubmit,
   };

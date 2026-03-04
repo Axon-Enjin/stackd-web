@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { format, isBefore, startOfDay } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import {
   Loader2,
   CheckCircle2,
@@ -31,6 +32,7 @@ export function CalendarBookingUI() {
     setEmail,
     submitting,
     isSuccess,
+    confirmedBooking,
     authError,
     timezone,
     setTimezone,
@@ -42,6 +44,20 @@ export function CalendarBookingUI() {
   const [showTzPicker, setShowTzPicker] = useState(false);
   const [tzSearch, setTzSearch] = useState("");
   const tzDropdownRef = useRef<HTMLDivElement>(null);
+
+  const getGMTOffset = (tz: string) => {
+    try {
+      const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: tz,
+        timeZoneName: "shortOffset",
+      });
+      const parts = formatter.formatToParts(new Date());
+      const offsetPart = parts.find((p) => p.type === "timeZoneName");
+      return offsetPart ? offsetPart.value : "";
+    } catch (e) {
+      return "";
+    }
+  };
 
   // Close timezone picker on outside click
   useEffect(() => {
@@ -80,7 +96,13 @@ export function CalendarBookingUI() {
         <p className="mb-6 text-gray-600">
           Thank you, {name}! Your strategy call is scheduled for{" "}
           <span className="font-semibold text-gray-900">
-            {selectedSlot && format(selectedSlot, "MMMM d, yyyy 'at' h:mm a")}
+            {selectedSlot &&
+              formatInTimeZone(
+                selectedSlot,
+                timezone,
+                "MMMM d, yyyy 'at' h:mm a",
+              )}{" "}
+            ({getGMTOffset(timezone)})
           </span>
           .
         </p>
@@ -114,7 +136,9 @@ export function CalendarBookingUI() {
               size={13}
               className="shrink-0 text-indigo-400 group-hover:text-indigo-600"
             />
-            <span className="flex-1 truncate">{timezone}</span>
+            <span className="flex-1 truncate">
+              {timezone} ({getGMTOffset(timezone)})
+            </span>
             <span className="shrink-0 text-indigo-500 group-hover:text-indigo-600">
               Verify your timezone
             </span>
@@ -183,7 +207,10 @@ export function CalendarBookingUI() {
                         ) : (
                           <span className="w-[13px] shrink-0" />
                         )}
-                        <span>{tz}</span>
+                        <span className="flex-1 truncate">{tz}</span>
+                        <span className="shrink-0 text-[10px] opacity-50">
+                          {getGMTOffset(tz)}
+                        </span>
                       </button>
                     </li>
                   ));
@@ -231,6 +258,20 @@ export function CalendarBookingUI() {
                 : "Available Times"}
             </h3>
 
+            <div className="mb-6 flex items-center gap-3 rounded-xl border border-indigo-100/50 bg-indigo-50/40 p-3">
+              <AlertCircle size={14} className="shrink-0 text-indigo-500" />
+              <div className="text-[10px] leading-tight text-gray-600">
+                <span className="mb-0.5 block font-semibold text-indigo-700">
+                  Timezone Context
+                </span>
+                All slots reflect your selected timezone:{" "}
+                <span className="font-medium">
+                  {timezone} ({getGMTOffset(timezone)})
+                </span>
+                . Business hours are set to 9:00 AM – 5:00 PM US Eastern Time.
+              </div>
+            </div>
+
             {!selectedDate ? (
               <div className="mt-8 text-sm text-gray-400 italic">
                 Please select a date from the calendar first.
@@ -251,7 +292,7 @@ export function CalendarBookingUI() {
                     onClick={() => setSelectedSlot(slot)}
                     className="rounded-lg border border-indigo-100 px-4 py-3 text-center text-sm font-medium text-indigo-700 transition-all hover:border-indigo-300 hover:bg-indigo-50"
                   >
-                    {format(slot, "h:mm a")}
+                    {formatInTimeZone(slot, timezone, "h:mm a")}
                   </button>
                 ))}
               </div>
@@ -275,9 +316,12 @@ export function CalendarBookingUI() {
                 Selected Time
               </span>
               <span className="font-semibold">
-                {format(selectedSlot, "EEEE, MMMM d")}
+                {formatInTimeZone(selectedSlot, timezone, "EEEE, MMMM d")}
               </span>
-              <span className="text-lg">{format(selectedSlot, "h:mm a")}</span>
+              <span className="text-lg">
+                {formatInTimeZone(selectedSlot, timezone, "h:mm a")} (
+                {getGMTOffset(timezone)})
+              </span>
             </div>
 
             {authError && (

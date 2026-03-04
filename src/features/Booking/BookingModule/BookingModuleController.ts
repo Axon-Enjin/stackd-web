@@ -17,12 +17,17 @@ export class BookingModuleController {
     return this.getAvailableSlotsUseCase.execute(date, timezone);
   }
 
-  async createBooking(name: string, email: string, startTimeString: string) {
+  async createBooking(
+    name: string,
+    email: string,
+    startTimeString: string,
+    timezone: string,
+  ) {
     const startTime = new Date(startTimeString);
     if (isNaN(startTime.getTime())) {
       throw new Error("Invalid start time format.");
     }
 
-    return this.createBookingUseCase.execute(name, email, startTime);
+    return this.createBookingUseCase.execute(name, email, startTime, timezone);
   }
 }
