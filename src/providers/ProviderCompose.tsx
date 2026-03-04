@@ -13,7 +13,7 @@ export const ProviderCompose = (props: Props) => {
 
   return (
     <GoogleOAuthProvider
-      clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+      clientId={configs.googleAuth.clientId!}
     >
       <QueryProvider>{props.children}</QueryProvider>
       <ToastProvider />
