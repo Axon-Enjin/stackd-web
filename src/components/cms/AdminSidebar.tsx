@@ -8,6 +8,8 @@ import {
   Award,
   MessageSquareQuote,
   X,
+  Globe,
+  ExternalLink,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -112,6 +114,30 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
               </Link>
             );
           })}
+
+          {/* Divider */}
+          <div className="my-4 border-t border-gray-200" />
+
+          {/* External link */}
+          <p className="mb-3 px-3 text-[11px] font-semibold text-gray-400 uppercase tracking-widest">
+            External
+          </p>
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-3 rounded px-3 py-2.5 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+          >
+            <Globe
+              size={20}
+              className="shrink-0 text-gray-400 transition-colors group-hover:text-gray-600"
+            />
+            View Live Website
+            <ExternalLink
+              size={14}
+              className="ml-auto shrink-0 text-gray-300 transition-colors group-hover:text-gray-500"
+            />
+          </a>
         </nav>
 
 
