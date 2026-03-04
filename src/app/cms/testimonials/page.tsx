@@ -139,7 +139,7 @@ export default function TestimonialsAdminPage() {
       ) : (
         <>
           {/* Row List */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
             {testimonials.length === 0 ? (
               <div className="py-16 text-center text-gray-500">
                 <MessageSquareQuote

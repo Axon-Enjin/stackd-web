@@ -19,7 +19,7 @@ export const createRegularHandler = (
   const options = {
     limiter: {
       // 60 request per 60 seconds
-      requestPerDuration: 2,
+      requestPerDuration: 60,
       durationSeconds: 60,
       ...optionsParameter?.limiter,
     },
