@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { certificationsModuleController } from "@/features/Certifications/CertificationsModule"; // Adjust the import path as needed
+import { certificationsModuleController } from "@/features/Certifications/CertificationsModule";
+import { createRegularHandler } from "@/lib/api/createHandler";
+import {
+  BadRequestError,
+  UnprocessableEntityError,
+} from "@/lib/errors/HttpError";
 
-export async function GET(request: NextRequest) {
+export const GET = createRegularHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
 
   // Support ?all=true for fetching all items (used by sort modal)
@@ -13,16 +18,21 @@ export async function GET(request: NextRequest) {
         message: "GET all certifications",
         data,
       },
-      { status: 200 }
+      { status: 200 },
     );
   }
 
   const pageNumber = parseInt(searchParams.get("pageNumber") || "1");
   const pageSize = parseInt(searchParams.get("pageSize") || "10");
 
+  if (isNaN(pageNumber) || isNaN(pageSize))
+    throw new UnprocessableEntityError(
+      "pageNumber and pageSize must be valid numbers",
+    );
+
   const data = await certificationsModuleController.listCertifications(
     pageNumber,
-    pageSize
+    pageSize,
   );
 
   return NextResponse.json(
@@ -37,55 +47,31 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(data.count / pageSize),
       },
     },
-    { status: 200 }
+    { status: 200 },
   );
-}
+});
 
-export async function POST(request: Request) {
-  try {
-    const formData = await request.formData();
+export const POST = createRegularHandler(async (request: NextRequest) => {
+  const formData = await request.formData();
 
-    // 1. Extract the file
-    const image = formData.get("image") as File;
-    if (!image) {
-      return NextResponse.json({ error: "Image is required" }, { status: 400 });
-    }
+  // 1. Extract the file
+  const image = formData.get("image") as File;
+  if (!image) throw new BadRequestError("Image is required");
 
-    // 2. Extract and validate text fields
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
+  // 2. Extract and validate text fields
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
 
-    if (!title || !description) {
-      return NextResponse.json(
-        { error: "Missing required fields (title, description)" },
-        { status: 400 }
-      );
-    }
+  if (!title || !description)
+    throw new BadRequestError("Missing required fields (title, description)");
 
-    // 3. Call the controller
-    const newCertification =
-      await certificationsModuleController.createCertification(
-        title,
-        description,
-        image
-      );
-
-    return NextResponse.json(newCertification, { status: 201 });
-  } catch (error: any) {
-    console.error("Create Certification Error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal Server Error" },
-      { status: 500 }
+  // 3. Call the controller
+  const newCertification =
+    await certificationsModuleController.createCertification(
+      title,
+      description,
+      image,
     );
-  }
-}
 
-/**
- * Frontend POST example:
- * const formData = new FormData();
- * formData.append("title", "AWS Certified Solutions Architect");
- * formData.append("description", "Validates technical expertise in AWS cloud.");
- * formData.append("image", fileInput.files[0]);
- *
- * // Sent via POST to /api/certifications
- */
+  return NextResponse.json(newCertification, { status: 201 });
+});

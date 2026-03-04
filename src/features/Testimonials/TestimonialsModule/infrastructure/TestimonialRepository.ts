@@ -128,4 +128,16 @@ export class TestimonialRepository implements ITestimonialRepository {
       Testimonial.hydrate(this.toDomain(item)),
     );
   }
+
+  async countAll(): Promise<number> {
+    const supabase = await createSupabaseServerClient();
+    const { count, error } = await supabase
+      .from(this.TABLE_NAME)
+      .select("*", { count: "exact", head: true });
+
+    if (error)
+      throw new Error(`Failed to count testimonials: ${error.message}`);
+
+    return count || 0;
+  }
 }
