@@ -1,49 +1,54 @@
 import { bookingModuleController } from "@/features/Booking/BookingModule";
+import { emailService } from "@/features/Booking/services/EmailService";
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { OAuth2Client } from "google-auth-library";
 
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_PROJECT_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set({ name, value, ...options }),
-              );
-            } catch {
-              // Ignore in API route
-            }
-          },
-        },
-      },
-    );
-
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user || !user.email) {
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
-        { error: "Unauthorized. You must be logged in to book." },
+        { error: "Unauthorized. Missing or invalid Authorization header." },
+        { status: 401 },
+      );
+    }
+    const token = authHeader.split(" ")[1];
+
+    let userEmail: string | undefined;
+    try {
+      const client = new OAuth2Client();
+      const tokenInfo = await client.getTokenInfo(token);
+      userEmail = tokenInfo.email;
+    } catch (error) {
+      return NextResponse.json(
+        { error: "Unauthorized. Invalid Google token." },
         { status: 401 },
       );
     }
 
-    const { name, startTime } = await request.json();
-
-    if (!name || !startTime) {
+    if (!userEmail) {
       return NextResponse.json(
-        { error: "Name and startTime are required" },
+        { error: "Unauthorized. Could not read email from token." },
+        { status: 401 },
+      );
+    }
+
+    const { name, email, startTime, timezone } = await request.json();
+
+    if (!name || !email || !startTime || !timezone) {
+      return NextResponse.json(
+        { error: "Name, email, startTime, and timezone are required" },
+        { status: 400 },
+      );
+    }
+
+    // Verify email match (form vs OAuth)
+    if (email.toLowerCase() !== userEmail.toLowerCase()) {
+      return NextResponse.json(
+        {
+          error:
+            "Email mismatch. The email entered in the form does not match your Google account. Please use the same email.",
+        },
         { status: 400 },
       );
     }
@@ -51,9 +56,13 @@ export async function POST(request: NextRequest) {
     // Force the email to be the authenticated user's email
     const booking = await bookingModuleController.createBooking(
       name,
-      user.email,
+      userEmail,
       startTime,
+      timezone,
     );
+
+    // Fire-and-forget admin notification
+    emailService.sendAdminNotification(booking).catch(console.error);
 
     return NextResponse.json({ booking }, { status: 201 });
   } catch (error: any) {
