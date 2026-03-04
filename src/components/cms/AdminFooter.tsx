@@ -13,7 +13,7 @@ export function AdminFooter() {
           {/* Left: Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#2F80ED] to-[#2FB7A8] text-[10px] font-black text-white shadow-md">
+              <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-gradient-to-br from-[#2F80ED] to-[#2FB7A8] text-[10px] font-black text-white shadow-md">
                 S
               </div>
               <span className="text-base font-bold tracking-[0.12em] text-white uppercase select-none">
@@ -25,21 +25,7 @@ export function AdminFooter() {
             </p>
           </div>
 
-          {/* Right: Links-style info */}
-          <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:gap-8">
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-white/30">
-                Platform
-              </span>
-              <span className="text-sm text-white/60">Stackd CMS v1.0</span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-white/30">
-                Powered by
-              </span>
-              <span className="text-sm text-white/60">Axon Enjin</span>
-            </div>
-          </div>
+
         </div>
 
         {/* Divider + bottom */}

@@ -8,6 +8,8 @@ import {
   Award,
   MessageSquareQuote,
   X,
+  Globe,
+  ExternalLink,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -73,7 +75,7 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
           </span>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
           >
             <X size={18} />
           </button>
@@ -93,7 +95,7 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                 href={item.href}
                 onClick={onClose}
                 className={`
-                  group flex items-center gap-3 rounded-xl px-3 py-2.5
+                  group flex items-center gap-3 rounded px-3 py-2.5
                   text-sm font-medium transition-all duration-200
                   ${active
                     ? "bg-[#0B1F3B] text-white shadow-md shadow-[#0B1F3B]/20"
@@ -104,22 +106,41 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                 <Icon
                   size={20}
                   className={`shrink-0 transition-colors ${active
-                      ? "text-[#2FB7A8]"
-                      : "text-gray-400 group-hover:text-gray-600"
+                    ? "text-[#2FB7A8]"
+                    : "text-gray-400 group-hover:text-gray-600"
                     }`}
                 />
                 {item.label}
               </Link>
             );
           })}
+
+          {/* Divider */}
+          <div className="my-4 border-t border-gray-200" />
+
+          {/* External link */}
+          <p className="mb-3 px-3 text-[11px] font-semibold text-gray-400 uppercase tracking-widest">
+            External
+          </p>
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-3 rounded px-3 py-2.5 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+          >
+            <Globe
+              size={20}
+              className="shrink-0 text-gray-400 transition-colors group-hover:text-gray-600"
+            />
+            View Live Website
+            <ExternalLink
+              size={14}
+              className="ml-auto shrink-0 text-gray-300 transition-colors group-hover:text-gray-500"
+            />
+          </a>
         </nav>
 
-        {/* Footer / branding */}
-        <div className="border-t border-gray-100 px-5 py-4">
-          <p className="text-[11px] font-medium text-gray-300 tracking-wider">
-            STACKD CMS v1.0
-          </p>
-        </div>
+
       </aside>
     </>
   );

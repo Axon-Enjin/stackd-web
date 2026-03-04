@@ -6,6 +6,7 @@ import {
     closestCenter,
     KeyboardSensor,
     PointerSensor,
+    TouchSensor,
     useSensor,
     useSensors,
     DragEndEvent,
@@ -75,6 +76,7 @@ export function SortContentsModal({
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         }),
@@ -239,13 +241,13 @@ export function SortContentsModal({
             onClick={onClose}
         >
             <div
-                className="relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
+                className="relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-sm bg-white shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
                 <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#2F80ED]/10">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-[#2F80ED]/10">
                             <ArrowUpDown size={18} className="text-[#2F80ED]" />
                         </div>
                         <div>
@@ -257,14 +259,14 @@ export function SortContentsModal({
                     </div>
                     <div className="flex items-center gap-3">
                         {saving && (
-                            <div className="flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-medium text-[#2F80ED]">
+                            <div className="flex items-center gap-2 rounded-sm bg-blue-50 px-2 py-1.5 text-xs font-medium text-[#2F80ED] sm:px-3">
                                 <Loader2 size={14} className="animate-spin" />
-                                Saving...
+                                <span className="hidden sm:inline">Saving...</span>
                             </div>
                         )}
                         <button
                             onClick={onClose}
-                            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+                            className="rounded-sm p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
                         >
                             <X size={20} />
                         </button>
@@ -273,7 +275,7 @@ export function SortContentsModal({
 
                 {/* Error Banner */}
                 {error && (
-                    <div className="mx-6 mt-4 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+                    <div className="mx-6 mt-4 flex items-start gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3">
                         <AlertTriangle size={18} className="mt-0.5 shrink-0 text-red-500" />
                         <div className="min-w-0 flex-1">
                             <p className="text-sm font-medium text-red-800">Couldn&apos;t update order</p>
@@ -346,7 +348,7 @@ export function SortContentsModal({
                     </p>
                     <button
                         onClick={onClose}
-                        className="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                        className="rounded-sm bg-gray-100 px-5 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
                     >
                         Done
                     </button>
@@ -394,14 +396,15 @@ function SortableCard({
         <div
             ref={setNodeRef}
             style={style}
-            className={`group relative flex flex-col items-center gap-2.5 rounded-xl border-2 p-3 transition-all ${isDragging
+            className={`group relative flex flex-col items-center gap-2.5 rounded border-2 p-3 transition-all ${isDragging
                 ? "z-10 border-[#2F80ED] bg-blue-50/50 opacity-40"
                 : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-md"
                 }`}
         >
             {/* Drag Handle */}
             <button
-                className="absolute right-1.5 top-1.5 cursor-grab rounded-md p-1 text-gray-300 opacity-0 transition-all hover:bg-gray-100 hover:text-gray-500 group-hover:opacity-100 active:cursor-grabbing"
+                className="absolute right-1.5 top-1.5 cursor-grab rounded-sm p-1 text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-500 active:cursor-grabbing"
+                style={{ touchAction: "none" }}
                 {...attributes}
                 {...listeners}
             >
@@ -409,7 +412,7 @@ function SortableCard({
             </button>
 
             {/* Image */}
-            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-gray-100">
                 {imageUrl ? (
                     <img
                         src={imageUrl}
@@ -458,8 +461,8 @@ function OverlayCard({
     const imageUrl = item[imageKey];
 
     return (
-        <div className="flex flex-col items-center gap-2.5 rounded-xl border-2 border-[#2F80ED] bg-white p-3 shadow-xl ring-4 ring-[#2F80ED]/20">
-            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+        <div className="flex flex-col items-center gap-2.5 rounded border-2 border-[#2F80ED] bg-white p-3 shadow-xl ring-4 ring-[#2F80ED]/20">
+            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-gray-100">
                 {imageUrl ? (
                     <img
                         src={imageUrl}

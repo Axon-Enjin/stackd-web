@@ -57,7 +57,7 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
         <div className="flex items-center gap-3">
           <button
             onClick={onToggleSidebar}
-            className="rounded-lg p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white md:hidden"
+            className="rounded-sm p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white md:hidden"
             aria-label="Toggle sidebar"
           >
             <Menu size={22} />
@@ -65,7 +65,7 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
 
           <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
             {/* Logo mark */}
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#2F80ED] to-[#2FB7A8] text-xs font-black text-white shadow-md">
+            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-gradient-to-br from-[#2F80ED] to-[#2FB7A8] text-xs font-black text-white shadow-md">
               S
             </div>
             <span className="text-lg font-bold tracking-[0.12em] text-white uppercase select-none">
@@ -78,7 +78,7 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-2 rounded-xl px-3 py-2 transition-colors hover:bg-white/10"
+            className="flex items-center gap-2 rounded px-3 py-2 transition-colors hover:bg-white/10"
             aria-label="User menu"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#2F80ED] to-[#2FB7A8] shadow-inner">
@@ -92,7 +92,7 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
 
           {/* Dropdown menu */}
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 origin-top-right overflow-hidden rounded-xl border border-gray-100 bg-white py-1 shadow-xl animate-in fade-in slide-in-from-top-2">
+            <div className="absolute right-0 mt-2 w-48 origin-top-right overflow-hidden rounded border border-gray-100 bg-white py-1 shadow-xl animate-in fade-in slide-in-from-top-2">
               <Link
                 href="/"
                 onClick={() => setIsDropdownOpen(false)}
