@@ -18,9 +18,11 @@ export const configs = {
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-    adminCalendarId:
-      process.env.GOOGLE_API_ADMIN_CALENDAR_ID || "sales@axonenjin.com",
+    adminCalendarId: process.env.GOOGLE_API_ADMIN_CALENDAR_ID,
   },
 
+  resendApiKey: process.env.RESEND_API_KEY,
+
   environment: process.env.NEXT_PUBLIC_ENVIRONMENT || "PRODUCTION",
+  businessTimezone: process.env.BUSINESS_TIMEZONE || "America/New_York",
 };
