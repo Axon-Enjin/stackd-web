@@ -61,8 +61,13 @@ export async function POST(request: NextRequest) {
       timezone,
     );
 
-    // Fire-and-forget admin notification
-    emailService.sendAdminNotification(booking).catch(console.error);
+    // Await admin notification to ensure it completes before the serverless function terminates
+    try {
+      await emailService.sendAdminNotification(booking);
+    } catch (error) {
+      console.error("Failed to send admin notification:", error);
+      // We don't throw here to avoid failing the booking if only the email fails
+    }
 
     return NextResponse.json({ booking }, { status: 201 });
   } catch (error: any) {
