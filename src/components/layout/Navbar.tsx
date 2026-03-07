@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
-    { label: "How We Work", href: "#how-we-work" },
+    { label: "Our Story", href: "#why-stackd" },
+    { label: "How We Work", href: "#our-position" },
     { label: "Our Team", href: "#team" },
-    { label: "The Process", href: "#process" },
+    { label: "FAQ", href: "#faq" },
 ];
 
 export function Navbar() {
@@ -63,7 +64,7 @@ export function Navbar() {
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
                     >
-                        Book a Strategy Call
+                        Request a Strategy Conversation
                     </motion.a>
                 </div>
 

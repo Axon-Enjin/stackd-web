@@ -29,13 +29,12 @@ export function FinalCTASection() {
                     </BlurFade>
                     <BlurFade delay={0.14}>
                         <h2 className="text-3xl md:text-4xl lg:text-[44px] font-bold text-[#0B1F3B] leading-tight tracking-tight mb-5">
-                            If TikTok Shop is a channel you want to take seriously this year,
-                            let&apos;s have a conversation.
+                            If TikTok Shop is a channel you want to take seriously — let&apos;s have a conversation.
                         </h2>
                     </BlurFade>
                     <BlurFade delay={0.24}>
                         <p className="text-[#1A1A1A]/55 text-base md:text-lg leading-relaxed mb-10">
-                            No commitments, no pitch deck. Just a direct conversation about
+                            No pitch deck. No commitments. A direct conversation about
                             whether Stackd is the right operations partner for your brand.
                         </p>
                     </BlurFade>
@@ -49,7 +48,7 @@ export function FinalCTASection() {
                             whileTap={{ scale: 0.97 }}
                             transition={{ type: "spring", stiffness: 400, damping: 25 }}
                         >
-                            BOOK A STRATEGY CALL
+                            Request a Strategy Conversation
                             <ArrowRight size={15} />
                         </motion.a>
                     </BlurFade>

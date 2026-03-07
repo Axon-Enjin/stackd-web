@@ -8,8 +8,7 @@ export function Footer() {
                             STACKD
                         </div>
                         <p className="text-white/50 text-sm max-w-xs leading-relaxed">
-                            Revenue operations for direct-to-consumer brands scaling on TikTok
-                            Shop.
+                            Revenue operations for consumer brands scaling through TikTok Shop.
                         </p>
                     </div>
 
@@ -18,7 +17,7 @@ export function Footer() {
                             href="#contact"
                             className="inline-flex items-center gap-2 bg-[#2F80ED] hover:bg-[#2570d4] text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors duration-200"
                         >
-                            Book a Strategy Call →
+                            Request a Strategy Conversation →
                         </a>
                     </div>
                 </div>
