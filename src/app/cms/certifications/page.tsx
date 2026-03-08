@@ -24,6 +24,7 @@ import { SortContentsModal } from "@/components/cms/SortContentsModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { truncateWithEllipsis } from "@/lib/utils";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 // ==========================================
 // Types
@@ -106,6 +107,11 @@ function CertificationsAdminPageContent() {
     setPageError(null);
     try {
       await deleteMutation.mutateAsync(id);
+      toast.success("Certification successfully deleted.", {
+        className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+        progressClassName: "!bg-[#2F80ED]",
+        icon: <Trash2 className="text-red-500" size={20} />
+      });
     } catch (error: any) {
       setPageError(error.message || "Failed to delete certification.");
     }
@@ -566,9 +572,19 @@ function CertificationModal({
           formData: apiFormData,
         });
         onClose();
+        toast.success("Certification successfully updated.", {
+          className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+          progressClassName: "!bg-[#2F80ED]",
+          icon: <Award className="text-[#2F80ED]" size={20} />
+        });
       } else {
         const result = await createMutation.mutateAsync(apiFormData);
         onClose(result?.id || result?.data?.id);
+        toast.success("Certification successfully created.", {
+          className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+          progressClassName: "!bg-[#2F80ED]",
+          icon: <Award className="text-[#2F80ED]" size={20} />
+        });
       }
     } catch (error: any) {
       setFormError(error.message || "Failed to save certification.");

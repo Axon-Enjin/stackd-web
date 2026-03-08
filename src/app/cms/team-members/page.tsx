@@ -25,6 +25,7 @@ import { useDeleteTeamMemberMutation } from "@/features/TeamMembers/hooks/useDel
 import { useQueryClient } from "@tanstack/react-query";
 import { truncateWithEllipsis } from "@/lib/utils";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 // Types based on your domain
 interface Member {
@@ -100,6 +101,11 @@ function TeamAdminPageContent() {
     setPageError(null);
     try {
       await deleteMutation.mutateAsync(id);
+      toast.success("Team member successfully deleted.", {
+        className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+        progressClassName: "!bg-[#2F80ED]",
+        icon: <Trash2 className="text-red-500" size={20} />
+      });
     } catch (error: any) {
       setPageError(error.message || "Failed to delete member.");
     }
@@ -579,9 +585,19 @@ function MemberModal({
           formData: apiFormData,
         });
         onClose();
+        toast.success("Team member successfully updated.", {
+          className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+          progressClassName: "!bg-[#2F80ED]",
+          icon: <Users className="text-[#2F80ED]" size={20} />
+        });
       } else {
         const result = await createMutation.mutateAsync(apiFormData);
         onClose(result?.id || result?.data?.id);
+        toast.success("Team member successfully created.", {
+          className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+          progressClassName: "!bg-[#2F80ED]",
+          icon: <Users className="text-[#2F80ED]" size={20} />
+        });
       }
     } catch (error: any) {
       setFormError(error.message || "Failed to save team member.");
