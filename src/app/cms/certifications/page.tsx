@@ -23,6 +23,7 @@ import { Pagination } from "@/components/cms/Pagination";
 import { SortContentsModal } from "@/components/cms/SortContentsModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { truncateWithEllipsis } from "@/lib/utils";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 // ==========================================
 // Types
@@ -39,8 +40,34 @@ export interface Certification {
 // Main Page Component
 // ==========================================
 export default function CertificationsAdminPage() {
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  return (
+    <React.Suspense fallback={<div className="p-8 text-center text-gray-500">Loading...</div>}>
+      <CertificationsAdminPageContent />
+    </React.Suspense>
+  );
+}
+
+function CertificationsAdminPageContent() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("pageSize")) || 10;
+
+  const setPage = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const setPageSize = (newPageSize: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("pageSize", newPageSize.toString());
+    params.set("page", "1");
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCert, setEditingCert] = useState<Certification | null>(null);
   const [viewingCert, setViewingCert] = useState<Certification | null>(null);
@@ -190,7 +217,6 @@ export default function CertificationsAdminPage() {
               onPageChange={setPage}
               onPageSizeChange={(size) => {
                 setPageSize(size);
-                setPage(1);
               }}
             />
           )}

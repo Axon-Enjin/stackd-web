@@ -24,6 +24,7 @@ import { useUpdateTeamMemberMutation } from "@/features/TeamMembers/hooks/useUpd
 import { useDeleteTeamMemberMutation } from "@/features/TeamMembers/hooks/useDeleteTeamMemberMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { truncateWithEllipsis } from "@/lib/utils";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 // Types based on your domain
 interface Member {
@@ -37,8 +38,34 @@ interface Member {
 }
 
 export default function TeamAdminPage() {
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  return (
+    <React.Suspense fallback={<div className="p-8 text-center text-gray-500">Loading...</div>}>
+      <TeamAdminPageContent />
+    </React.Suspense>
+  );
+}
+
+function TeamAdminPageContent() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("pageSize")) || 10;
+
+  const setPage = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const setPageSize = (newPageSize: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("pageSize", newPageSize.toString());
+    params.set("page", "1");
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [viewingMember, setViewingMember] = useState<Member | null>(null);
@@ -190,7 +217,6 @@ export default function TeamAdminPage() {
               onPageChange={setPage}
               onPageSizeChange={(size) => {
                 setPageSize(size);
-                setPage(1);
               }}
             />
           )}
