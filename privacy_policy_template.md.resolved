@@ -1,0 +1,36 @@
+# Privacy Policy Template for Google OAuth Verification
+
+This is a template you can host on your website (e.g., `stackd.com/privacy`). You **must** replace all bracketed items (e.g., `[App Name]`) with your actual information.
+
+---
+
+## 1. Introduction
+At **[App Name]**, we respect your privacy and are committed to protecting it. This Privacy Policy explains how we collect, use, and process your data when you use our booking services.
+
+## 2. Information We Collect via Google APIs
+When you use our booking system, we access specific information from Google APIs to facilitate your appointment:
+- **Email Address**: We use Google OAuth to verify your email address to ensure the booking belongs to you.
+- **Calendar Data**: Our application uses a dedicated administrative Google Calendar to manage bookings. When you book a slot, we create an event on this calendar and add your email as an **attendee** so you receive a calendar invitation and a Google Meet link.
+
+## 3. How We Use This Data
+We use your Google data **solely** for the following purposes:
+- To confirm your identity via Google Sign-In.
+- To schedule your appointment and send you automated calendar invites and reminders.
+- **No Data Sharing**: We do **not** sell, trade, or share your Google user data with any third parties. We do not use this data for marketing purposes without your explicit consent.
+
+## 4. Limited Use Disclosure
+**[App Name]**'s use and transfer to any other app of information received from Google APIs will adhere to the **[Google API Service User Data Policy](https://developers.google.com/terms/api-services-user-data-policy)**, including the Limited Use requirements.
+
+## 5. Your Rights & Revoking Access
+You can revoke our application's access to your Google account at any time through your [Google Security Settings](https://myaccount.google.com/permissions). 
+
+## 6. Contact Us
+If you have any questions regarding this Privacy Policy or our use of Google APIs, please contact us at **[Support Email]**.
+
+---
+
+> [!IMPORTANT]
+> **To get verified by Google:**
+> 1. Ensure this page is publicly accessible (no password/login).
+> 2. Ensure your domain is listed in the "Authorized Domains" in the Google Cloud Console.
+> 3. The email listed in "Contact Us" should match your Support Email in the OAuth Consent Screen.
