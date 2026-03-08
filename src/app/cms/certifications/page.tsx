@@ -23,6 +23,8 @@ import { Pagination } from "@/components/cms/Pagination";
 import { SortContentsModal } from "@/components/cms/SortContentsModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { truncateWithEllipsis } from "@/lib/utils";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 // ==========================================
 // Types
@@ -39,18 +41,45 @@ export interface Certification {
 // Main Page Component
 // ==========================================
 export default function CertificationsAdminPage() {
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  return (
+    <React.Suspense fallback={<div className="p-8 text-center text-gray-500">Loading...</div>}>
+      <CertificationsAdminPageContent />
+    </React.Suspense>
+  );
+}
+
+function CertificationsAdminPageContent() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("pageSize")) || 10;
+
+  const setPage = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const setPageSize = (newPageSize: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("pageSize", newPageSize.toString());
+    params.set("page", "1");
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCert, setEditingCert] = useState<Certification | null>(null);
   const [viewingCert, setViewingCert] = useState<Certification | null>(null);
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
   const [pageError, setPageError] = useState<string | null>(null);
+  const [highlightId, setHighlightId] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   // TanStack Query Hooks
-  const { data: response, isLoading } = usePaginatedCertificationsQuery(
+  const { data: response, isLoading, isFetching } = usePaginatedCertificationsQuery(
     page,
     pageSize,
   );
@@ -59,12 +88,30 @@ export default function CertificationsAdminPage() {
   const certifications: Certification[] = response?.data || [];
   const meta = response?.meta;
 
+  useEffect(() => {
+    if (!isLoading && highlightId) {
+      const found = certifications.find((c) => c.id === highlightId);
+      if (found) {
+        const el = document.getElementById(`row-${highlightId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => setHighlightId(null), 3000);
+        }
+      }
+    }
+  }, [isLoading, highlightId, certifications]);
+
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this certification?"))
       return;
     setPageError(null);
     try {
       await deleteMutation.mutateAsync(id);
+      toast.success("Certification successfully deleted.", {
+        className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+        progressClassName: "!bg-[#2F80ED]",
+        icon: <Trash2 className="text-red-500" size={20} />
+      });
     } catch (error: any) {
       setPageError(error.message || "Failed to delete certification.");
     }
@@ -134,7 +181,12 @@ export default function CertificationsAdminPage() {
       ) : (
         <>
           {/* Row List */}
-          <div className="rounded border border-gray-200 bg-white shadow-sm">
+          <div className="relative rounded border border-gray-200 bg-white shadow-sm">
+            {isFetching && !isLoading && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center rounded bg-white/50 backdrop-blur-[1px]">
+                <Loader2 className="animate-spin text-[#2F80ED]" size={32} />
+              </div>
+            )}
             {certifications.length === 0 ? (
               <div className="py-16 text-center text-gray-500">
                 <Award className="mx-auto mb-3 text-gray-300" size={48} />
@@ -159,6 +211,7 @@ export default function CertificationsAdminPage() {
                       deleteMutation.isPending &&
                       deleteMutation.variables === cert.id
                     }
+                    isHighlighted={highlightId === cert.id}
                   />
                 ))}
               </div>
@@ -175,7 +228,6 @@ export default function CertificationsAdminPage() {
               onPageChange={setPage}
               onPageSizeChange={(size) => {
                 setPageSize(size);
-                setPage(1);
               }}
             />
           )}
@@ -199,7 +251,15 @@ export default function CertificationsAdminPage() {
       {/* Create/Edit Form Modal */}
       {isModalOpen && (
         <CertificationModal
-          onClose={() => setIsModalOpen(false)}
+          onClose={(createdId?: string) => {
+            setIsModalOpen(false);
+            if (createdId && meta) {
+              const newTotalRecords = meta.totalRecords + 1;
+              const targetPage = Math.ceil(newTotalRecords / pageSize) || 1;
+              setPage(targetPage);
+              setHighlightId(createdId);
+            }
+          }}
           certification={editingCert}
         />
       )}
@@ -240,6 +300,7 @@ function CertificationRow({
   onDelete,
   onPhotoClick,
   isDeleting,
+  isHighlighted,
 }: {
   certification: Certification;
   onView: () => void;
@@ -247,6 +308,7 @@ function CertificationRow({
   onDelete: () => void;
   onPhotoClick: (url: string) => void;
   isDeleting: boolean;
+  isHighlighted?: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -263,7 +325,8 @@ function CertificationRow({
 
   return (
     <div
-      className={`group relative flex items-center gap-4 px-5 py-4 transition-colors hover:bg-gray-50 ${isDeleting ? "opacity-50" : "cursor-pointer"}`}
+      id={`row-${certification.id}`}
+      className={`group relative flex items-center gap-4 px-5 py-4 transition-all duration-500 hover:bg-gray-50 ${isDeleting ? "opacity-50" : "cursor-pointer"} ${isHighlighted ? "bg-blue-50/50" : ""}`}
       onClick={() => !isDeleting && onView()}
     >
       {/* Thumbnail */}
@@ -470,7 +533,7 @@ function CertificationModal({
   onClose,
   certification,
 }: {
-  onClose: () => void;
+  onClose: (id?: string) => void;
   certification: Certification | null;
 }) {
   const isEditing = !!certification;
@@ -508,10 +571,21 @@ function CertificationModal({
           id: certification.id,
           formData: apiFormData,
         });
+        onClose();
+        toast.success("Certification successfully updated.", {
+          className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+          progressClassName: "!bg-[#2F80ED]",
+          icon: <Award className="text-[#2F80ED]" size={20} />
+        });
       } else {
-        await createMutation.mutateAsync(apiFormData);
+        const result = await createMutation.mutateAsync(apiFormData);
+        onClose(result?.id || result?.data?.id);
+        toast.success("Certification successfully created.", {
+          className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+          progressClassName: "!bg-[#2F80ED]",
+          icon: <Award className="text-[#2F80ED]" size={20} />
+        });
       }
-      onClose();
     } catch (error: any) {
       setFormError(error.message || "Failed to save certification.");
     }
@@ -525,7 +599,7 @@ function CertificationModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={() => onClose()}>
       <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-sm border border-gray-200 bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
         <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50/80 px-6 py-4">
           <div className="flex items-center gap-3">
@@ -537,7 +611,7 @@ function CertificationModal({
             </h2>
           </div>
           <button
-            onClick={onClose}
+            onClick={() => onClose()}
             className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600"
           >
             <X size={20} />
@@ -628,7 +702,7 @@ function CertificationModal({
           <div className="mt-8 flex justify-end gap-2 border-t border-gray-200 pt-6">
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => onClose()}
               disabled={isPending}
               className="rounded-sm border border-gray-200 bg-white px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
             >
