@@ -51,28 +51,35 @@ export const GET = createRegularHandler(async (request: NextRequest) => {
   );
 });
 
-export const POST = createRegularHandler(async (request: NextRequest) => {
-  const formData = await request.formData();
+export const POST = createRegularHandler(
+  async (request: NextRequest) => {
+    const formData = await request.formData();
 
-  // 1. Extract the file
-  const image = formData.get("image") as File;
-  if (!image) throw new BadRequestError("Image is required");
+    // 1. Extract the file
+    const image = formData.get("image") as File;
+    if (!image) throw new BadRequestError("Image is required");
 
-  // 2. Extract and validate text fields
-  const name = formData.get("name") as string;
-  const role = formData.get("role") as string;
-  const body = formData.get("body") as string;
+    // 2. Extract and validate text fields
+    const name = formData.get("name") as string;
+    const role = formData.get("role") as string;
+    const body = formData.get("body") as string;
 
-  if (!name || !role || !body)
-    throw new BadRequestError("Missing required fields (name, role, body)");
+    if (!name || !role || !body)
+      throw new BadRequestError("Missing required fields (name, role, body)");
 
-  // 3. Call the controller
-  const newTestimonial = await testimonialsModuleController.createTestimonial(
-    name,
-    role,
-    body,
-    image,
-  );
+    // 3. Call the controller
+    const newTestimonial = await testimonialsModuleController.createTestimonial(
+      name,
+      role,
+      body,
+      image,
+    );
 
-  return NextResponse.json(newTestimonial, { status: 201 });
-});
+    return NextResponse.json(newTestimonial, { status: 201 });
+  },
+  {
+    auth: {
+      required: true,
+    },
+  },
+);
