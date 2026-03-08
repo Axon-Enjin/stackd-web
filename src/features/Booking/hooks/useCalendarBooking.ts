@@ -58,6 +58,10 @@ export function useCalendarBooking() {
       );
       setSubmitting(false);
     },
+    onNonOAuthError: (error) => {
+      console.log("Google login cancelled or failed:", error);
+      setSubmitting(false);
+    },
   });
 
   const handleDateSelect = async (date: Date | undefined) => {
