@@ -49,6 +49,12 @@ export class InternalServerError extends HttpError {
   }
 }
 
+export class UnauthorizedError extends HttpError {
+  constructor(description: string, cause?: unknown) {
+    super(401, "Unauthorized", description, cause);
+  }
+}
+
 /**
  * @deprecated
  */

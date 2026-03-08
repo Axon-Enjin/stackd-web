@@ -51,27 +51,34 @@ export const GET = createRegularHandler(async (request: NextRequest) => {
   );
 });
 
-export const POST = createRegularHandler(async (request: NextRequest) => {
-  const formData = await request.formData();
+export const POST = createRegularHandler(
+  async (request: NextRequest) => {
+    const formData = await request.formData();
 
-  // 1. Extract the file
-  const image = formData.get("image") as File;
-  if (!image) throw new BadRequestError("Image is required");
+    // 1. Extract the file
+    const image = formData.get("image") as File;
+    if (!image) throw new BadRequestError("Image is required");
 
-  // 2. Extract and validate text fields
-  const title = formData.get("title") as string;
-  const description = formData.get("description") as string;
+    // 2. Extract and validate text fields
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
 
-  if (!title || !description)
-    throw new BadRequestError("Missing required fields (title, description)");
+    if (!title || !description)
+      throw new BadRequestError("Missing required fields (title, description)");
 
-  // 3. Call the controller
-  const newCertification =
-    await certificationsModuleController.createCertification(
-      title,
-      description,
-      image,
-    );
+    // 3. Call the controller
+    const newCertification =
+      await certificationsModuleController.createCertification(
+        title,
+        description,
+        image,
+      );
 
-  return NextResponse.json(newCertification, { status: 201 });
-});
+    return NextResponse.json(newCertification, { status: 201 });
+  },
+  {
+    auth: {
+      required: true,
+    },
+  },
+);

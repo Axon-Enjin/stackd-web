@@ -50,7 +50,9 @@ export const PATCH = createRegularHandler(
     if (rankingIndexRaw !== null) {
       rankingIndex = parseFloat(rankingIndexRaw as string);
       if (isNaN(rankingIndex))
-        throw new UnprocessableEntityError("rankingIndex must be a valid number");
+        throw new UnprocessableEntityError(
+          "rankingIndex must be a valid number",
+        );
     }
 
     // 4. Execute the update via controller
@@ -70,6 +72,11 @@ export const PATCH = createRegularHandler(
       { status: 200 },
     );
   },
+  {
+    auth: {
+      required: true,
+    },
+  },
 );
 
 export const DELETE = createRegularHandler(
@@ -88,5 +95,10 @@ export const DELETE = createRegularHandler(
       { message: "ok", status: "success" },
       { status: 200 },
     );
+  },
+  {
+    auth: {
+      required: true,
+    },
   },
 );

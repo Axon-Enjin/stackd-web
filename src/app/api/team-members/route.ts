@@ -51,34 +51,41 @@ export const GET = createRegularHandler(async (request: NextRequest) => {
   );
 });
 
-export const POST = createRegularHandler(async (request: NextRequest) => {
-  const formData = await request.formData();
+export const POST = createRegularHandler(
+  async (request: NextRequest) => {
+    const formData = await request.formData();
 
-  // 1. Extract the file
-  const image = formData.get("image") as File;
-  if (!image) throw new BadRequestError("Image is required");
+    // 1. Extract the file
+    const image = formData.get("image") as File;
+    if (!image) throw new BadRequestError("Image is required");
 
-  // 2. Extract and validate text fields
-  const firstname = formData.get("firstname") as string;
-  const lastname = formData.get("lastname") as string;
-  const role = formData.get("role") as string;
-  const bio = formData.get("bio") as string;
-  const middlename = formData.get("middlename") as string | undefined;
+    // 2. Extract and validate text fields
+    const firstname = formData.get("firstname") as string;
+    const lastname = formData.get("lastname") as string;
+    const role = formData.get("role") as string;
+    const bio = formData.get("bio") as string;
+    const middlename = formData.get("middlename") as string | undefined;
 
-  if (!firstname || !lastname || !role || !bio)
-    throw new BadRequestError(
-      "Missing required fields (firstname, lastname, role, bio)",
+    if (!firstname || !lastname || !role || !bio)
+      throw new BadRequestError(
+        "Missing required fields (firstname, lastname, role, bio)",
+      );
+
+    // 3. Call the controller
+    const newMember = await teamMembersModuleController.createMember(
+      firstname,
+      lastname,
+      role,
+      bio,
+      image,
+      middlename,
     );
 
-  // 3. Call the controller
-  const newMember = await teamMembersModuleController.createMember(
-    firstname,
-    lastname,
-    role,
-    bio,
-    image,
-    middlename,
-  );
-
-  return NextResponse.json(newMember, { status: 201 });
-});
+    return NextResponse.json(newMember, { status: 201 });
+  },
+  {
+    auth: {
+      required: true,
+    },
+  },
+);
