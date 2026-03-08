@@ -76,7 +76,7 @@ function TeamAdminPageContent() {
   const queryClient = useQueryClient();
 
   // TanStack Query Hooks
-  const { data: response, isLoading } = usePaginatedTeamMembersQuery(page, pageSize);
+  const { data: response, isLoading, isFetching } = usePaginatedTeamMembersQuery(page, pageSize);
   const deleteMutation = useDeleteTeamMemberMutation();
 
   const members: Member[] = response?.data || [];
@@ -174,7 +174,12 @@ function TeamAdminPageContent() {
       ) : (
         <>
           {/* Row List */}
-          <div className="rounded border border-gray-200 bg-white shadow-sm">
+          <div className="relative rounded border border-gray-200 bg-white shadow-sm">
+            {isFetching && !isLoading && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center rounded bg-white/50 backdrop-blur-[1px]">
+                <Loader2 className="animate-spin text-[#2F80ED]" size={32} />
+              </div>
+            )}
             {members.length === 0 ? (
               <div className="py-16 text-center text-gray-500">
                 <Users className="mx-auto mb-3 text-gray-300" size={48} />

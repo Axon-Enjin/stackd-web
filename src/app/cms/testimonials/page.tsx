@@ -81,7 +81,7 @@ function TestimonialsAdminPageContent() {
   const queryClient = useQueryClient();
 
   // TanStack Query Hooks
-  const { data: response, isLoading } = usePaginatedTestimonialsQuery(page, pageSize);
+  const { data: response, isLoading, isFetching } = usePaginatedTestimonialsQuery(page, pageSize);
   const deleteMutation = useDeleteTestimonialMutation();
 
   const rawTestimonials = response?.data || [];
@@ -181,7 +181,12 @@ function TestimonialsAdminPageContent() {
       ) : (
         <>
           {/* Row List */}
-          <div className="rounded border border-gray-200 bg-white shadow-sm">
+          <div className="relative rounded border border-gray-200 bg-white shadow-sm">
+            {isFetching && !isLoading && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center rounded bg-white/50 backdrop-blur-[1px]">
+                <Loader2 className="animate-spin text-[#2F80ED]" size={32} />
+              </div>
+            )}
             {testimonials.length === 0 ? (
               <div className="py-16 text-center text-gray-500">
                 <MessageSquareQuote
