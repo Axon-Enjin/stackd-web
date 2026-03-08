@@ -45,6 +45,7 @@ export default function TeamAdminPage() {
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
   const [pageError, setPageError] = useState<string | null>(null);
+  const [highlightId, setHighlightId] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   // TanStack Query Hooks
@@ -53,6 +54,19 @@ export default function TeamAdminPage() {
 
   const members: Member[] = response?.data || [];
   const meta = response?.meta;
+
+  useEffect(() => {
+    if (!isLoading && highlightId) {
+      const found = members.find((m) => m.id === highlightId);
+      if (found) {
+        const el = document.getElementById(`row-${highlightId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => setHighlightId(null), 3000);
+        }
+      }
+    }
+  }, [isLoading, highlightId, members]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this team member?")) return;
@@ -159,6 +173,7 @@ export default function TeamAdminPage() {
                       deleteMutation.isPending &&
                       deleteMutation.variables === member.id
                     }
+                    isHighlighted={highlightId === member.id}
                   />
                 ))}
               </div>
@@ -200,7 +215,15 @@ export default function TeamAdminPage() {
       {/* Create/Edit Form Modal */}
       {isModalOpen && (
         <MemberModal
-          onClose={() => setIsModalOpen(false)}
+          onClose={(createdId?: string) => {
+            setIsModalOpen(false);
+            if (createdId && meta) {
+              const newTotalRecords = meta.totalRecords + 1;
+              const targetPage = Math.ceil(newTotalRecords / pageSize) || 1;
+              setPage(targetPage);
+              setHighlightId(createdId);
+            }
+          }}
           member={editingMember}
         />
       )}
@@ -242,6 +265,7 @@ function MemberRow({
   onDelete,
   onPhotoClick,
   isDeleting,
+  isHighlighted,
 }: {
   member: Member;
   fullName: string;
@@ -250,6 +274,7 @@ function MemberRow({
   onDelete: () => void;
   onPhotoClick: (url: string) => void;
   isDeleting: boolean;
+  isHighlighted?: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -266,7 +291,8 @@ function MemberRow({
 
   return (
     <div
-      className={`group relative flex items-center gap-4 px-5 py-4 transition-colors hover:bg-gray-50 ${isDeleting ? "opacity-50" : "cursor-pointer"}`}
+      id={`row-${member.id}`}
+      className={`group relative flex items-center gap-4 px-5 py-4 transition-all duration-500 hover:bg-gray-50 ${isDeleting ? "opacity-50" : "cursor-pointer"} ${isHighlighted ? "bg-blue-50/50" : ""}`}
       onClick={() => !isDeleting && onView()}
     >
       {/* Avatar */}
@@ -469,7 +495,7 @@ function MemberModal({
   onClose,
   member,
 }: {
-  onClose: () => void;
+  onClose: (id?: string) => void;
   member: Member | null;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -521,10 +547,11 @@ function MemberModal({
           id: member.id,
           formData: apiFormData,
         });
+        onClose();
       } else {
-        await createMutation.mutateAsync(apiFormData);
+        const result = await createMutation.mutateAsync(apiFormData);
+        onClose(result?.id || result?.data?.id);
       }
-      onClose();
     } catch (error: any) {
       setFormError(error.message || "Failed to save team member.");
     }
@@ -538,7 +565,7 @@ function MemberModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={() => onClose()}>
       <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-sm border border-gray-200 bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
         <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50/80 px-6 py-4">
           <div className="flex items-center gap-3">
@@ -550,7 +577,7 @@ function MemberModal({
             </h2>
           </div>
           <button
-            onClick={onClose}
+            onClick={() => onClose()}
             className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600"
           >
             <X size={20} />
@@ -673,7 +700,7 @@ function MemberModal({
           <div className="mt-8 flex justify-end gap-2 border-t border-gray-200 pt-6">
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => onClose()}
               disabled={isPending}
               className="rounded-sm border border-gray-200 bg-white px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
             >
