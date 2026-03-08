@@ -155,6 +155,10 @@ export default function TeamAdminPage() {
                     onEdit={() => openEdit(member)}
                     onDelete={() => handleDelete(member.id)}
                     onPhotoClick={(url) => setPhotoViewerUrl(url)}
+                    isDeleting={
+                      deleteMutation.isPending &&
+                      deleteMutation.variables === member.id
+                    }
                   />
                 ))}
               </div>
@@ -237,6 +241,7 @@ function MemberRow({
   onEdit,
   onDelete,
   onPhotoClick,
+  isDeleting,
 }: {
   member: Member;
   fullName: string;
@@ -244,6 +249,7 @@ function MemberRow({
   onEdit: () => void;
   onDelete: () => void;
   onPhotoClick: (url: string) => void;
+  isDeleting: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -260,8 +266,8 @@ function MemberRow({
 
   return (
     <div
-      className="group flex cursor-pointer items-center gap-4 px-5 py-4 transition-colors hover:bg-gray-50"
-      onClick={() => onView()}
+      className={`group relative flex items-center gap-4 px-5 py-4 transition-colors hover:bg-gray-50 ${isDeleting ? "opacity-50" : "cursor-pointer"}`}
+      onClick={() => !isDeleting && onView()}
     >
       {/* Avatar */}
       <div
@@ -290,6 +296,11 @@ function MemberRow({
         </h3>
         <p className="mt-0.5   text-xs text-gray-500">{truncateWithEllipsis(member.role, 30)}</p>
       </div>
+
+      {/* Loading spinner for delete */}
+      {isDeleting && (
+        <Loader2 className="shrink-0 animate-spin text-red-500" size={18} />
+      )}
 
       {/* Menu */}
       <div className="relative shrink-0" ref={menuRef}>
