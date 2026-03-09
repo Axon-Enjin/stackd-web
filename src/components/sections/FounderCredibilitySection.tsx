@@ -60,34 +60,39 @@ export function FounderCredibilitySection() {
           ) : (
             displayMembers.map((member, i) => (
               <BlurFade key={member.id} delay={0.15 + i * 0.12} className="h-full">
-                <Link href="/our-team" className="block w-full aspect-[4/5] sm:aspect-[3/4] lg:h-[400px] lg:aspect-auto rounded-2xl overflow-hidden relative group">
-                  {/* Background Image */}
-                  {member.imageUrl ? (
-                    <img
-                      src={member.imageUrl}
-                      alt={getFullName(member)}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#0B1F3B] to-[#0B1F3B]/80 flex items-center justify-center">
-                      <span className="text-white/20 text-7xl font-bold uppercase">
-                        {member.firstName.charAt(0)}
-                      </span>
-                    </div>
-                  )}
+                <Link href="/our-team" className="block sm:flex sm:flex-row md:block w-full aspect-[4/5] sm:aspect-auto sm:h-[240px] md:h-auto md:aspect-[3/4] lg:h-[400px] lg:aspect-auto rounded-2xl overflow-hidden relative group bg-[#0f2a4a]">
+                  {/* Image Container */}
+                  <div className="absolute inset-0 sm:relative sm:w-[40%] md:absolute md:w-full h-full shrink-0 overflow-hidden z-0">
+                    {member.imageUrl ? (
+                      <img
+                        src={member.imageUrl}
+                        alt={getFullName(member)}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#0B1F3B] to-[#0B1F3B]/80 flex items-center justify-center">
+                        <span className="text-white/20 text-7xl font-bold uppercase">
+                          {member.firstName.charAt(0)}
+                        </span>
+                      </div>
+                    )}
 
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F3B] via-[#0B1F3B]/50 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100" />
+                    {/* Gradient Overlay for xs and md+ (Bottom Fade) */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f2a4a] via-[#0f2a4a]/60 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100 sm:hidden md:block pointer-events-none" />
 
-                  {/* Content Overlay */}
-                  <div className="absolute inset-0 p-8 flex flex-col justify-end translate-y-4 transition-transform duration-300 group-hover:translate-y-0">
+                    {/* Gradient Overlay for sm (Right Fade) */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#0f2a4a]/50 to-[#0f2a4a] hidden sm:block md:hidden pointer-events-none" />
+                  </div>
+
+                  {/* Content Container */}
+                  <div className="absolute inset-0 p-8 flex flex-col justify-end translate-y-4 transition-transform duration-300 group-hover:translate-y-0 sm:relative sm:p-6 sm:justify-center sm:translate-y-0 sm:w-[60%] md:absolute md:w-full md:p-8 md:justify-end md:translate-y-4 z-10 pointer-events-none">
                     <h3 className="text-white font-bold text-2xl leading-snug mb-1">
                       {getFullName(member)}
                     </h3>
                     <p className="text-[#2F80ED] text-xs font-bold uppercase tracking-widest mb-4">
                       {member.role}
                     </p>
-                    <p className="text-white/70 text-sm leading-relaxed line-clamp-3">
+                    <p className="text-white/80 text-sm leading-relaxed line-clamp-3 sm:line-clamp-4 md:line-clamp-3">
                       {member.bio}
                     </p>
                   </div>
