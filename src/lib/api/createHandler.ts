@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createLimiterHandler } from "./rateLimiting";
 import { errorHandler } from "./errorHandler";
+import { requireAuth } from "./requireAuth";
 
 export type NextHandler = (
   req: NextRequest,
@@ -14,6 +15,9 @@ export const createRegularHandler = (
       requestPerDuration: number;
       durationSeconds: number;
     };
+    auth?: {
+      required?: boolean;
+    };
   },
 ) => {
   const options = {
@@ -22,6 +26,10 @@ export const createRegularHandler = (
       requestPerDuration: 60,
       durationSeconds: 60,
       ...optionsParameter?.limiter,
+    },
+    auth: {
+      required: false,
+      ...optionsParameter?.auth,
     },
   };
 
@@ -33,6 +41,10 @@ export const createRegularHandler = (
   const wrapperHandler = async (req: NextRequest, ...args: any[]) => {
     try {
       await limiterHandler(req);
+
+      if (options.auth.required) {
+        await requireAuth(req);
+      }
 
       const result = await handler(req, ...args);
       return result;

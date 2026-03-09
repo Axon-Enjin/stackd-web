@@ -1,36 +1,37 @@
 export function Footer() {
-    return (
-        <footer className="bg-[#0B1F3B] text-white py-12 px-6">
-            <div className="max-w-6xl mx-auto">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                    <div>
-                        <div className="text-lg font-bold tracking-[0.15em] uppercase mb-1">
-                            STACKD
-                        </div>
-                        <p className="text-white/50 text-sm max-w-xs leading-relaxed">
-                            Revenue operations for consumer brands scaling through TikTok Shop.
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col md:items-end gap-2">
-                        <a
-                            href="#contact"
-                            className="inline-flex items-center gap-2 bg-[#2F80ED] hover:bg-[#2570d4] text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors duration-200"
-                        >
-                            Request a Strategy Conversation →
-                        </a>
-                    </div>
-                </div>
-
-                <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <p className="text-white/30 text-xs">
-                        © {new Date().getFullYear()} Stackd. All rights reserved.
-                    </p>
-                    <p className="text-white/30 text-xs">
-                        TikTok Shop Revenue Operations Partner
-                    </p>
-                </div>
+  return (
+    <footer className="bg-[#0B1F3B] px-6 py-12 text-white">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div>
+            <div className="mb-1 text-lg font-bold tracking-[0.15em] uppercase">
+              STACKD
             </div>
-        </footer>
-    );
+            <p className="max-w-xs text-sm leading-relaxed text-white/50">
+              Revenue operations for consumer brands scaling through TikTok
+              Shop.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-2 md:items-end">
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2570d4]"
+            >
+              Request a Strategy Conversation →
+            </a>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center">
+          <p className="text-xs text-white/30">
+            © {new Date().getFullYear()} Stackd. All rights reserved.
+          </p>
+          <p className="text-xs text-white/30">
+            TikTok Shop Revenue Operations Partner
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
 }

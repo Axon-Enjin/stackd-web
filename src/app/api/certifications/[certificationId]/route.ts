@@ -69,6 +69,11 @@ export const PATCH = createRegularHandler(
       },
       { status: 200 },
     );
+  }, 
+  {
+    auth: {
+      required: true,
+    },
   },
 );
 
@@ -88,5 +93,10 @@ export const DELETE = createRegularHandler(
       { message: "ok", status: "success" },
       { status: 200 },
     );
+  }, 
+  {
+    auth: {
+      required: true,
+    },
   },
 );

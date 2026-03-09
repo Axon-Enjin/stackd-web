@@ -1,29 +1,40 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { extractApiError } from "@/lib/apiError";
+import { useSupabaseAuthContext } from "@/providers/SupabaseAuthProvider";
 
 export const useUpdateTeamMemberMutation = () => {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
+  const supabaseAuthContext = useSupabaseAuthContext();
 
-    return useMutation({
-        mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
-            const res = await fetch(`/api/team-members/${id}`, {
-                method: "PATCH",
-                body: formData,
-            });
-
-            if (!res.ok) {
-                throw await extractApiError(res, "Failed to update team member");
-            }
-
-            return res.json();
+  return useMutation({
+    mutationFn: async ({
+      id,
+      formData,
+    }: {
+      id: string;
+      formData: FormData;
+    }) => {
+      const res = await fetch(`/api/team-members/${id}`, {
+        method: "PATCH",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${supabaseAuthContext.supabaseAccessToken}`,
         },
-        onSuccess: (data, variables) => {
-            queryClient.invalidateQueries({
-                queryKey: ["team-members", variables.id],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ["team-members"],
-            });
-        },
-    });
+      });
+
+      if (!res.ok) {
+        throw await extractApiError(res, "Failed to update team member");
+      }
+
+      return res.json();
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["team-members", variables.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["team-members"],
+      });
+    },
+  });
 };

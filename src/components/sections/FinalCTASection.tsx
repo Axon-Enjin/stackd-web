@@ -40,9 +40,7 @@ export function FinalCTASection() {
                     </BlurFade>
                     <BlurFade delay={0.34}>
                         <motion.a
-                            href="https://calendly.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href="/book"
                             className="inline-flex items-center gap-2.5 px-8 py-4 bg-[#0B1F3B] text-white font-semibold rounded-md text-sm tracking-wide shadow-xl shadow-[#0B1F3B]/15"
                             whileHover={{ scale: 1.03, backgroundColor: "#0f2a4d" }}
                             whileTap={{ scale: 0.97 }}
