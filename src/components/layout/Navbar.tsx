@@ -34,11 +34,12 @@ export function Navbar() {
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         {/* Logo */}
-        <a
-          href="/"
-          className="text-xl font-bold tracking-[0.15em] text-white uppercase select-none"
-        >
-          STACKD
+        <a href="/" className="flex items-center">
+          <img
+            src="/logo-white.png"
+            alt="Stackd Logo"
+            className="h-3 w-auto object-contain lg:h-3.5"
+          />
         </a>
 
         {/* Desktop nav */}

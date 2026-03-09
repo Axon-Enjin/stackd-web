@@ -4,8 +4,12 @@ export function Footer() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div>
-            <div className="mb-1 text-lg font-bold tracking-[0.15em] uppercase">
-              STACKD
+            <div className="mb-4 flex items-center">
+              <img
+                src="/logo-white.png"
+                alt="Stackd Logo"
+                className="h-3 w-auto object-contain"
+              />
             </div>
             <p className="max-w-xs text-sm leading-relaxed text-white/50">
               Revenue operations for consumer brands scaling through TikTok
