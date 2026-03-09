@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { PainPointsSection } from "@/components/sections/PainPointsSection";
 import { FounderCredibilitySection } from "@/components/sections/FounderCredibilitySection";
 import { WhyStackdExistsSection } from "@/components/sections/WhyStackdExistsSection";
 import { ProblemSection } from "@/components/sections/ProblemSection";
@@ -18,15 +19,17 @@ export default function LandingPage() {
       <main>
         <HeroSection />
         <FounderCredibilitySection />
+        {/* <PainPointsSection /> */}
+        {/* <FounderCredibilitySection /> */}
+        <ProblemSection />
         <section id="why-stackd">
           <WhyStackdExistsSection />
         </section>
-        <ProblemSection />
         <section id="our-position">
           <OurPositionSection />
         </section>
         <WhoWeWorkWithSection />
-        <TeamSection />
+        {/* <TeamSection /> */}
         <section id="faq">
           <FAQSection />
         </section>

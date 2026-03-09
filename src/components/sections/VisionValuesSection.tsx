@@ -1,6 +1,7 @@
 "use client";
 
 import { BlurFade } from "@/components/magicui/BlurFade";
+import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
 
 const VALUES = [
   { title: "Proactive Execution", description: "We move before we are asked. Accountability is built into how we operate." },
@@ -13,15 +14,16 @@ const VALUES = [
 export function VisionValuesSection() {
   return (
     <section className="relative bg-[#0B1F3B] py-24 px-6 overflow-hidden">
-      {/* Grid texture */}
-      <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`,
-          backgroundSize: "72px 72px",
-        }}
-      />
+      {/* Interactive Grid texture */}
+      <div className="absolute inset-0 z-0">
+        <InteractiveGridPattern
+          width={72}
+          height={72}
+          squares={[40, 40]}
+          className="opacity-100 mix-blend-overlay"
+          hoverColor="fill-white/[0.08]"
+        />
+      </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Vision */}

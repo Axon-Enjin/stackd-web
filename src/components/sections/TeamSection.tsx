@@ -2,50 +2,37 @@
 
 import { BlurFade } from "@/components/magicui/BlurFade";
 import { MagicCard } from "@/components/magicui/magic-card";
-import { Linkedin } from "lucide-react";
+import { Linkedin, Loader2 } from "lucide-react";
+import { usePaginatedTeamMembersQuery } from "@/features/TeamMembers/hooks/usePaginatedTeamMembersQuery";
 
-const TEAM_MEMBERS = [
-  {
-    name: "Jay Buenaflor",
-    role: "CEO",
-    bio: [
-      "Jay Buenaflor is a leadership coach and business operator with nearly two decades of experience helping organizations scale through stronger teams, clearer decisions and disciplined execution.",
-      "Before founding Stackd, Jay spent ten years in leadership roles within a fast-growing e-commerce cosmetics company, including four years as Chief Operating Officer.",
-      "During that time, he helped build the operational systems and leadership structure needed to support growth across multiple channels, including the early adoption of TikTok commerce.",
-      "Jay founded Stackd to bring structured revenue operations to TikTok Shop — helping brands move beyond experimentation and operate live commerce as a serious business channel.",
-    ],
-    highlights: null as string[] | null,
-    linkedin: "#",
-  },
-  {
-    name: "Dette Tejada",
-    role: "Commerce Operations",
-    bio: [
-      "Dette specializes in building the operational systems behind successful TikTok Shop growth.",
-      "With more than five years of hands-on experience in the TikTok ecosystem, she has led e-commerce and TikTok Shop operations for multiple consumer brands across beauty, apparel and general e-commerce categories.",
-      "In previous roles as E-Commerce Head, she oversaw both marketing strategy and operational execution, helping brands transform TikTok from a marketing channel into a primary revenue driver.",
-      "Her expertise lies in designing the infrastructure required to scale TikTok Shop consistently — including creator ecosystems, affiliate activation, live selling operations and performance tracking systems.",
-    ],
-    highlights: [
-      "5+ years working within the TikTok ecosystem",
-      "Led TikTok Shop growth for multiple consumer brands",
-      "Built affiliate and creator ecosystems from scratch",
-      "Designed live selling operations and inventory workflows",
-      "Implemented ROAS and performance tracking systems",
-    ],
-    linkedin: "#",
-  },
-];
+// Types based on the CMS Member definition
+interface Member {
+    id: string;
+    imageUrl?: string;
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+    role: string;
+    bio: string;
+}
 
 const COMBINED_STATS = [
-  "29 years of combined leadership and operational experience",
-  "Leadership roles across e-commerce and digital commerce environments",
-  "Hands-on experience supporting TikTok-based commerce operations",
-  "Executive coaching and advisory work with founders and leadership teams",
-  "Specialized focus on operational systems behind live commerce",
+    "29 years of combined leadership and operational experience",
+    "Leadership roles across e-commerce and digital commerce environments",
+    "Hands-on experience supporting TikTok-based commerce operations",
+    "Executive coaching and advisory work with founders and leadership teams",
+    "Specialized focus on operational systems behind live commerce",
 ];
 
 export function TeamSection() {
+    const { data: response, isLoading } = usePaginatedTeamMembersQuery(1, 20);
+    const members: Member[] = response?.data || [];
+
+    const getFullName = (member: Member) => {
+        const middle = member.middleName ? `${member.middleName.charAt(0)}.` : "";
+        return `${member.firstName} ${middle} ${member.lastName}`.replace(/\s+/g, " ").trim();
+    };
+
     return (
         <section id="team" className="bg-[#F7F9FC] py-24 px-6">
             <div className="max-w-6xl mx-auto">
@@ -75,70 +62,67 @@ export function TeamSection() {
 
                 {/* Profiles */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                    {TEAM_MEMBERS.map((member, i) => (
-                        <BlurFade key={member.name} delay={0.15 + i * 0.12}>
-                            <MagicCard
-                                className="bg-white border border-[#E8ECF2] rounded-xl p-8 h-full cursor-default hover:shadow-md transition-shadow duration-300"
-                                gradientColor="#2F80ED08"
-                                gradientSize={300}
-                            >
-                                {/* Photo + name row */}
-                                <div className="flex items-start gap-5 mb-6">
-                                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#0B1F3B]/10 to-[#2F80ED]/10 border border-[#E8ECF2] flex items-center justify-center shrink-0">
-                                        <span className="text-[#0B1F3B]/30 text-xl font-bold">
-                                            {member.name.charAt(0)}
-                                        </span>
+                    {isLoading ? (
+                        <div className="col-span-full flex justify-center py-12">
+                            <Loader2 className="animate-spin text-[#2F80ED]" size={40} />
+                        </div>
+                    ) : (
+                        members.map((member, i) => (
+                            <BlurFade key={member.id} delay={0.15 + i * 0.12}>
+                                <MagicCard
+                                    className="bg-white border border-[#E8ECF2] rounded-xl p-8 h-full cursor-default hover:shadow-md transition-shadow duration-300 flex flex-col"
+                                    gradientColor="#2F80ED08"
+                                    gradientSize={300}
+                                >
+                                    {/* Photo + name row */}
+                                    <div className="flex items-start gap-5 mb-6 shrink-0">
+                                        <div className="w-16 h-16 shrink-0 rounded-full bg-[#0B1F3B]/5 border border-[#E8ECF2] flex items-center justify-center overflow-hidden">
+                                            {member.imageUrl ? (
+                                                <img
+                                                    src={member.imageUrl}
+                                                    alt={getFullName(member)}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full bg-gradient-to-br from-[#0B1F3B]/10 to-[#2F80ED]/10 flex items-center justify-center">
+                                                    <span className="text-[#0B1F3B]/30 text-xl font-bold uppercase">
+                                                        {member.firstName.charAt(0)}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <h3 className="text-[#0B1F3B] font-bold text-xl leading-snug">
+                                                {getFullName(member)}
+                                            </h3>
+                                            <p className="text-[#2F80ED] text-sm font-medium mt-0.5">
+                                                {member.role}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h3 className="text-[#0B1F3B] font-bold text-xl leading-snug">
-                                            {member.name}
-                                        </h3>
-                                        <p className="text-[#2F80ED] text-sm font-medium mt-0.5">
-                                            {member.role}
+
+                                    {/* Bio */}
+                                    <div className="mb-5 flex-grow">
+                                        <p className="text-[#1A1A1A]/60 text-sm leading-relaxed whitespace-pre-wrap">
+                                            {member.bio}
                                         </p>
                                     </div>
-                                </div>
 
-                                {/* Bio paragraphs */}
-                                <div className="space-y-3 mb-5">
-                                    {member.bio.map((para, j) => (
-                                        <p key={j} className="text-[#1A1A1A]/60 text-sm leading-relaxed">
-                                            {para}
-                                        </p>
-                                    ))}
-                                </div>
-
-                                {/* Experience highlights (Dette only) */}
-                                {member.highlights && (
-                                    <div className="mt-6 pt-5 border-t border-[#E8ECF2]">
-                                        <p className="text-[#0B1F3B] text-xs font-semibold tracking-[0.12em] uppercase mb-3">
-                                            Experience Highlights
-                                        </p>
-                                        <ul className="space-y-1.5">
-                                            {member.highlights.map((h) => (
-                                                <li key={h} className="flex items-start gap-2.5 text-[#1A1A1A]/60 text-sm">
-                                                    <span className="mt-2 w-1 h-1 rounded-full bg-[#2FB7A8] shrink-0" />
-                                                    {h}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                    {/* LinkedIn */}
+                                    <div className="mt-6 pt-4 border-t border-[#E8ECF2] shrink-0">
+                                        <a
+                                            href="#"
+                                            className="inline-flex items-center gap-2 text-[#0B1F3B]/40 hover:text-[#2F80ED] text-xs font-medium transition-colors duration-200"
+                                            aria-label={`${getFullName(member)} on LinkedIn`}
+                                        >
+                                            <Linkedin size={13} />
+                                            LinkedIn
+                                        </a>
                                     </div>
-                                )}
-
-                                {/* LinkedIn */}
-                                <div className="mt-6 pt-4 border-t border-[#E8ECF2]">
-                                    <a
-                                        href={member.linkedin}
-                                        className="inline-flex items-center gap-2 text-[#0B1F3B]/40 hover:text-[#2F80ED] text-xs font-medium transition-colors duration-200"
-                                        aria-label={`${member.name} on LinkedIn`}
-                                    >
-                                        <Linkedin size={13} />
-                                        LinkedIn
-                                    </a>
-                                </div>
-                            </MagicCard>
-                        </BlurFade>
-                    ))}
+                                </MagicCard>
+                            </BlurFade>
+                        ))
+                    )}
                 </div>
 
                 {/* Combined credentials block */}

@@ -1,19 +1,21 @@
 "use client";
 
 import { BlurFade } from "@/components/magicui/BlurFade";
+import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
 
 export function WhyStackdExistsSection() {
   return (
     <section className="relative bg-[#0B1F3B] py-24 px-6 overflow-hidden">
-      {/* Grid texture overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`,
-          backgroundSize: "60px 60px",
-        }}
-      />
+      {/* Interactive grid background */}
+      <div className="absolute inset-0 z-0">
+        <InteractiveGridPattern
+          width={60}
+          height={60}
+          squares={[40, 40]}
+          className="opacity-100 mix-blend-overlay"
+          hoverColor="fill-white/[0.08]"
+        />
+      </div>
 
       {/* Dot accent — top right */}
       <div

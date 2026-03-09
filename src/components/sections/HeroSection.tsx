@@ -1,8 +1,10 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { useRef, MouseEvent } from "react";
 import { BlurFade } from "@/components/magicui/BlurFade";
 import { PhoneMockup3D } from "@/components/magicui/PhoneMockup3D";
+import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
 import { ArrowRight } from "lucide-react";
 
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -16,18 +18,85 @@ const TikTokIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+function TikTokLogo3D() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+
+  const springConfig = { damping: 25, stiffness: 150, mass: 0.5 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  const rotateX = useTransform(smoothY, [0, 1], [25, -25]);
+  const rotateY = useTransform(smoothX, [0, 1], [-25, 25]);
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      mouseX.set(x);
+      mouseY.set(y);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0.5);
+    mouseY.set(0.5);
+  };
+
+  return (
+    <motion.div
+      className="absolute z-20 top-24 left-[25%] lg:top-32 lg:-left-4 xl:left-8 max-lg:hidden w-fit"
+      animate={{ y: [0, -15, 0] }}
+      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      style={{ perspective: 1000 }}
+    >
+      <BlurFade delay={0.8}>
+        <motion.div
+          ref={ref}
+          className="flex flex-col h-28 w-28 lg:h-24 lg:w-24 items-center justify-center rounded-full bg-[#0d0d1a] border border-white/[0.08] pointer-events-auto cursor-default"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          style={{
+            rotateX,
+            rotateY,
+            transformStyle: "preserve-3d",
+          }}
+          whileHover={{
+            scale: 1.15,
+            boxShadow: "0 25px 50px rgba(0,0,0,0.6), 0 0 80px rgba(47,128,237,0.6)"
+          }}
+          // The base shadow needs to be applied when not hovering
+          initial={{ boxShadow: "0 20px 40px rgba(0,0,0,0.5), 0 0 40px rgba(47,128,237,0.3)" }}
+          whileTap={{ scale: 0.95 }}
+        >
+          {/* Apply counter-rotation to icon so it pops out of the 3D surface */}
+          <motion.div
+            style={{ translateZ: 20 }}
+          >
+            <TikTokIcon className="h-14 w-14 lg:h-12 lg:w-12 text-white" />
+          </motion.div>
+        </motion.div>
+      </BlurFade>
+    </motion.div>
+  );
+}
+
 export function HeroSection() {
   return (
     <section className="relative flex min-h-screen items-start lg:items-center overflow-hidden bg-[#0B1F3B] pt-24 lg:pt-16 px-6">
-      {/* Subtle grid background */}
-      <div
-        className="absolute inset-0 opacity-[0.035]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`,
-          backgroundSize: "72px 72px",
-        }}
-      />
+      {/* Interactive grid background */}
+      <div className="absolute inset-0 z-0">
+        <InteractiveGridPattern
+          width={72}
+          height={72}
+          squares={[40, 40]}
+          className="opacity-100 mix-blend-overlay"
+          hoverColor="fill-white/[0.08]"
+        />
+      </div>
 
       {/* Radial gradient glow — left */}
       <div
@@ -106,13 +175,7 @@ export function HeroSection() {
           {/* ── Right: Visuals (Phone + TikTok Logo) ── */}
           <div className="absolute right-[-35%] md:right-[-30%] top-[280px] md:top-[280px] z-0 flex w-[110%] sm:w-[100%] lg:col-span-5 lg:relative lg:right-auto lg:top-auto lg:z-10 lg:w-full lg:justify-center items-center justify-end pointer-events-none lg:pointer-events-auto">
             {/* Floating TikTok Logo */}
-            <motion.div
-              className="max-lg:hidden absolute z-20 flex h-28 w-28 lg:h-24 lg:w-24 items-center justify-center rounded-full bg-[#0d0d1a] shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_40px_rgba(47,128,237,0.3)] border border-white/[0.08] top-24 left-[25%] lg:top-32 lg:-left-4 xl:left-8"
-              animate={{ y: [0, -15, 0], rotate: [0, 5, -5, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <TikTokIcon className="h-14 w-14 lg:h-12 lg:w-12 text-white" />
-            </motion.div>
+            <TikTokLogo3D />
 
             {/* 3D Phone Mockup */}
             <div className="w-full pointer-events-auto">

@@ -32,7 +32,7 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] }}
     >
-      <div className="mx-auto flex h-18 max-w-6xl items-center justify-between">
+      <div className="mx-auto flex h-18 max-w-6xl px-6 xl:px-0 items-center justify-between">
         {/* Logo */}
         <a href="/" className="flex items-center">
           <img
@@ -43,7 +43,7 @@ export function Navbar() {
         </a>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-8 lg:flex">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
@@ -56,7 +56,7 @@ export function Navbar() {
         </nav>
 
         {/* Desktop CTA */}
-        <div className="hidden items-center md:flex">
+        <div className="hidden items-center lg:flex">
           <motion.a
             href="/book"
             className="rounded-md bg-[#2F80ED] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2570d4]"
@@ -69,7 +69,7 @@ export function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="p-1 text-white/80 hover:text-white md:hidden"
+          className="p-1 text-white/80 hover:text-white lg:hidden"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
@@ -81,7 +81,7 @@ export function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="border-t border-white/10 bg-[#0B1F3B] md:hidden"
+            className="border-t border-white/10 bg-[#0B1F3B] lg:hidden"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
