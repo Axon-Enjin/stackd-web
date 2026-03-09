@@ -62,59 +62,61 @@ export default function OurTeamPage() {
                         <div className="flex flex-col gap-8">
                             {members.map((member, i) => (
                                 <BlurFade key={member.id} delay={0.15 + (i * 0.08)}>
-                                    <MagicCard
-                                        className="bg-white border border-[#E8ECF2] rounded-xl p-8 cursor-default hover:shadow-lg transition-all duration-300 flex flex-col md:flex-row gap-8 items-start group/card"
-                                        gradientColor="#2F80ED08"
-                                        gradientSize={300}
-                                    >
-                                        <div className="shrink-0 flex justify-center w-full md:w-auto">
-                                            {/* Profile Avatar */}
-                                            <div className="w-40 h-40 md:w-56 md:h-72 rounded-full md:rounded-2xl bg-[#0B1F3B]/5 border border-[#E8ECF2] flex items-center justify-center overflow-hidden transition-all duration-500 group-hover/card:scale-[1.03] group-hover/card:-translate-y-1 group-hover/card:border-[#2F80ED]/30 group-hover/card:shadow-xl relative z-10">
-                                                {member.imageUrl ? (
-                                                    <img
-                                                        src={member.imageUrl}
-                                                        alt={getFullName(member)}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full bg-gradient-to-br from-[#0B1F3B]/10 to-[#2F80ED]/10 flex items-center justify-center">
-                                                        <span className="text-[#0B1F3B]/30 text-4xl font-bold uppercase">
-                                                            {member.firstName.charAt(0)}
-                                                        </span>
-                                                    </div>
-                                                )}
+                                    <div id={member.id} className="scroll-mt-28">
+                                        <MagicCard
+                                            className="bg-white border border-[#E8ECF2] rounded-xl p-8 cursor-default hover:shadow-lg transition-all duration-300 flex flex-col md:flex-row gap-8 items-start group/card"
+                                            gradientColor="#2F80ED08"
+                                            gradientSize={300}
+                                        >
+                                            <div className="shrink-0 flex justify-center w-full md:w-auto">
+                                                {/* Profile Avatar */}
+                                                <div className="w-40 h-40 md:w-56 md:h-72 rounded-full md:rounded-2xl bg-[#0B1F3B]/5 border border-[#E8ECF2] flex items-center justify-center overflow-hidden transition-all duration-500 group-hover/card:scale-[1.03] group-hover/card:-translate-y-1 group-hover/card:border-[#2F80ED]/30 group-hover/card:shadow-xl relative z-10">
+                                                    {member.imageUrl ? (
+                                                        <img
+                                                            src={member.imageUrl}
+                                                            alt={getFullName(member)}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-full bg-gradient-to-br from-[#0B1F3B]/10 to-[#2F80ED]/10 flex items-center justify-center">
+                                                            <span className="text-[#0B1F3B]/30 text-4xl font-bold uppercase">
+                                                                {member.firstName.charAt(0)}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div className="flex-grow flex flex-col text-center md:text-left">
-                                            {/* Name & Role */}
-                                            <h3 className="text-[#0B1F3B] font-bold text-2xl leading-snug">
-                                                {getFullName(member)}
-                                            </h3>
-                                            <p className="text-[#2F80ED] text-sm font-semibold mt-1 mb-4 uppercase tracking-wider">
-                                                {member.role}
-                                            </p>
-
-                                            {/* Bio */}
-                                            <div className="mb-6 flex-grow">
-                                                <p className="text-[#1A1A1A]/80 text-base md:text-lg leading-relaxed whitespace-pre-wrap">
-                                                    {member.bio}
+                                            <div className="flex-grow flex flex-col text-center md:text-left">
+                                                {/* Name & Role */}
+                                                <h3 className="text-[#0B1F3B] font-bold text-2xl leading-snug">
+                                                    {getFullName(member)}
+                                                </h3>
+                                                <p className="text-[#2F80ED] text-sm font-semibold mt-1 mb-4 uppercase tracking-wider">
+                                                    {member.role}
                                                 </p>
-                                            </div>
 
-                                            {/* LinkedIn Action */}
-                                            <div className="shrink-0 mt-auto pt-5 border-t border-[#E8ECF2]/50 flex justify-center md:justify-start">
-                                                <a
-                                                    href="#"
-                                                    className="inline-flex items-center gap-2 text-[#0B1F3B]/50 hover:text-[#2F80ED] text-sm font-semibold uppercase tracking-widest transition-colors duration-200"
-                                                    aria-label={`${getFullName(member)} on LinkedIn`}
-                                                >
-                                                    <Linkedin size={16} />
-                                                    LinkedIn Profile
-                                                </a>
+                                                {/* Bio */}
+                                                <div className="mb-6 flex-grow">
+                                                    <p className="text-[#1A1A1A]/80 text-base md:text-lg leading-relaxed whitespace-pre-wrap">
+                                                        {member.bio}
+                                                    </p>
+                                                </div>
+
+                                                {/* LinkedIn Action */}
+                                                <div className="shrink-0 mt-auto pt-5 border-t border-[#E8ECF2]/50 flex justify-center md:justify-start">
+                                                    <a
+                                                        href="#"
+                                                        className="inline-flex items-center gap-2 text-[#0B1F3B]/50 hover:text-[#2F80ED] text-sm font-semibold uppercase tracking-widest transition-colors duration-200"
+                                                        aria-label={`${getFullName(member)} on LinkedIn`}
+                                                    >
+                                                        <Linkedin size={16} />
+                                                        LinkedIn Profile
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </MagicCard>
+                                        </MagicCard>
+                                    </div>
                                 </BlurFade>
                             ))}
                         </div>

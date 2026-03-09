@@ -60,7 +60,7 @@ export function FounderCredibilitySection() {
           ) : (
             displayMembers.map((member, i) => (
               <BlurFade key={member.id} delay={0.15 + i * 0.12} className="h-full">
-                <Link href="/our-team" className="block sm:flex sm:flex-row md:block w-full aspect-[4/5] sm:aspect-auto sm:h-[360px] md:h-auto md:aspect-[3/4] lg:h-[400px] lg:aspect-auto rounded-2xl overflow-hidden relative group bg-[#0f2a4a]">
+                <Link href={`/our-team#${member.id}`} className="block sm:flex sm:flex-row md:block w-full aspect-[4/5] sm:aspect-auto sm:h-[360px] md:h-auto md:aspect-[3/4] lg:h-[400px] lg:aspect-auto rounded-2xl overflow-hidden relative group bg-[#0f2a4a]">
                   {/* Image Container */}
                   <div className="absolute inset-0 sm:relative sm:w-[45%] md:absolute md:w-full h-full shrink-0 overflow-hidden z-0">
                     {member.imageUrl ? (
