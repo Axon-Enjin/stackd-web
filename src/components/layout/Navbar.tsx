@@ -32,7 +32,7 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] }}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+      <div className="mx-auto flex h-18 max-w-6xl items-center justify-between">
         {/* Logo */}
         <a href="/" className="flex items-center">
           <img
