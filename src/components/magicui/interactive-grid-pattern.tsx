@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useId } from "react";
 
 interface InteractiveGridPatternProps extends React.SVGProps<SVGSVGElement> {
     width?: number;
@@ -30,6 +30,8 @@ export function InteractiveGridPattern({
     const horizontalSquares = squares[0];
     const verticalSquares = squares[1];
 
+    const patternId = useId();
+
     useEffect(() => {
         // Randomly select a few squares to light up out of the grid
         const interval = setInterval(() => {
@@ -55,7 +57,7 @@ export function InteractiveGridPattern({
         >
             <defs>
                 <pattern
-                    id="interactiveGridPatternKey"
+                    id={patternId}
                     width={width}
                     height={height}
                     patternUnits="userSpaceOnUse"
@@ -72,7 +74,7 @@ export function InteractiveGridPattern({
             </defs>
 
             {/* Background Grid Lines */}
-            <rect width="100%" height="100%" fill="url(#interactiveGridPatternKey)" />
+            <rect width="100%" height="100%" fill={`url(#${patternId})`} />
 
             {/* Interactive Overlay Grid */}
             <svg x="-1" y="-1" className="overflow-visible">
