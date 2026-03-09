@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { BlurFade } from "@/components/magicui/BlurFade";
 import { PhoneMockup3D } from "@/components/magicui/PhoneMockup3D";
+import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
 import { ArrowRight } from "lucide-react";
 
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -19,15 +20,16 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 export function HeroSection() {
   return (
     <section className="relative flex min-h-screen items-start lg:items-center overflow-hidden bg-[#0B1F3B] pt-24 lg:pt-16 px-6">
-      {/* Subtle grid background */}
-      <div
-        className="absolute inset-0 opacity-[0.035]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`,
-          backgroundSize: "72px 72px",
-        }}
-      />
+      {/* Interactive grid background */}
+      <div className="absolute inset-0 z-0">
+        <InteractiveGridPattern
+          width={72}
+          height={72}
+          squares={[40, 40]}
+          className="opacity-100 mix-blend-overlay"
+          hoverColor="fill-white/[0.08]"
+        />
+      </div>
 
       {/* Radial gradient glow — left */}
       <div

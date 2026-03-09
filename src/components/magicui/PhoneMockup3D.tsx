@@ -2,6 +2,7 @@
 
 import { motion, useInView, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useRef, MouseEvent } from "react";
+import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
 
 const METRICS = [
   { label: "Monthly Revenue", value: "$247K", change: "+34%", positive: true },
@@ -101,15 +102,16 @@ export function PhoneMockup3D() {
                 aspectRatio: "9 / 19.5",
               }}
             >
-              {/* Subtle grid overlay on screen */}
-              <div
-                className="absolute inset-0 opacity-[0.04] pointer-events-none"
-                style={{
-                  backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`,
-                  backgroundSize: "24px 24px",
-                }}
-              />
+              {/* Interactive grid overlay on screen */}
+              <div className="absolute inset-0 z-0">
+                <InteractiveGridPattern
+                  width={24}
+                  height={24}
+                  squares={[16, 32]}
+                  className="opacity-100 mix-blend-overlay"
+                  hoverColor="fill-white/[0.08]"
+                />
+              </div>
 
               {/* Status bar */}
               <div className="flex items-center justify-between px-5 pt-3 pb-1">
