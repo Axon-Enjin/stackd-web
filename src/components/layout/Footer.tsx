@@ -1,7 +1,19 @@
+import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
+
 export function Footer() {
   return (
-    <footer className="bg-[#0B1F3B] px-6 py-12 text-white">
-      <div className="mx-auto max-w-6xl">
+    <footer className="relative overflow-hidden bg-[#0B1F3B] px-6 py-12 text-white">
+      <div className="absolute inset-0 z-0">
+        <InteractiveGridPattern
+          width={72}
+          height={72}
+          squares={[40, 40]}
+          className="opacity-100 mix-blend-overlay"
+          hoverColor="fill-white/[0.08]"
+        />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-6xl">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div>
             <div className="mb-4 flex items-center">
