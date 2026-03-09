@@ -35,11 +35,11 @@ export function HeroSection() {
           <div>
             {/* Headline */}
             <BlurFade delay={0.1}>
-              <h1 className="mb-6 text-3xl leading-[1.08] font-bold tracking-tight text-white sm:text-4xl lg:text-[50px]">
-                Own TikTok Shop as a revenue channel —{" "}
-                <span className="text-white/60">
+              <h1 className="mb-6 text-3xl leading-[1.15] font-normal tracking-tight text-white sm:text-5xl lg:text-[64px]">
+                Own TikTok Shop as a revenue channel
+                {/* —{" "} <span className="text-white/60">
                   not a marketing experiment.
-                </span>
+                </span> */}
               </h1>
             </BlurFade>
 
@@ -53,18 +53,18 @@ export function HeroSection() {
             </BlurFade>
 
             {/* Qualification line */}
-            <BlurFade delay={0.32}>
+            {/* <BlurFade delay={0.32}>
               <p className="mb-10 text-sm font-medium text-[#2FB7A8] italic">
                 Best suited for growing consumer brands ready to treat TikTok
                 Shop as a serious revenue channel.
               </p>
-            </BlurFade>
+            </BlurFade> */}
 
             {/* CTA */}
             <BlurFade delay={0.42}>
               <motion.a
                 href="/book"
-                className="inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-8 py-4 text-sm font-semibold tracking-wide text-white shadow-lg shadow-[#2F80ED]/30"
+                className="mt-12 inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-8 py-4 text-sm font-semibold tracking-wide text-white shadow-lg shadow-[#2F80ED]/30"
                 whileHover={{ scale: 1.03, backgroundColor: "#2570d4" }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -76,7 +76,7 @@ export function HeroSection() {
 
             {/* Stats row */}
             <BlurFade delay={0.58}>
-              <div className="mt-12 flex flex-col gap-6 border-t border-white/[0.08] pt-8 sm:flex-row sm:gap-10">
+              <div className="mt-6 flex flex-col gap-6 border-t border-white/[0.08] pt-8 sm:flex-row sm:gap-10">
                 {[
                   { value: "100%", label: "Performance aligned" },
                   { value: "0", label: "Internal hires needed" },
