@@ -11,6 +11,8 @@ import { TeamSection } from "@/components/sections/TeamSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { VisionValuesSection } from "@/components/sections/VisionValuesSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
+import { TestimonialSection } from "@/components/sections/TestimonialSection";
+import { ProcessSection } from "@/components/sections/ProcessSection";
 
 export default function LandingPage() {
   return (
@@ -30,6 +32,8 @@ export default function LandingPage() {
         </section>
         <WhoWeWorkWithSection />
         {/* <TeamSection /> */}
+        {/* <TestimonialSection /> */}
+        <ProcessSection />
         <section id="faq">
           <FAQSection />
         </section>
