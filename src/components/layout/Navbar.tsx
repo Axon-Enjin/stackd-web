@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 
 const NAV_LINKS = [
-  { label: "Our Story", href: "#why-stackd" },
-  { label: "How We Work", href: "#our-position" },
-  { label: "Our Team", href: "#team" },
-  { label: "FAQ", href: "#faq" },
+  { label: "How We Work", href: "/#our-position" },
+  { label: "Our Team", href: "/our-team" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
 export function Navbar() {
@@ -34,37 +34,38 @@ export function Navbar() {
     >
       <div className="mx-auto flex h-18 max-w-6xl px-6 xl:px-0 items-center justify-between">
         {/* Logo */}
-        <a href="/" className="flex items-center">
+        <Link href="/" className="flex items-center">
           <img
             src="/logo-white.png"
             alt="Stackd Logo"
             className="h-3 w-auto object-contain lg:h-3.5"
           />
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-8 lg:flex">
           {NAV_LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-sm font-medium text-white/60 transition-colors duration-200 hover:text-white"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         {/* Desktop CTA */}
         <div className="hidden items-center lg:flex">
-          <motion.a
-            href="/book"
-            className="rounded-md bg-[#2F80ED] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2570d4]"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Request a Strategy Conversation
-          </motion.a>
+          <Link href="/book" passHref legacyBehavior>
+            <motion.a
+              className="rounded-md bg-[#2F80ED] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2570d4]"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Request a Strategy Conversation
+            </motion.a>
+          </Link>
         </div>
 
         {/* Mobile hamburger */}
@@ -89,22 +90,22 @@ export function Navbar() {
           >
             <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-4">
               {NAV_LINKS.map((link) => (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   className="text-sm font-medium text-white/70 transition-colors hover:text-white"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
-              <a
+              <Link
                 href="/book"
                 className="mt-2 rounded-md bg-[#2F80ED] px-5 py-3 text-center text-sm font-semibold text-white"
                 onClick={() => setIsOpen(false)}
               >
                 Book a Strategy Call
-              </a>
+              </Link>
             </div>
           </motion.div>
         )}

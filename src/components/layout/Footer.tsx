@@ -1,5 +1,5 @@
 import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
-
+import Link from "next/link";
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-[#0B1F3B] px-6 py-12 text-white">
@@ -30,12 +30,12 @@ export function Footer() {
           </div>
 
           <div className="flex flex-col gap-2 md:items-end">
-            <a
-              href="#contact"
+            <Link
+              href="/#contact"
               className="inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2570d4]"
             >
               Request a Strategy Conversation →
-            </a>
+            </Link>
           </div>
         </div>
 
