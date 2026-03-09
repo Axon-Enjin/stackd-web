@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-[#0B1F3B] pt-16">
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-[#0B1F3B] pt-16 px-6">
       {/* Subtle grid background */}
       <div
         className="absolute inset-0 opacity-[0.035]"
@@ -28,7 +28,7 @@ export function HeroSection() {
         }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24 lg:py-28">
+      <div className="relative z-10 mx-auto w-full max-w-6xl py-24 lg:py-28">
         {/* Two-column layout on desktop */}
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* ── Left: Content ── */}
