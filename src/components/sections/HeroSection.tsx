@@ -5,6 +5,17 @@ import { BlurFade } from "@/components/magicui/BlurFade";
 import { PhoneMockup3D } from "@/components/magicui/PhoneMockup3D";
 import { ArrowRight } from "lucide-react";
 
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 448 512"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z" />
+  </svg>
+);
+
 export function HeroSection() {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden bg-[#0B1F3B] pt-16 px-6">
@@ -28,18 +39,15 @@ export function HeroSection() {
         }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl py-24 lg:py-28">
+      <div className="relative z-10 mx-auto w-full max-w-6xl py-12 md:py-20 lg:py-28">
         {/* Two-column layout on desktop */}
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* ── Left: Content ── */}
           <div>
             {/* Headline */}
             <BlurFade delay={0.1}>
-              <h1 className="mb-6 text-3xl leading-[1.15] font-normal tracking-tight text-white sm:text-5xl lg:text-[64px]">
-                Own TikTok Shop as a revenue channel
-                {/* —{" "} <span className="text-white/60">
-                  not a marketing experiment.
-                </span> */}
+              <h1 className="mb-4 sm:mb-6 text-[38px] leading-[1.1] font-normal tracking-tight text-white sm:text-5xl lg:text-[64px]">
+                Own TikTok Shop as a <span className="text-[#2F80ED] font-semibold">revenue channel</span>
               </h1>
             </BlurFade>
 
@@ -64,7 +72,7 @@ export function HeroSection() {
             <BlurFade delay={0.42}>
               <motion.a
                 href="/book"
-                className="mt-12 inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-8 py-4 text-sm font-semibold tracking-wide text-white shadow-lg shadow-[#2F80ED]/30"
+                className="mt-6 sm:mt-8 lg:mt-12 inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-6 py-3 sm:px-8 sm:py-4 text-sm font-semibold tracking-wide text-white shadow-lg shadow-[#2F80ED]/30"
                 whileHover={{ scale: 1.03, backgroundColor: "#2570d4" }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -76,7 +84,7 @@ export function HeroSection() {
 
             {/* Stats row */}
             <BlurFade delay={0.58}>
-              <div className="mt-6 flex flex-col gap-6 border-t border-white/[0.08] pt-8 sm:flex-row sm:gap-10">
+              <div className="mt-8 sm:mt-12 flex flex-col gap-6 border-t border-white/[0.08] pt-8 sm:flex-row sm:gap-10">
                 {[
                   { value: "100%", label: "Performance aligned" },
                   { value: "0", label: "Internal hires needed" },
@@ -95,8 +103,22 @@ export function HeroSection() {
             </BlurFade>
           </div>
 
-          {/* ── Right: 3D Phone Mockup ── */}
-          <PhoneMockup3D />
+          {/* ── Right: Visuals (Phone + TikTok Logo) ── */}
+          <div className="relative flex items-center justify-end w-full sm:justify-center">
+            {/* Floating TikTok Logo */}
+            <motion.div
+              className="absolute z-20 flex h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 items-center justify-center rounded-full bg-[#0d0d1a] shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_40px_rgba(47,128,237,0.3)] border border-white/[0.08] top-12 left-[10%] sm:top-24 sm:left-[25%] lg:top-32 lg:-left-4 xl:left-8"
+              animate={{ y: [0, -15, 0], rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <TikTokIcon className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-white" />
+            </motion.div>
+
+            {/* 3D Phone Mockup */}
+            <div className="w-full translate-x-8 sm:translate-x-0 lg:translate-x-0">
+              <PhoneMockup3D />
+            </div>
+          </div>
         </div>
       </div>
     </section>
