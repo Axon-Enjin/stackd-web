@@ -18,6 +18,7 @@ export default function LandingPage() {
       <Navbar />
       <main>
         <HeroSection />
+        <FounderCredibilitySection />
         {/* <PainPointsSection /> */}
         {/* <FounderCredibilitySection /> */}
         <ProblemSection />
@@ -28,7 +29,6 @@ export default function LandingPage() {
           <OurPositionSection />
         </section>
         <WhoWeWorkWithSection />
-        <FounderCredibilitySection />
         {/* <TeamSection /> */}
         <section id="faq">
           <FAQSection />
