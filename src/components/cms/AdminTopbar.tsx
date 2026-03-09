@@ -64,13 +64,11 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
           </button>
 
           <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
-            {/* Logo mark */}
-            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-gradient-to-br from-[#2F80ED] to-[#2FB7A8] text-xs font-black text-white shadow-md">
-              S
-            </div>
-            <span className="text-lg font-bold tracking-[0.12em] text-white uppercase select-none">
-              STACKD
-            </span>
+            <img
+              src="/logo-white.png"
+              alt="Stackd Logo"
+              className="h-3 w-auto object-contain"
+            />
           </Link>
         </div>
 

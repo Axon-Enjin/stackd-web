@@ -13,12 +13,11 @@ export function AdminFooter() {
           {/* Left: Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
-              <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-gradient-to-br from-[#2F80ED] to-[#2FB7A8] text-[10px] font-black text-white shadow-md">
-                S
-              </div>
-              <span className="text-base font-bold tracking-[0.12em] text-white uppercase select-none">
-                STACKD
-              </span>
+              <img
+                src="/logo-white.png"
+                alt="Stackd Logo"
+                className="h-2.5 w-auto object-contain"
+              />
             </Link>
             <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/40">
               Content management system for your digital storefront.
