@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useInView } from "motion/react";
-import { useRef } from "react";
+import { motion, useInView, useMotionValue, useSpring, useTransform } from "motion/react";
+import { useRef, MouseEvent } from "react";
 
 const METRICS = [
   { label: "Monthly Revenue", value: "$247K", change: "+34%", positive: true },
@@ -13,11 +13,42 @@ const METRICS = [
 const BARS = [38, 52, 44, 67, 58, 79, 95];
 
 export function PhoneMockup3D() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+
+  const springConfig = { damping: 25, stiffness: 150, mass: 0.5 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  // Base rotation: rotateY(-24), rotateX(12)
+  const rotateX = useTransform(smoothY, [0, 1], [16, 8]);
+  const rotateY = useTransform(smoothX, [0, 1], [-18, -30]);
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      mouseX.set(x);
+      mouseY.set(y);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0.5);
+    mouseY.set(0.5);
+  };
+
   return (
-    <div ref={ref} className="relative hidden lg:flex items-center justify-center select-none">
+    <div
+      ref={ref}
+      className="relative hidden lg:flex items-center justify-center select-none"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
       {/* Ambient glow behind phone */}
       <div
         className="absolute -inset-[150px] pointer-events-none"
@@ -40,10 +71,10 @@ export function PhoneMockup3D() {
           animate={{ y: [0, -12, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           style={{
-            rotateY: -24,
-            rotateX: 12,
+            rotateY,
+            rotateX,
             rotateZ: 4,
-            scale: 1.15,
+            scale: 1.3,
             transformStyle: "preserve-3d",
           }}
         >
