@@ -60,9 +60,9 @@ export function FounderCredibilitySection() {
           ) : (
             displayMembers.map((member, i) => (
               <BlurFade key={member.id} delay={0.15 + i * 0.12} className="h-full">
-                <Link href="/our-team" className="block sm:flex sm:flex-row md:block w-full aspect-[4/5] sm:aspect-auto sm:h-[240px] md:h-auto md:aspect-[3/4] lg:h-[400px] lg:aspect-auto rounded-2xl overflow-hidden relative group bg-[#0f2a4a]">
+                <Link href="/our-team" className="block sm:flex sm:flex-row md:block w-full aspect-[4/5] sm:aspect-auto sm:h-[360px] md:h-auto md:aspect-[3/4] lg:h-[400px] lg:aspect-auto rounded-2xl overflow-hidden relative group bg-[#0f2a4a]">
                   {/* Image Container */}
-                  <div className="absolute inset-0 sm:relative sm:w-[40%] md:absolute md:w-full h-full shrink-0 overflow-hidden z-0">
+                  <div className="absolute inset-0 sm:relative sm:w-[45%] md:absolute md:w-full h-full shrink-0 overflow-hidden z-0">
                     {member.imageUrl ? (
                       <img
                         src={member.imageUrl}
@@ -76,23 +76,31 @@ export function FounderCredibilitySection() {
                         </span>
                       </div>
                     )}
-
-                    {/* Gradient Overlay for xs and md+ (Bottom Fade) */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f2a4a] via-[#0f2a4a]/60 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100 sm:hidden md:block pointer-events-none" />
-
-                    {/* Gradient Overlay for sm (Right Fade) */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#0f2a4a]/50 to-[#0f2a4a] hidden sm:block md:hidden pointer-events-none" />
                   </div>
 
-                  {/* Content Container */}
-                  <div className="absolute inset-0 p-8 flex flex-col justify-end translate-y-4 transition-transform duration-300 group-hover:translate-y-0 sm:relative sm:p-6 sm:justify-center sm:translate-y-0 sm:w-[60%] md:absolute md:w-full md:p-8 md:justify-end md:translate-y-4 z-10 pointer-events-none">
+                  {/* Content Container XS and MD+ */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f2a4a] via-[#0f2a4a]/80 via-[45%] to-[#0f2a4a]/0 opacity-90 transition-opacity duration-300 group-hover:opacity-100 sm:hidden md:block pointer-events-none z-10" />
+                  <div className="absolute inset-0 p-8 flex flex-col justify-end translate-y-4 transition-transform duration-300 group-hover:translate-y-0 sm:hidden md:flex md:w-full md:p-8 md:justify-end md:translate-y-4 z-20 pointer-events-none">
                     <h3 className="text-white font-bold text-2xl leading-snug mb-1">
                       {getFullName(member)}
                     </h3>
                     <p className="text-[#2F80ED] text-xs font-bold uppercase tracking-widest mb-4">
                       {member.role}
                     </p>
-                    <p className="text-white/80 text-sm leading-relaxed line-clamp-3 sm:line-clamp-4 md:line-clamp-3">
+                    <p className="text-white/80 text-sm leading-relaxed line-clamp-3 md:line-clamp-3">
+                      {member.bio}
+                    </p>
+                  </div>
+
+                  {/* Content Container SM Only */}
+                  <div className="relative p-6 sm:px-8 flex flex-col justify-center sm:w-[55%] hidden sm:flex md:hidden z-20 pointer-events-none">
+                    <h3 className="text-white font-bold text-2xl leading-snug mb-1">
+                      {getFullName(member)}
+                    </h3>
+                    <p className="text-[#2F80ED] text-xs font-bold uppercase tracking-widest mb-4">
+                      {member.role}
+                    </p>
+                    <p className="text-white/80 text-sm leading-relaxed line-clamp-4">
                       {member.bio}
                     </p>
                   </div>
