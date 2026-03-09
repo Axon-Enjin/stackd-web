@@ -20,10 +20,10 @@ export function PhoneMockup3D() {
     <div ref={ref} className="relative hidden lg:flex items-center justify-center select-none">
       {/* Ambient glow behind phone */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute -inset-[150px] pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 60% 50%, rgba(47,128,237,0.18) 0%, transparent 65%)",
+            "radial-gradient(ellipse at 50% 50%, rgba(47,128,237,0.15) 0%, transparent 60%)",
         }}
       />
 
