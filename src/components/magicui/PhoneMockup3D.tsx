@@ -45,7 +45,7 @@ export function PhoneMockup3D() {
   return (
     <div
       ref={ref}
-      className="relative flex w-full items-center justify-center select-none mt-12 lg:mt-0 scale-[0.8] sm:scale-100"
+      className="relative flex w-full items-center justify-center select-none scale-100 origin-center"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >

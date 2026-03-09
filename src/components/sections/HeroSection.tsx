@@ -18,7 +18,7 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-[#0B1F3B] pt-16 px-6">
+    <section className="relative flex min-h-screen items-start lg:items-center overflow-hidden bg-[#0B1F3B] pt-24 lg:pt-16 px-6">
       {/* Subtle grid background */}
       <div
         className="absolute inset-0 opacity-[0.035]"
@@ -39,11 +39,11 @@ export function HeroSection() {
         }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl py-12 md:py-20 lg:py-28">
-        {/* Two-column layout on desktop */}
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <div className="relative z-10 mx-auto w-full max-w-6xl pt-8 pb-32 md:py-20 lg:py-28">
+        {/* Grid layout on desktop, overlapping background on mobile */}
+        <div className="relative flex flex-col lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
           {/* ── Left: Content ── */}
-          <div>
+          <div className="relative z-10 w-[85%] sm:w-[70%] lg:w-full lg:col-span-7">
             {/* Headline */}
             <BlurFade delay={0.1}>
               <h1 className="mb-4 sm:mb-6 text-[38px] leading-[1.1] font-normal tracking-tight text-white sm:text-5xl lg:text-[64px]">
@@ -84,7 +84,7 @@ export function HeroSection() {
 
             {/* Stats row */}
             <BlurFade delay={0.58}>
-              <div className="mt-8 sm:mt-12 flex flex-col gap-6 border-t border-white/[0.08] pt-8 sm:flex-row sm:gap-10">
+              <div className="mt-8 sm:mt-12 flex flex-col gap-6 border-t border-white/[0.08] pt-8 md:flex-row sm:gap-10">
                 {[
                   { value: "100%", label: "Performance aligned" },
                   { value: "0", label: "Internal hires needed" },
@@ -104,18 +104,18 @@ export function HeroSection() {
           </div>
 
           {/* ── Right: Visuals (Phone + TikTok Logo) ── */}
-          <div className="relative flex items-center justify-end w-full sm:justify-center">
+          <div className="absolute right-[-35%] md:right-[-30%] top-[280px] md:top-[280px] z-0 flex w-[110%] sm:w-[100%] lg:col-span-5 lg:relative lg:right-auto lg:top-auto lg:z-10 lg:w-full lg:justify-center items-center justify-end pointer-events-none lg:pointer-events-auto">
             {/* Floating TikTok Logo */}
             <motion.div
-              className="absolute z-20 flex h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 items-center justify-center rounded-full bg-[#0d0d1a] shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_40px_rgba(47,128,237,0.3)] border border-white/[0.08] top-12 left-[10%] sm:top-24 sm:left-[25%] lg:top-32 lg:-left-4 xl:left-8"
+              className="max-lg:hidden absolute z-20 flex h-28 w-28 lg:h-24 lg:w-24 items-center justify-center rounded-full bg-[#0d0d1a] shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_40px_rgba(47,128,237,0.3)] border border-white/[0.08] top-24 left-[25%] lg:top-32 lg:-left-4 xl:left-8"
               animate={{ y: [0, -15, 0], rotate: [0, 5, -5, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
-              <TikTokIcon className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-white" />
+              <TikTokIcon className="h-14 w-14 lg:h-12 lg:w-12 text-white" />
             </motion.div>
 
             {/* 3D Phone Mockup */}
-            <div className="w-full translate-x-8 sm:translate-x-0 lg:translate-x-0">
+            <div className="w-full pointer-events-auto">
               <PhoneMockup3D />
             </div>
           </div>
