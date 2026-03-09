@@ -37,10 +37,13 @@ export function PhoneMockup3D() {
       >
         {/* Floating loop */}
         <motion.div
-          animate={{ y: [0, -10, 0] }}
+          animate={{ y: [0, -12, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           style={{
-            transform: "rotateY(-14deg) rotateX(5deg)",
+            rotateY: -24,
+            rotateX: 12,
+            rotateZ: 4,
+            scale: 1.15,
             transformStyle: "preserve-3d",
           }}
         >
