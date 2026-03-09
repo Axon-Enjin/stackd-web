@@ -15,10 +15,10 @@ export function Footer() {
 
           <div className="flex flex-col gap-2 md:items-end">
             <a
-              href="#contact"
+              href="/book"
               className="inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2570d4]"
             >
-              Book a Strategy Call →
+              Book a Strategy Call
             </a>
           </div>
         </div>
