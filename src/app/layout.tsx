@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <ProviderCompose>
       <html lang="en">
-        <body className={`${inter.variable} antialiased`}>
+        <body className={`${inter.variable} ${inter.className} antialiased`}>
           {children}
           {isDev && <BreakpointIndicator />}
           {isDev && <DebugNavigator />}
