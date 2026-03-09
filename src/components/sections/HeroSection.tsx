@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { BlurFade } from "@/components/magicui/BlurFade";
-import { HeroDashboard } from "@/components/magicui/HeroDashboard";
+import { PhoneMockup3D } from "@/components/magicui/PhoneMockup3D";
 import { ArrowRight } from "lucide-react";
 
 export function HeroSection() {
@@ -33,68 +33,45 @@ export function HeroSection() {
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* ── Left: Content ── */}
           <div>
-            {/* Badge */}
-            <BlurFade delay={0.05}>
-              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.07] px-4 py-1.5">
-                <motion.span
-                  className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#2FB7A8]"
-                  animate={{ opacity: [1, 0.3, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <span className="text-sm font-medium text-white/70">
-                  TikTok Shop Revenue Operations
-                </span>
-              </div>
-            </BlurFade>
-
             {/* Headline */}
-            <BlurFade delay={0.15}>
-              <h1 className="mb-6 text-3xl leading-[1.12] font-bold tracking-tight text-white sm:text-4xl lg:text-[48px]">
-                We scale TikTok Shop revenue for brands through live commerce
-                operations, creator networks and performance optimization.
+            <BlurFade delay={0.1}>
+              <h1 className="mb-6 text-3xl leading-[1.08] font-bold tracking-tight text-white sm:text-4xl lg:text-[50px]">
+                Own TikTok Shop as a revenue channel —{" "}
+                <span className="text-white/60">
+                  not a marketing experiment.
+                </span>
               </h1>
             </BlurFade>
 
             {/* Sub-headline */}
-            <BlurFade delay={0.28}>
-              <p className="mb-4 text-base leading-relaxed text-white/55 md:text-lg">
-                Stackd operates the systems and execution behind TikTok live
-                commerce — helping brands launch, manage and scale sales without
-                building an internal team.
+            <BlurFade delay={0.22}>
+              <p className="mb-5 text-base leading-relaxed text-white/55 md:text-lg">
+                Stackd partners with established consumer brands to build and
+                operate the live commerce, creator and performance systems
+                behind TikTok Shop — as a fully accountable revenue function.
               </p>
             </BlurFade>
 
-            {/* Supporting line */}
-            <BlurFade delay={0.38}>
-              <p className="mb-10 text-sm font-medium text-[#2FB7A8]">
-                Built for direct-to-consumer brands already selling — or ready
-                to sell — on TikTok Shop.
+            {/* Qualification line */}
+            <BlurFade delay={0.32}>
+              <p className="mb-10 text-sm font-medium text-[#2FB7A8] italic">
+                Best suited for growing consumer brands ready to treat TikTok
+                Shop as a serious revenue channel.
               </p>
             </BlurFade>
 
-            {/* CTAs */}
-            <BlurFade delay={0.48}>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <motion.a
-                  href="/book"
-                  className="inline-flex items-center justify-center gap-2 rounded-md bg-[#2F80ED] px-7 py-3.5 text-sm font-semibold tracking-wide text-white shadow-lg shadow-[#2F80ED]/25"
-                  whileHover={{ scale: 1.03, backgroundColor: "#2570d4" }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                >
-                  BOOK A STRATEGY CALL
-                  <ArrowRight size={15} />
-                </motion.a>
-
-                <motion.a
-                  href="/#how-we-work"
-                  className="inline-flex items-center justify-center gap-2 rounded-md border border-white/20 px-7 py-3.5 text-sm font-medium text-white/65 transition-colors duration-200 hover:border-white/40 hover:text-white"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  How we work
-                </motion.a>
-              </div>
+            {/* CTA */}
+            <BlurFade delay={0.42}>
+              <motion.a
+                href="/book"
+                className="inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-8 py-4 text-sm font-semibold tracking-wide text-white shadow-lg shadow-[#2F80ED]/30"
+                whileHover={{ scale: 1.03, backgroundColor: "#2570d4" }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                Request a Strategy Conversation
+                <ArrowRight size={15} />
+              </motion.a>
             </BlurFade>
 
             {/* Stats row */}
@@ -118,8 +95,8 @@ export function HeroSection() {
             </BlurFade>
           </div>
 
-          {/* ── Right: Animated Dashboard ── */}
-          <HeroDashboard />
+          {/* ── Right: 3D Phone Mockup ── */}
+          <PhoneMockup3D />
         </div>
       </div>
     </section>
