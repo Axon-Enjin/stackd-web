@@ -42,9 +42,9 @@ export const createRegularHandler = (
     try {
       await limiterHandler(req);
 
-      if (options.auth.required) {
-        await requireAuth(req);
-      }
+      // if (options.auth.required) {
+      //   await requireAuth(req);
+      // }
 
       const result = await handler(req, ...args);
       return result;
