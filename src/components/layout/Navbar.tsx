@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
-    { label: "How We Work", href: "#how-we-work" },
-    { label: "Our Team", href: "#team" },
-    { label: "The Process", href: "#process" },
+  { label: "How We Work", href: "/#how-we-work" },
+  { label: "Our Team", href: "/#team" },
+  { label: "The Process", href: "/#process" },
 ];
 
 export function Navbar() {
@@ -36,7 +36,7 @@ export function Navbar() {
             <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
                 {/* Logo */}
                 <a
-                    href="#"
+                    href="/"
                     className="text-white font-bold text-xl tracking-[0.15em] uppercase select-none"
                 >
                     STACKD
@@ -58,7 +58,7 @@ export function Navbar() {
                 {/* Desktop CTA */}
                 <div className="hidden md:flex items-center">
                     <motion.a
-                        href="#contact"
+                        href="/book"
                         className="bg-[#2F80ED] hover:bg-[#2570d4] text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors duration-200"
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
@@ -99,7 +99,7 @@ export function Navbar() {
                                 </a>
                             ))}
                             <a
-                                href="#contact"
+                                href="/book"
                                 className="bg-[#2F80ED] text-white text-sm font-semibold px-5 py-3 rounded-md text-center mt-2"
                                 onClick={() => setIsOpen(false)}
                             >

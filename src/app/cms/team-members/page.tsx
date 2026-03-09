@@ -24,6 +24,8 @@ import { useUpdateTeamMemberMutation } from "@/features/TeamMembers/hooks/useUpd
 import { useDeleteTeamMemberMutation } from "@/features/TeamMembers/hooks/useDeleteTeamMemberMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { truncateWithEllipsis } from "@/lib/utils";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 // Types based on your domain
 interface Member {
@@ -37,28 +39,73 @@ interface Member {
 }
 
 export default function TeamAdminPage() {
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  return (
+    <React.Suspense fallback={<div className="p-8 text-center text-gray-500">Loading...</div>}>
+      <TeamAdminPageContent />
+    </React.Suspense>
+  );
+}
+
+function TeamAdminPageContent() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("pageSize")) || 10;
+
+  const setPage = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const setPageSize = (newPageSize: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("pageSize", newPageSize.toString());
+    params.set("page", "1");
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [viewingMember, setViewingMember] = useState<Member | null>(null);
   const [photoViewerUrl, setPhotoViewerUrl] = useState<string | null>(null);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
   const [pageError, setPageError] = useState<string | null>(null);
+  const [highlightId, setHighlightId] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   // TanStack Query Hooks
-  const { data: response, isLoading } = usePaginatedTeamMembersQuery(page, pageSize);
+  const { data: response, isLoading, isFetching } = usePaginatedTeamMembersQuery(page, pageSize);
   const deleteMutation = useDeleteTeamMemberMutation();
 
   const members: Member[] = response?.data || [];
   const meta = response?.meta;
+
+  useEffect(() => {
+    if (!isLoading && highlightId) {
+      const found = members.find((m) => m.id === highlightId);
+      if (found) {
+        const el = document.getElementById(`row-${highlightId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => setHighlightId(null), 3000);
+        }
+      }
+    }
+  }, [isLoading, highlightId, members]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this team member?")) return;
     setPageError(null);
     try {
       await deleteMutation.mutateAsync(id);
+      toast.success("Team member successfully deleted.", {
+        className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+        progressClassName: "!bg-[#2F80ED]",
+        icon: <Trash2 className="text-red-500" size={20} />
+      });
     } catch (error: any) {
       setPageError(error.message || "Failed to delete member.");
     }
@@ -133,7 +180,12 @@ export default function TeamAdminPage() {
       ) : (
         <>
           {/* Row List */}
-          <div className="rounded border border-gray-200 bg-white shadow-sm">
+          <div className="relative rounded border border-gray-200 bg-white shadow-sm">
+            {isFetching && !isLoading && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center rounded bg-white/50 backdrop-blur-[1px]">
+                <Loader2 className="animate-spin text-[#2F80ED]" size={32} />
+              </div>
+            )}
             {members.length === 0 ? (
               <div className="py-16 text-center text-gray-500">
                 <Users className="mx-auto mb-3 text-gray-300" size={48} />
@@ -155,6 +207,11 @@ export default function TeamAdminPage() {
                     onEdit={() => openEdit(member)}
                     onDelete={() => handleDelete(member.id)}
                     onPhotoClick={(url) => setPhotoViewerUrl(url)}
+                    isDeleting={
+                      deleteMutation.isPending &&
+                      deleteMutation.variables === member.id
+                    }
+                    isHighlighted={highlightId === member.id}
                   />
                 ))}
               </div>
@@ -171,7 +228,6 @@ export default function TeamAdminPage() {
               onPageChange={setPage}
               onPageSizeChange={(size) => {
                 setPageSize(size);
-                setPage(1);
               }}
             />
           )}
@@ -196,7 +252,15 @@ export default function TeamAdminPage() {
       {/* Create/Edit Form Modal */}
       {isModalOpen && (
         <MemberModal
-          onClose={() => setIsModalOpen(false)}
+          onClose={(createdId?: string) => {
+            setIsModalOpen(false);
+            if (createdId && meta) {
+              const newTotalRecords = meta.totalRecords + 1;
+              const targetPage = Math.ceil(newTotalRecords / pageSize) || 1;
+              setPage(targetPage);
+              setHighlightId(createdId);
+            }
+          }}
           member={editingMember}
         />
       )}
@@ -237,6 +301,8 @@ function MemberRow({
   onEdit,
   onDelete,
   onPhotoClick,
+  isDeleting,
+  isHighlighted,
 }: {
   member: Member;
   fullName: string;
@@ -244,6 +310,8 @@ function MemberRow({
   onEdit: () => void;
   onDelete: () => void;
   onPhotoClick: (url: string) => void;
+  isDeleting: boolean;
+  isHighlighted?: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -260,8 +328,9 @@ function MemberRow({
 
   return (
     <div
-      className="group flex cursor-pointer items-center gap-4 px-5 py-4 transition-colors hover:bg-gray-50"
-      onClick={() => onView()}
+      id={`row-${member.id}`}
+      className={`group relative flex items-center gap-4 px-5 py-4 transition-all duration-500 hover:bg-gray-50 ${isDeleting ? "opacity-50" : "cursor-pointer"} ${isHighlighted ? "bg-blue-50/50" : ""}`}
+      onClick={() => !isDeleting && onView()}
     >
       {/* Avatar */}
       <div
@@ -290,6 +359,11 @@ function MemberRow({
         </h3>
         <p className="mt-0.5   text-xs text-gray-500">{truncateWithEllipsis(member.role, 30)}</p>
       </div>
+
+      {/* Loading spinner for delete */}
+      {isDeleting && (
+        <Loader2 className="shrink-0 animate-spin text-red-500" size={18} />
+      )}
 
       {/* Menu */}
       <div className="relative shrink-0" ref={menuRef}>
@@ -458,7 +532,7 @@ function MemberModal({
   onClose,
   member,
 }: {
-  onClose: () => void;
+  onClose: (id?: string) => void;
   member: Member | null;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -510,10 +584,21 @@ function MemberModal({
           id: member.id,
           formData: apiFormData,
         });
+        onClose();
+        toast.success("Team member successfully updated.", {
+          className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+          progressClassName: "!bg-[#2F80ED]",
+          icon: <Users className="text-[#2F80ED]" size={20} />
+        });
       } else {
-        await createMutation.mutateAsync(apiFormData);
+        const result = await createMutation.mutateAsync(apiFormData);
+        onClose(result?.id || result?.data?.id);
+        toast.success("Team member successfully created.", {
+          className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
+          progressClassName: "!bg-[#2F80ED]",
+          icon: <Users className="text-[#2F80ED]" size={20} />
+        });
       }
-      onClose();
     } catch (error: any) {
       setFormError(error.message || "Failed to save team member.");
     }
@@ -527,7 +612,7 @@ function MemberModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={() => onClose()}>
       <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-sm border border-gray-200 bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
         <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50/80 px-6 py-4">
           <div className="flex items-center gap-3">
@@ -539,7 +624,7 @@ function MemberModal({
             </h2>
           </div>
           <button
-            onClick={onClose}
+            onClick={() => onClose()}
             className="rounded-sm p-1.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600"
           >
             <X size={20} />
@@ -662,7 +747,7 @@ function MemberModal({
           <div className="mt-8 flex justify-end gap-2 border-t border-gray-200 pt-6">
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => onClose()}
               disabled={isPending}
               className="rounded-sm border border-gray-200 bg-white px-5 py-2.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
             >
