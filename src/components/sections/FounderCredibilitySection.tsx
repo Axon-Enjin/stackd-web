@@ -1,25 +1,33 @@
 "use client";
 
 import { BlurFade } from "@/components/magicui/BlurFade";
-import { MagicCard } from "@/components/magicui/magic-card";
-import { Linkedin } from "lucide-react";
+import Link from "next/link";
+import { usePaginatedTeamMembersQuery } from "@/features/TeamMembers/hooks/usePaginatedTeamMembersQuery";
+import { Loader2 } from "lucide-react";
 
-const FOUNDERS = [
-  {
-    name: "Jay Buenaflor",
-    role: "CEO",
-    bio: "Nearly two decades helping organizations scale through stronger teams, clearer decisions and disciplined execution. Former COO of a fast-growing e-commerce cosmetics company — with hands-on experience building the operational systems behind multi-channel growth, including early TikTok commerce adoption.",
-    linkedin: "#",
-  },
-  {
-    name: "Dette Tejada",
-    role: "Commerce Operations",
-    bio: "5+ years operating within the TikTok ecosystem. Former E-Commerce Head across beauty, apparel and general e-commerce brands. Specializes in building the creator ecosystems, affiliate infrastructure and live selling systems that convert TikTok visibility into predictable revenue.",
-    linkedin: "#",
-  },
-];
+// Types based on the CMS Member definition
+interface Member {
+  id: string;
+  imageUrl?: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+  role: string;
+  bio: string;
+}
 
 export function FounderCredibilitySection() {
+  const { data: response, isLoading } = usePaginatedTeamMembersQuery(1, 4);
+  const members: Member[] = response?.data || [];
+
+  // We want to show up to the first 3 team members
+  const displayMembers = members.slice(0, 3);
+
+  const getFullName = (member: Member) => {
+    const middle = member.middleName ? `${member.middleName.charAt(0)}.` : "";
+    return `${member.firstName} ${middle} ${member.lastName}`.replace(/\s+/g, " ").trim();
+  };
+
   return (
     <section className="bg-[#F7F9FC] py-24 px-6">
       <div className="max-w-6xl mx-auto">
@@ -29,54 +37,64 @@ export function FounderCredibilitySection() {
           </p>
         </BlurFade>
         <BlurFade delay={0.1}>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#0B1F3B] leading-tight tracking-tight mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#0B1F3B] leading-tight tracking-tight mb-5">
             Built by Operators, Not Marketers.
           </h2>
         </BlurFade>
+        <div className="max-w-3xl mb-12">
+          <BlurFade delay={0.2}>
+            <p className="text-[#1A1A1A]/60 text-base md:text-lg leading-relaxed mb-2">
+              Stackd is built by operators who believe TikTok Shop succeeds when execution is owned, structured and consistent.
+            </p>
+            <p className="text-[#1A1A1A]/60 text-base md:text-lg leading-relaxed">
+              Our team combines leadership experience, operational discipline and hands-on knowledge of live commerce systems.
+            </p>
+          </BlurFade>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {FOUNDERS.map((founder, i) => (
-            <BlurFade key={founder.name} delay={0.15 + i * 0.12}>
-              <MagicCard
-                className="bg-white border border-[#E8ECF2] rounded-xl p-8 h-full cursor-default hover:shadow-md transition-shadow duration-300"
-                gradientColor="#2F80ED10"
-                gradientSize={240}
-              >
-                {/* Photo placeholder */}
-                <div className="w-16 h-16 rounded-full bg-[#0B1F3B]/08 border border-[#E8ECF2] mb-5 flex items-center justify-center overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-br from-[#0B1F3B]/10 to-[#2F80ED]/10 flex items-center justify-center">
-                    <span className="text-[#0B1F3B]/30 text-xl font-bold">
-                      {founder.name.charAt(0)}
-                    </span>
+        <div className={`grid grid-cols-1 ${displayMembers.length === 1 ? 'md:grid-cols-1 max-w-2xl mx-auto' : displayMembers.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'lg:grid-cols-3 md:grid-cols-2'} gap-6`}>
+          {isLoading ? (
+            <div className="col-span-full flex justify-center py-12">
+              <Loader2 className="animate-spin text-[#2F80ED]" size={40} />
+            </div>
+          ) : (
+            displayMembers.map((member, i) => (
+              <BlurFade key={member.id} delay={0.15 + i * 0.12} className="h-full">
+                <Link href="/our-team" className="block w-full h-[400px] rounded-2xl overflow-hidden relative group">
+                  {/* Background Image */}
+                  {member.imageUrl ? (
+                    <img
+                      src={member.imageUrl}
+                      alt={getFullName(member)}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#0B1F3B] to-[#0B1F3B]/80 flex items-center justify-center">
+                      <span className="text-white/20 text-7xl font-bold uppercase">
+                        {member.firstName.charAt(0)}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F3B] via-[#0B1F3B]/50 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100" />
+
+                  {/* Content Overlay */}
+                  <div className="absolute inset-0 p-8 flex flex-col justify-end translate-y-4 transition-transform duration-300 group-hover:translate-y-0">
+                    <h3 className="text-white font-bold text-2xl leading-snug mb-1">
+                      {getFullName(member)}
+                    </h3>
+                    <p className="text-[#2F80ED] text-xs font-bold uppercase tracking-widest mb-4">
+                      {member.role}
+                    </p>
+                    <p className="text-white/70 text-sm leading-relaxed line-clamp-3">
+                      {member.bio}
+                    </p>
                   </div>
-                </div>
-
-                <div className="mb-1">
-                  <h3 className="text-[#0B1F3B] font-bold text-lg leading-snug">
-                    {founder.name}
-                  </h3>
-                  <p className="text-[#2F80ED] text-sm font-medium mt-0.5">
-                    {founder.role}
-                  </p>
-                </div>
-
-                <div className="w-8 h-px bg-[#E8ECF2] my-4" />
-
-                <p className="text-[#1A1A1A]/60 text-sm leading-relaxed mb-6">
-                  {founder.bio}
-                </p>
-
-                <a
-                  href={founder.linkedin}
-                  className="inline-flex items-center gap-2 text-[#0B1F3B]/50 hover:text-[#2F80ED] text-xs font-medium transition-colors duration-200"
-                  aria-label={`${founder.name} on LinkedIn`}
-                >
-                  <Linkedin size={14} />
-                  LinkedIn
-                </a>
-              </MagicCard>
-            </BlurFade>
-          ))}
+                </Link>
+              </BlurFade>
+            ))
+          )}
         </div>
       </div>
     </section>
