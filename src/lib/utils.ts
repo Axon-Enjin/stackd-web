@@ -7,6 +7,13 @@ export function cn(...inputs: ClassValue[]) {
 
 
 
+export function toTeamSlug(firstName: string, lastName: string): string {
+  return `${firstName}-${lastName}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 export function truncateWithEllipsis(text: string, maxLength: number = 100): string {
   // remove \n and \t
   // trim whitespace
