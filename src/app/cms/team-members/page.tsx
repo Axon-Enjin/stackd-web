@@ -14,6 +14,8 @@ import {
   ZoomIn,
   ArrowUpDown,
   AlertTriangle,
+  Linkedin,
+  Trophy,
 } from "lucide-react";
 
 import { Pagination } from "@/components/cms/Pagination";
@@ -36,6 +38,8 @@ interface Member {
   middleName?: string;
   role: string;
   bio: string;
+  linkedinProfile?: string | null;
+  achievements?: string[];
 }
 
 export default function TeamAdminPage() {
@@ -104,7 +108,7 @@ function TeamAdminPageContent() {
       toast.success("Team member successfully deleted.", {
         className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
         progressClassName: "!bg-[#2F80ED]",
-        icon: <Trash2 className="text-red-500" size={20} />
+        icon: <Trash2 className="text-red-500" size={20} />,
       });
     } catch (error: any) {
       setPageError(error.message || "Failed to delete member.");
@@ -354,10 +358,10 @@ function MemberRow({
 
       {/* Text */}
       <div className="min-w-0 flex-1">
-        <h3 className="  text-sm font-semibold text-gray-900">
+        <h3 className="text-sm font-semibold text-gray-900">
           {truncateWithEllipsis(fullName, 30)}
         </h3>
-        <p className="mt-0.5   text-xs text-gray-500">{truncateWithEllipsis(member.role, 30)}</p>
+        <p className="mt-0.5 text-xs text-gray-500">{truncateWithEllipsis(member.role, 30)}</p>
       </div>
 
       {/* Loading spinner for delete */}
@@ -492,6 +496,42 @@ function MemberDetailModal({
                 {member.bio}
               </p>
             </div>
+
+            {/* LinkedIn Profile */}
+            {member.linkedinProfile && (
+              <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
+                <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+                  LinkedIn Profile
+                </label>
+                <a
+                  href={member.linkedinProfile}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 flex items-center gap-1.5 text-sm text-[#0A66C2] hover:underline break-all"
+                >
+                  <Linkedin size={14} className="shrink-0" />
+                  {member.linkedinProfile}
+                </a>
+              </div>
+            )}
+
+            {/* Achievements */}
+            {member.achievements && member.achievements.length > 0 && (
+              <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
+                <label className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+                  <Trophy size={11} className="text-amber-500" />
+                  Achievements
+                </label>
+                <ul className="space-y-1.5">
+                  {member.achievements.map((a, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+                      {a}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
 
@@ -541,6 +581,12 @@ function MemberModal({
   );
   const [formError, setFormError] = useState<string | null>(null);
 
+  // Achievements are managed as a list of strings
+  const [achievements, setAchievements] = useState<string[]>(
+    member?.achievements && member.achievements.length > 0 ? member.achievements : [],
+  );
+  const [newAchievement, setNewAchievement] = useState("");
+
   const isEditing = !!member;
 
   // Mutations
@@ -548,6 +594,24 @@ function MemberModal({
   const updateMutation = useUpdateTeamMemberMutation();
 
   const isPending = createMutation.isPending || updateMutation.isPending;
+
+  const addAchievement = () => {
+    const trimmed = newAchievement.trim();
+    if (!trimmed) return;
+    setAchievements((prev) => [...prev, trimmed]);
+    setNewAchievement("");
+  };
+
+  const removeAchievement = (index: number) => {
+    setAchievements((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleAchievementKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addAchievement();
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -564,6 +628,8 @@ function MemberModal({
       apiFormData.append("middleName", rawFormData.get("middlename") as string);
       apiFormData.append("role", rawFormData.get("role") as string);
       apiFormData.append("bio", rawFormData.get("bio") as string);
+      apiFormData.append("linkedinProfile", rawFormData.get("linkedinProfile") as string);
+      apiFormData.append("achievements", JSON.stringify(achievements));
       if (imageFile && imageFile.size > 0) {
         apiFormData.append("image", imageFile);
       }
@@ -573,6 +639,8 @@ function MemberModal({
       apiFormData.append("middlename", rawFormData.get("middlename") as string);
       apiFormData.append("role", rawFormData.get("role") as string);
       apiFormData.append("bio", rawFormData.get("bio") as string);
+      apiFormData.append("linkedinProfile", rawFormData.get("linkedinProfile") as string);
+      apiFormData.append("achievements", JSON.stringify(achievements));
       if (imageFile && imageFile.size > 0) {
         apiFormData.append("image", imageFile);
       }
@@ -588,7 +656,7 @@ function MemberModal({
         toast.success("Team member successfully updated.", {
           className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
           progressClassName: "!bg-[#2F80ED]",
-          icon: <Users className="text-[#2F80ED]" size={20} />
+          icon: <Users className="text-[#2F80ED]" size={20} />,
         });
       } else {
         const result = await createMutation.mutateAsync(apiFormData);
@@ -596,7 +664,7 @@ function MemberModal({
         toast.success("Team member successfully created.", {
           className: "!bg-white border !border-gray-200 !text-gray-900 !rounded-sm shadow-xl",
           progressClassName: "!bg-[#2F80ED]",
-          icon: <Users className="text-[#2F80ED]" size={20} />
+          icon: <Users className="text-[#2F80ED]" size={20} />,
         });
       }
     } catch (error: any) {
@@ -741,8 +809,69 @@ function MemberModal({
                   className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                 ></textarea>
               </div>
+
+              {/* LinkedIn Profile */}
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  LinkedIn Profile URL (Optional)
+                </label>
+                <input
+                  name="linkedinProfile"
+                  type="url"
+                  defaultValue={member?.linkedinProfile ?? ""}
+                  placeholder="https://linkedin.com/in/username"
+                  className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                />
+              </div>
+
+              {/* Achievements */}
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Achievements (Optional)
+                </label>
+
+                {/* Achievement List */}
+                {achievements.length > 0 && (
+                  <ul className="mb-3 space-y-1.5">
+                    {achievements.map((a, i) => (
+                      <li key={i} className="flex items-center gap-2 rounded-sm border border-gray-100 bg-gray-50 px-3 py-2 text-sm text-gray-700">
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400" />
+                        <span className="flex-1 break-all">{a}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeAchievement(i)}
+                          className="shrink-0 text-gray-400 transition-colors hover:text-red-500"
+                        >
+                          <X size={14} />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Add Achievement Input */}
+                <input
+                  type="text"
+                  value={newAchievement}
+                  onChange={(e) => setNewAchievement(e.target.value)}
+                  onKeyDown={handleAchievementKeyDown}
+                  placeholder="e.g. Best Innovator Award 2024"
+                  className="w-full rounded-sm border p-2.5 text-sm outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                />
+                <div className="mt-1.5 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={addAchievement}
+                    disabled={!newAchievement.trim()}
+                    className="rounded-sm border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-40"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
+
 
           <div className="mt-8 flex justify-end gap-2 border-t border-gray-200 pt-6">
             <button

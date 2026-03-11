@@ -3,6 +3,7 @@
 import { BlurFade } from "@/components/magicui/BlurFade";
 import Link from "next/link";
 import { usePaginatedTeamMembersQuery } from "@/features/TeamMembers/hooks/usePaginatedTeamMembersQuery";
+import { toTeamSlug } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
 // Types based on the CMS Member definition
@@ -20,8 +21,8 @@ export function FounderCredibilitySection() {
   const { data: response, isLoading } = usePaginatedTeamMembersQuery(1, 4);
   const members: Member[] = response?.data || [];
 
-  // We want to show up to the first 3 team members
-  const displayMembers = members.slice(0, 3);
+  // We want to show up to the first 4 team members
+  const displayMembers = members.slice(0, 4);
 
   const getFullName = (member: Member) => {
     const middle = member.middleName ? `${member.middleName.charAt(0)}.` : "";
@@ -52,7 +53,7 @@ export function FounderCredibilitySection() {
           </BlurFade>
         </div>
 
-        <div className={`grid grid-cols-1 ${displayMembers.length === 1 ? 'md:grid-cols-1 max-w-2xl mx-auto' : displayMembers.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'lg:grid-cols-3 md:grid-cols-2'} gap-6`}>
+        <div className={`grid grid-cols-1 ${displayMembers.length === 1 ? 'md:grid-cols-1 max-w-xl mx-auto' : displayMembers.length === 2 ? 'md:grid-cols-2 max-w-3xl mx-auto' : displayMembers.length === 4 ? 'md:grid-cols-2 lg:grid-cols-4 max-w-full' : 'lg:grid-cols-3 md:grid-cols-2 max-w-full'} gap-6`}>
           {isLoading ? (
             <div className="col-span-full flex justify-center py-12">
               <Loader2 className="animate-spin text-[#2F80ED]" size={40} />
@@ -60,7 +61,7 @@ export function FounderCredibilitySection() {
           ) : (
             displayMembers.map((member, i) => (
               <BlurFade key={member.id} delay={0.15 + i * 0.12} className="h-full">
-                <Link href={`/our-team#${member.id}`} className="block sm:flex sm:flex-row md:block w-full aspect-[4/5] sm:aspect-auto sm:h-[360px] md:h-auto md:aspect-[3/4] lg:h-[400px] lg:aspect-auto rounded-2xl overflow-hidden relative group bg-[#0f2a4a]">
+                <Link href={`/team/${toTeamSlug(member.firstName, member.lastName)}`} className="block sm:flex sm:flex-row md:block w-full aspect-[4/5] sm:aspect-auto sm:h-[360px] md:h-auto md:aspect-[3/4] lg:h-[400px] lg:aspect-auto rounded-2xl overflow-hidden relative group bg-[#0f2a4a]">
                   {/* Image Container */}
                   <div className="absolute inset-0 sm:relative sm:w-[45%] md:absolute md:w-full h-full shrink-0 overflow-hidden z-0">
                     {member.imageUrl ? (

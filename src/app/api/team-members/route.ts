@@ -9,6 +9,26 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = createRegularHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
 
+  // Support ?name=joe-bloggs for fetching a single member by slug name
+  const nameParam = searchParams.get("name");
+  if (nameParam) {
+    const data = await teamMembersModuleController.getMemberByName(nameParam);
+    if (!data) {
+      return NextResponse.json(
+        { message: "Member not found" },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json(
+      {
+        status: "success",
+        message: "GET team member by name",
+        data,
+      },
+      { status: 200 },
+    );
+  }
+
   // Support ?all=true for fetching all items (used by sort modal)
   if (searchParams.get("all") === "true") {
     const data = await teamMembersModuleController.listAllMembers();
@@ -65,13 +85,25 @@ export const POST = createRegularHandler(
     const role = formData.get("role") as string;
     const bio = formData.get("bio") as string;
     const middlename = formData.get("middlename") as string | undefined;
+    const linkedinProfile = formData.get("linkedinProfile") as string | undefined;
+
+    // 3. Parse achievements (sent as a JSON string array)
+    let achievements: string[] = [];
+    const achievementsRaw = formData.get("achievements");
+    if (achievementsRaw) {
+      try {
+        achievements = JSON.parse(achievementsRaw as string);
+      } catch {
+        throw new BadRequestError("achievements must be a valid JSON array");
+      }
+    }
 
     if (!firstname || !lastname || !role || !bio)
       throw new BadRequestError(
         "Missing required fields (firstname, lastname, role, bio)",
       );
 
-    // 3. Call the controller
+    // 4. Call the controller
     const newMember = await teamMembersModuleController.createMember(
       firstname,
       lastname,
@@ -79,6 +111,8 @@ export const POST = createRegularHandler(
       bio,
       image,
       middlename,
+      linkedinProfile || undefined,
+      achievements,
     );
 
     return NextResponse.json(newMember, { status: 201 });
@@ -89,3 +123,4 @@ export const POST = createRegularHandler(
     },
   },
 );
+

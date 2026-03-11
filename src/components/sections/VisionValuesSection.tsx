@@ -59,8 +59,7 @@ export function VisionValuesSection() {
             {VALUES.map((value, i) => (
               <BlurFade key={value.title} delay={0.3 + i * 0.08}>
                 <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-6 h-full hover:bg-white/[0.06] transition-colors duration-300">
-                  <div className="w-1 h-6 bg-[#2FB7A8] rounded-full mb-5" />
-                  <h3 className="text-white font-semibold text-base mb-2.5 leading-snug">
+                  <h3 className="flex items-center gap-3 text-white font-semibold text-base mb-2.5 leading-snug before:content-[''] before:shrink-0 before:w-1 before:h-6 before:bg-[#2FB7A8] before:rounded-full">
                     {value.title}
                   </h3>
                   <p className="text-white/40 text-sm leading-relaxed">

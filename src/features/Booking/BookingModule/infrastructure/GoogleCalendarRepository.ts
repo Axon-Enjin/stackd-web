@@ -2,19 +2,16 @@ import { google } from "googleapis";
 import { Booking } from "../domain/Booking";
 import { IBookingRepository } from "../domain/IBookingRepository";
 import { configs } from "@/configs/configs";
-import { addMinutes, isBefore, isAfter } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { addMinutes, isBefore, isAfter, format } from "date-fns";
+import { toZonedTime, formatInTimeZone } from "date-fns-tz";
 
 export class GoogleCalendarRepository implements IBookingRepository {
   private adminCalendarId = configs.googleAuth.adminCalendarId;
   private durationMinutes = 30; // 30-minute meetings
 
-  private businessStartHour = 9; // 9 AM
-  private businessEndHour = 17; // 5 PM
+  private businessStartHour = 21; // 9 PM
+  private businessEndHour = 24; // 12 AM
 
-  private formatPrivateKey(key: string) {
-    return key.replace(/\\n/g, "\n");
-  }
 
   private getCalendarClient() {
     const clientId = configs.googleAuth.clientId;
@@ -58,18 +55,36 @@ export class GoogleCalendarRepository implements IBookingRepository {
     }
 
     // 2. Query Free/Busy API using the shared admin calendar
-    const response = await calendar.freebusy.query({
-      requestBody: {
-        timeMin: searchStart.toISOString(),
-        timeMax: searchEnd.toISOString(),
-        items: [{ id: this.adminCalendarId }],
-      },
-    });
+    try {
+      const response = await calendar.freebusy.query({
+        requestBody: {
+          timeMin: searchStart.toISOString(),
+          timeMax: searchEnd.toISOString(),
+          items: [{ id: this.adminCalendarId }],
+        },
+      });
 
-    const busySlots =
-      response.data.calendars?.[this.adminCalendarId as string]?.busy || [];
+      const busySlots =
+        response.data.calendars?.[this.adminCalendarId as string]?.busy || [];
+      
+      return this.calculateFreeSlots(date, searchStart, searchEnd, now, busySlots, timezone);
+    } catch (error: any) {
+      if (error.code === 400 || error.code === 401 || error.message?.includes("invalid_grant")) {
+        throw new Error("CALENDAR_AUTH_ERROR");
+      }
+      throw error;
+    }
+  }
 
-    // 3. Calculate free slots window
+  private calculateFreeSlots(
+    date: Date,
+    searchStart: Date,
+    searchEnd: Date,
+    now: Date,
+    busySlots: any[],
+    timezone: string
+  ): Date[] {
+    const businessTimezone = configs.businessTimezone;
     const availableSlots: Date[] = [];
     let currentSlot = searchStart;
 
@@ -89,11 +104,11 @@ export class GoogleCalendarRepository implements IBookingRepository {
 
         // Convert to Client Timezone to check if it falls on the requested calendar date
         const cZoned = toZonedTime(currentSlot, timezone);
+        
+        // This is the CRITICAL fix: make sure the slot we are looking at falls on the EXACT
+        // day the user clicked on in their local timezone.
         const reqZoned = toZonedTime(date, timezone);
-        const isOnRequestedClientDay =
-          cZoned.getFullYear() === reqZoned.getFullYear() &&
-          cZoned.getMonth() === reqZoned.getMonth() &&
-          cZoned.getDate() === reqZoned.getDate();
+        const isOnRequestedClientDay = format(cZoned, "yyyy-MM-dd") === format(reqZoned, "yyyy-MM-dd");
 
         if (isWeekday && isBusinessHours && isOnRequestedClientDay) {
           // Check if this slot overlaps with any busy block
@@ -129,9 +144,13 @@ export class GoogleCalendarRepository implements IBookingRepository {
       adminEmail = cal.data.id || adminEmail;
     }
 
+    const clientDate = formatInTimeZone(booking.startTime, booking.timezone, "EEEE, MMM d, yyyy");
+    const clientTimeStart = formatInTimeZone(booking.startTime, booking.timezone, "h:mm a");
+    const clientTimeEnd = formatInTimeZone(booking.endTime, booking.timezone, "h:mm a");
+
     const event: any = {
-      summary: `Strategy Call: ${booking.name}`,
-      description: `Strategy call booked via website.\nEmail: ${booking.email}`,
+      summary: `TikTok Shop Revenue Review: ${booking.name}`,
+      description: `TikTok Shop Revenue Review booked via website.\n\nEmail: ${booking.email}\nCustomer Local Time: ${clientDate} from ${clientTimeStart} to ${clientTimeEnd} (${booking.timezone})`,
       start: {
         dateTime: booking.startTime.toISOString(),
         timeZone: booking.timezone,

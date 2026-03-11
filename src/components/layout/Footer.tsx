@@ -31,7 +31,7 @@ export function Footer() {
 
           <div className="flex flex-col gap-2 md:items-end">
             <Link
-              href="/#contact"
+              href="/book"
               className="inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2570d4]"
             >
               Request a Strategy Conversation →
@@ -43,9 +43,26 @@ export function Footer() {
           <p className="text-xs text-white/30">
             © {new Date().getFullYear()} Stackd. All rights reserved.
           </p>
-          <p className="text-xs text-white/30">
-            TikTok Shop Revenue Operations Partner
-          </p>
+          <div className="flex items-center gap-4">
+            <Link href="/#how-we-work" className="text-xs text-white/30 transition-colors hover:text-white/60">
+              How We Work
+            </Link>
+            <Link href="/#team" className="text-xs text-white/30 transition-colors hover:text-white/60">
+              Our Team
+            </Link>
+            <Link href="/#faq" className="text-xs text-white/30 transition-colors hover:text-white/60">
+              FAQ
+            </Link>
+            <Link href="/terms" className="text-xs text-white/30 transition-colors hover:text-white/60">
+              Terms
+            </Link>
+            <Link href="/privacy" className="text-xs text-white/30 transition-colors hover:text-white/60">
+              Privacy
+            </Link>
+            <p className="text-xs text-white/30">
+              TikTok Shop Revenue Operations Partner
+            </p>
+          </div>
         </div>
       </div>
     </footer>

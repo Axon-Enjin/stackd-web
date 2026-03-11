@@ -82,36 +82,42 @@ export type Database = {
       }
       team_member: {
         Row: {
+          achievements: Json | null
           bio: string
           created_at: string
           first_name: string
           id: string
           image_url: string
           last_name: string
+          linkedinUrl: string | null
           middle_name: string | null
           ranking_index: number
           role: string
           updated_at: string
         }
         Insert: {
+          achievements?: Json | null
           bio: string
           created_at?: string
           first_name: string
           id?: string
           image_url: string
           last_name: string
+          linkedinUrl?: string | null
           middle_name?: string | null
           ranking_index: number
           role: string
           updated_at: string
         }
         Update: {
+          achievements?: Json | null
           bio?: string
           created_at?: string
           first_name?: string
           id?: string
           image_url?: string
           last_name?: string
+          linkedinUrl?: string | null
           middle_name?: string | null
           ranking_index?: number
           role?: string
@@ -199,7 +205,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

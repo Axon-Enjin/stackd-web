@@ -36,13 +36,23 @@ export const PATCH = createRegularHandler(
     // 2. Extract the update fields
     const updateDTO: any = {};
 
-    const fields = ["firstName", "lastName", "middleName", "role", "bio"];
+    const fields = ["firstName", "lastName", "middleName", "role", "bio", "linkedinProfile"];
     fields.forEach((field) => {
       const value = formData.get(field);
       if (value !== null) {
         updateDTO[field] = value as string;
       }
     });
+
+    // Parse achievements if provided (sent as a JSON string array)
+    const achievementsRaw = formData.get("achievements");
+    if (achievementsRaw !== null) {
+      try {
+        updateDTO.achievements = JSON.parse(achievementsRaw as string);
+      } catch {
+        throw new UnprocessableEntityError("achievements must be a valid JSON array");
+      }
+    }
 
     // 3. Extract optional rankingIndex for sort operations
     const rankingIndexRaw = formData.get("rankingIndex");
@@ -65,7 +75,7 @@ export const PATCH = createRegularHandler(
       { message: "Member updated successfully", data: updatedMember },
       { status: 200 },
     );
-  }, 
+  },
   {
     auth: {
       required: true,
@@ -89,7 +99,7 @@ export const DELETE = createRegularHandler(
       { message: "ok", status: "success" },
       { status: 200 },
     );
-  }, 
+  },
   {
     auth: {
       required: true,

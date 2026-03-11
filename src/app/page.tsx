@@ -20,7 +20,9 @@ export default function LandingPage() {
       <Navbar />
       <main>
         <HeroSection />
-        <FounderCredibilitySection />
+        <section id="team">
+          <FounderCredibilitySection />
+        </section>
         {/* <PainPointsSection /> */}
         {/* <FounderCredibilitySection /> */}
         <ProblemSection />
@@ -32,12 +34,14 @@ export default function LandingPage() {
         </section>
         <WhoWeWorkWithSection />
         {/* <TeamSection /> */}
-        {/* <TestimonialSection /> */}
-        <ProcessSection />
+        <section id="how-we-work">
+          <ProcessSection />
+        </section>
         <section id="faq">
           <FAQSection />
         </section>
         <VisionValuesSection />
+        <TestimonialSection />
         <FinalCTASection />
       </main>
       <Footer />

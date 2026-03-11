@@ -103,7 +103,7 @@ export function PhoneMockup3D() {
               }}
             >
               {/* Interactive grid overlay on screen */}
-              <div className="absolute inset-0 z-0 pointer-events-none">
+              {/* <div className="absolute inset-0 z-0 pointer-events-none">
                 <InteractiveGridPattern
                   width={24}
                   height={24}
@@ -111,7 +111,7 @@ export function PhoneMockup3D() {
                   className="opacity-100"
                   hoverColor="fill-white/[0.08]"
                 />
-              </div>
+              </div> */}
 
               {/* Status bar */}
               <div className="flex items-center justify-between px-5 pt-3 pb-1">

@@ -96,25 +96,23 @@ export function ProcessSection() {
                                     }}
                                 >
                                     {/* Step circle + connector */}
-                                    <div className="flex items-center gap-4 lg:block mb-5">
+                                    <div className="flex justify-center lg:block mb-5">
                                         <motion.div
-                                            className="relative z-10 w-[66px] h-[66px] rounded-full border border-[#E8ECF2] bg-white flex flex-col items-center justify-center gap-0.5 shrink-0 group-hover:border-[#2F80ED]/40 group-hover:shadow-md transition-all duration-300"
+                                            className="relative z-10 w-[66px] h-[66px] rounded-full border border-[#E8ECF2] bg-white flex flex-col items-center justify-center gap-0.5 shrink-0 group-hover:bg-[#0B1F3B] group-hover:border-[#0B1F3B] group-hover:shadow-[0_4px_20px_rgba(11,31,59,0.35)] transition-all duration-300"
                                             whileHover={{ scale: 1.06 }}
                                         >
                                             <Icon
                                                 size={18}
-                                                className="text-[#2F80ED] group-hover:text-[#2570d4] transition-colors"
+                                                className="text-[#2F80ED] group-hover:text-[#2FB7A8] transition-colors duration-300"
                                             />
-                                            <span className="text-[#0B1F3B]/40 text-[9px] font-bold tracking-wide">
+                                            <span className="text-[#0B1F3B]/40 group-hover:text-[#2FB7A8]/70 text-[9px] font-bold tracking-wide transition-colors duration-300">
                                                 {step.number}
                                             </span>
                                         </motion.div>
 
-                                        {/* Mobile connector line */}
-                                        <div className="flex-1 h-px bg-gradient-to-r from-[#E8ECF2] to-transparent lg:hidden" />
                                     </div>
 
-                                    <div className="lg:mt-5">
+                                    <div className="lg:mt-5 text-center lg:text-left">
                                         <h3 className="text-[#0B1F3B] font-semibold text-base mb-2">
                                             {step.title}
                                         </h3>

@@ -4,6 +4,7 @@ import { DeleteMemberUseCase } from "./useCases/DeleteMemberUseCase";
 import { GetOneMember } from "./useCases/GetOneMemberUseCase";
 import { ListMembers } from "./useCases/ListMembers";
 import { UpdateMemberUseCase } from "./useCases/UpdateMemberUseCase";
+import { GetMemberByNameUseCase } from "./useCases/GetMemberByNameUseCase";
 
 export class TeamMembersModuleController {
   constructor(
@@ -11,7 +12,8 @@ export class TeamMembersModuleController {
     private deleteMemberUseCase: DeleteMemberUseCase,
     private listMembersUseCase: ListMembers,
     private updateMemberUseCase: UpdateMemberUseCase,
-    private getOneMemberUseCase: GetOneMember
+    private getOneMemberUseCase: GetOneMember,
+    private getMemberByNameUseCase: GetMemberByNameUseCase
   ) { }
 
   /**
@@ -27,11 +29,18 @@ export class TeamMembersModuleController {
       role: member.props.role,
       bio: member.props.bio,
       rankingIndex: member.props.rankingIndex,
+      linkedinProfile: member.props.linkedinProfile ?? null,
+      achievements: member.props.achievements ?? [],
     };
   }
 
   async getOneMember(memberId: string) {
     const result = await this.getOneMemberUseCase.execute(memberId);
+    return this.mapMemberToResponse(result);
+  }
+
+  async getMemberByName(name: string) {
+    const result = await this.getMemberByNameUseCase.execute(name);
     return this.mapMemberToResponse(result);
   }
 
@@ -42,6 +51,8 @@ export class TeamMembersModuleController {
     bio: string,
     image: File,
     middlename?: string,
+    linkedinProfile?: string,
+    achievements?: string[],
   ) {
     const result = await this.createMemberUseCase.execute(
       {
@@ -49,7 +60,9 @@ export class TeamMembersModuleController {
         lastName: lastname,
         role: role,
         bio: bio,
+        achievements: achievements ?? [],
         ...((middlename && { middleName: middlename }) || {}),
+        ...((linkedinProfile && { linkedinProfile }) || {}),
       },
       image,
     );
