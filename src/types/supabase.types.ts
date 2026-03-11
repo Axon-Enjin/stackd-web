@@ -106,6 +106,9 @@ export type Database = {
           first_name: string
           id: string
           image_url: string
+          image_url_256: string | null
+          image_url_512: string | null
+          image_url_64: string | null
           last_name: string
           linkedinUrl: string | null
           middle_name: string | null
@@ -120,6 +123,9 @@ export type Database = {
           first_name: string
           id?: string
           image_url: string
+          image_url_256?: string | null
+          image_url_512?: string | null
+          image_url_64?: string | null
           last_name: string
           linkedinUrl?: string | null
           middle_name?: string | null
@@ -134,6 +140,9 @@ export type Database = {
           first_name?: string
           id?: string
           image_url?: string
+          image_url_256?: string | null
+          image_url_512?: string | null
+          image_url_64?: string | null
           last_name?: string
           linkedinUrl?: string | null
           middle_name?: string | null
