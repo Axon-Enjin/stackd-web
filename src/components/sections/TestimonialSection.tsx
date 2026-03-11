@@ -4,10 +4,10 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { BlurFade } from "@/components/magicui/BlurFade";
 import { useAllTestimonialsQuery, type TestimonialItem } from "@/features/Testimonials/hooks/useAllTestimonialsQuery";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const PER_PAGE = 3;
-const AUTO_SCROLL_MS = 3000;
+const AUTO_SCROLL_MS = 5000;
 
 const slideVariants = {
     enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 60 : -60, scale: 0.97 }),
@@ -17,7 +17,7 @@ const slideVariants = {
 
 function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
     return (
-        <div className="rounded-2xl overflow-hidden relative group bg-[#0f2a4a] aspect-3/4 lg:h-105 lg:aspect-auto">
+        <div className="rounded-2xl overflow-hidden relative group bg-[#0f2a4a] h-[340px] sm:h-[380px] lg:h-[420px]">
             {/* Background image */}
             <div className="absolute inset-0 z-0">
                 {testimonial.imageUrl ? (
@@ -44,12 +44,12 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
             </div>
 
             {/* Content */}
-            <div className="absolute inset-0 p-8 flex flex-col justify-end translate-y-3 transition-transform duration-300 group-hover:translate-y-0 z-30 pointer-events-none">
+            <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end translate-y-3 transition-transform duration-300 group-hover:translate-y-0 z-30 pointer-events-none">
                 <span className="text-brand-blue text-5xl font-serif leading-none mb-3 select-none">&ldquo;</span>
-                <p className="text-white/85 text-sm leading-relaxed line-clamp-4 mb-6">
+                <p className="text-white/85 text-sm leading-relaxed line-clamp-4 mb-5">
                     {testimonial.body}
                 </p>
-                <div className="w-10 h-px bg-brand-blue/60 mb-5" />
+                <div className="w-10 h-px bg-brand-blue/60 mb-4" />
                 <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border-2 border-white/20">
                         <img src={testimonial.imageUrl} alt={testimonial.title} className="w-full h-full object-cover" />
@@ -66,12 +66,25 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
 
 export function TestimonialSection() {
     const { data: testimonials, isLoading, isError } = useAllTestimonialsQuery();
+    const { isBreakpoint } = useBreakpoint();
+
+    const perPage = isBreakpoint("lg") ? 3 : isBreakpoint("md") ? 2 : 1;
+
     const [page, setPage] = useState(0);
     const [direction, setDirection] = useState(1);
     const [paused, setPaused] = useState(false);
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const prevPerPage = useRef(perPage);
 
-    const totalPages = testimonials ? Math.ceil(testimonials.length / PER_PAGE) : 0;
+    const totalPages = testimonials ? Math.ceil(testimonials.length / perPage) : 0;
+
+    // Reset to page 0 when perPage changes (responsive resize)
+    useEffect(() => {
+        if (prevPerPage.current !== perPage) {
+            prevPerPage.current = perPage;
+            setPage(0);
+        }
+    }, [perPage]);
 
     const go = useCallback(
         (dir: 1 | -1) => {
@@ -87,13 +100,20 @@ export function TestimonialSection() {
         return () => { if (timerRef.current) clearTimeout(timerRef.current); };
     }, [page, paused, go, totalPages]);
 
+    const gridCols =
+        perPage === 3
+            ? "grid-cols-3"
+            : perPage === 2
+              ? "grid-cols-2"
+              : "grid-cols-1";
+
     if (isLoading) {
         return (
             <section className="bg-soft-white py-24 px-6">
                 <div className="max-w-6xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {[...Array(3)].map((_, i) => (
-                            <div key={i} className="rounded-2xl bg-navy/10 aspect-3/4 lg:h-105 lg:aspect-auto animate-pulse" />
+                    <div className={`grid ${gridCols} gap-6`}>
+                        {[...Array(perPage)].map((_, i) => (
+                            <div key={i} className="rounded-2xl bg-navy/10 h-[340px] sm:h-[380px] lg:h-[420px] animate-pulse" />
                         ))}
                     </div>
                 </div>
@@ -105,7 +125,7 @@ export function TestimonialSection() {
         return null;
     }
 
-    const visibleCards = testimonials.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
+    const visibleCards = testimonials.slice(page * perPage, page * perPage + perPage);
 
     const navBtnClass =
         "w-11 h-11 rounded-full border border-[#E8ECF2] bg-white shadow-sm flex items-center justify-center text-navy/50 hover:text-brand-blue hover:border-brand-blue hover:shadow-md transition-all duration-200 shrink-0";
@@ -140,7 +160,7 @@ export function TestimonialSection() {
                         onMouseLeave={() => setPaused(false)}
                     >
                         {/* Arrows flanking the cards */}
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3 sm:gap-4">
                             {totalPages > 1 && (
                                 <button onClick={() => go(-1)} aria-label="Previous testimonials" className={navBtnClass}>
                                     <ChevronLeft size={18} />
@@ -150,16 +170,16 @@ export function TestimonialSection() {
                             <div className="flex-1 overflow-hidden">
                                 <AnimatePresence mode="wait" custom={direction}>
                                     <motion.div
-                                        key={page}
+                                        key={`${page}-${perPage}`}
                                         custom={direction}
                                         variants={slideVariants}
                                         initial="enter"
                                         animate="center"
                                         exit="exit"
                                         transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                                        className={`grid ${gridCols} gap-4 sm:gap-6`}
                                     >
-                                        {visibleCards.map((testimonial, i) => (
+                                        {visibleCards.map((testimonial) => (
                                             <TestimonialCard key={testimonial.id} testimonial={testimonial} />
                                         ))}
                                     </motion.div>
@@ -199,5 +219,6 @@ export function TestimonialSection() {
         </section>
     );
 }
+
 
 
