@@ -32,12 +32,12 @@ export default function LandingPage() {
         </section>
         <WhoWeWorkWithSection />
         {/* <TeamSection /> */}
-        {/* <TestimonialSection /> */}
         <ProcessSection />
         <section id="faq">
           <FAQSection />
         </section>
         <VisionValuesSection />
+        <TestimonialSection />
         <FinalCTASection />
       </main>
       <Footer />
