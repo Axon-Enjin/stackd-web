@@ -27,6 +27,8 @@ export class TeamMembersModuleController {
       role: member.props.role,
       bio: member.props.bio,
       rankingIndex: member.props.rankingIndex,
+      linkedinProfile: member.props.linkedinProfile ?? null,
+      achievements: member.props.achievements ?? [],
     };
   }
 
@@ -42,6 +44,8 @@ export class TeamMembersModuleController {
     bio: string,
     image: File,
     middlename?: string,
+    linkedinProfile?: string,
+    achievements?: string[],
   ) {
     const result = await this.createMemberUseCase.execute(
       {
@@ -49,7 +53,9 @@ export class TeamMembersModuleController {
         lastName: lastname,
         role: role,
         bio: bio,
+        achievements: achievements ?? [],
         ...((middlename && { middleName: middlename }) || {}),
+        ...((linkedinProfile && { linkedinProfile }) || {}),
       },
       image,
     );

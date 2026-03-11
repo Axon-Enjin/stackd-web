@@ -24,6 +24,8 @@ export class MemberRepository implements IMemberRepository {
       bio: props.bio,
       role: props.role,
       ranking_index: props.rankingIndex,
+      linkedinUrl: props.linkedinProfile || null,
+      achievements: props.achievements ?? [],
       updated_at: new Date().toISOString(), // Required by your Supabase Insert type
     };
   }

@@ -65,13 +65,25 @@ export const POST = createRegularHandler(
     const role = formData.get("role") as string;
     const bio = formData.get("bio") as string;
     const middlename = formData.get("middlename") as string | undefined;
+    const linkedinProfile = formData.get("linkedinProfile") as string | undefined;
+
+    // 3. Parse achievements (sent as a JSON string array)
+    let achievements: string[] = [];
+    const achievementsRaw = formData.get("achievements");
+    if (achievementsRaw) {
+      try {
+        achievements = JSON.parse(achievementsRaw as string);
+      } catch {
+        throw new BadRequestError("achievements must be a valid JSON array");
+      }
+    }
 
     if (!firstname || !lastname || !role || !bio)
       throw new BadRequestError(
         "Missing required fields (firstname, lastname, role, bio)",
       );
 
-    // 3. Call the controller
+    // 4. Call the controller
     const newMember = await teamMembersModuleController.createMember(
       firstname,
       lastname,
@@ -79,6 +91,8 @@ export const POST = createRegularHandler(
       bio,
       image,
       middlename,
+      linkedinProfile || undefined,
+      achievements,
     );
 
     return NextResponse.json(newMember, { status: 201 });
@@ -89,3 +103,4 @@ export const POST = createRegularHandler(
     },
   },
 );
+
