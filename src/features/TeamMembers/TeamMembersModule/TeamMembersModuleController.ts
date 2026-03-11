@@ -23,6 +23,9 @@ export class TeamMembersModuleController {
     return {
       id: member.props.id,
       imageUrl: member.props.image_url,
+      imageUrl64: member.props.image_url_64 ?? null,
+      imageUrl256: member.props.image_url_256 ?? null,
+      imageUrl512: member.props.image_url_512 ?? null,
       firstName: member.props.firstName,
       middleName: member.props.middleName,
       lastName: member.props.lastName,

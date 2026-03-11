@@ -11,6 +11,9 @@ import { useTeamMemberByNameQuery } from "@/features/TeamMembers/hooks/useTeamMe
 interface Member {
   id: string;
   imageUrl?: string;
+  imageUrl64?: string | null;
+  imageUrl256?: string | null;
+  imageUrl512?: string | null;
   firstName: string;
   lastName: string;
   middleName?: string;
@@ -73,7 +76,7 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                     <div className="w-full max-w-64 aspect-[4/5] mx-auto md:mx-0 rounded-2xl bg-navy/5 border border-[#E8ECF2] overflow-hidden">
                       {member.imageUrl ? (
                         <img
-                          src={member.imageUrl}
+                          src={member.imageUrl512 || member.imageUrl}
                           alt={getFullName(member)}
                           className="w-full h-full object-cover"
                         />

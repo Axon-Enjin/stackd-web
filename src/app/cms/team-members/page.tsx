@@ -33,6 +33,9 @@ import { toast } from "react-toastify";
 interface Member {
   id: string;
   imageUrl?: string;
+  imageUrl64?: string | null;
+  imageUrl256?: string | null;
+  imageUrl512?: string | null;
   firstName: string;
   lastName: string;
   middleName?: string;
@@ -345,7 +348,7 @@ function MemberRow({
         }}
       >
         <img
-          src={member.imageUrl || "/placeholder-avatar.png"}
+          src={member.imageUrl64 || member.imageUrl || "/placeholder-avatar.png"}
           alt={fullName}
           className="h-11 w-11 rounded-full border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-1"
         />
@@ -454,7 +457,7 @@ function MemberDetailModal({
               onClick={() => { if (member.imageUrl) onPhotoClick(member.imageUrl); }}
             >
               <img
-                src={member.imageUrl || "/placeholder-avatar.png"}
+                src={member.imageUrl256 || member.imageUrl || "/placeholder-avatar.png"}
                 alt={fullName}
                 className="h-28 w-28 rounded-full border-2 border-gray-100 object-cover shadow-sm transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-2"
               />
