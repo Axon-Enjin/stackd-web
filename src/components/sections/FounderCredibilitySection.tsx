@@ -30,7 +30,7 @@ export function FounderCredibilitySection() {
   };
 
   return (
-    <section id="team" className="bg-[#F7F9FC] py-24 px-6">
+    <section className="bg-[#F7F9FC] py-24 px-6">
       <div className="max-w-6xl mx-auto">
         <BlurFade delay={0.05}>
           <p className="text-xs font-semibold tracking-[0.18em] uppercase text-[#2FB7A8] mb-4">
