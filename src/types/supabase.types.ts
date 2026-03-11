@@ -53,7 +53,13 @@ export type Database = {
           file_path: string
           id: string
           preview_url: string
+          preview_url_256: string | null
+          preview_url_512: string | null
+          preview_url_64: string | null
           storage_ref: string
+          storage_ref_256: string | null
+          storage_ref_512: string | null
+          storage_ref_64: string | null
           updated_at: string
         }
         Insert: {
@@ -64,7 +70,13 @@ export type Database = {
           file_path: string
           id?: string
           preview_url: string
+          preview_url_256?: string | null
+          preview_url_512?: string | null
+          preview_url_64?: string | null
           storage_ref: string
+          storage_ref_256?: string | null
+          storage_ref_512?: string | null
+          storage_ref_64?: string | null
           updated_at?: string
         }
         Update: {
@@ -75,7 +87,13 @@ export type Database = {
           file_path?: string
           id?: string
           preview_url?: string
+          preview_url_256?: string | null
+          preview_url_512?: string | null
+          preview_url_64?: string | null
           storage_ref?: string
+          storage_ref_256?: string | null
+          storage_ref_512?: string | null
+          storage_ref_64?: string | null
           updated_at?: string
         }
         Relationships: []
