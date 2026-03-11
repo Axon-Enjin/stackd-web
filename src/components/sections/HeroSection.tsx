@@ -48,7 +48,7 @@ function TikTokLogo3D() {
 
   return (
     <motion.div
-      className="absolute z-20 top-24 left-[25%] lg:top-32 lg:-left-4 xl:left-8 max-lg:hidden w-fit"
+          className="absolute z-20 top-6 -left-4 lg:top-32 lg:-left-4 xl:left-8 w-fit"
       animate={{ y: [0, -15, 0] }}
       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       style={{ perspective: 1000 }}
@@ -56,7 +56,7 @@ function TikTokLogo3D() {
       <BlurFade delay={0.8}>
         <motion.div
           ref={ref}
-          className="flex flex-col h-28 w-28 lg:h-24 lg:w-24 items-center justify-center rounded-full bg-[#0d0d1a] border border-white/[0.08] pointer-events-auto cursor-default"
+          className="flex flex-col h-8 w-8 lg:h-24 lg:w-24 items-center justify-center rounded-full bg-[#0d0d1a] border border-white/[0.08] pointer-events-auto cursor-default"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           style={{
@@ -76,7 +76,7 @@ function TikTokLogo3D() {
           <motion.div
             style={{ translateZ: 20 }}
           >
-            <TikTokIcon className="h-14 w-14 lg:h-12 lg:w-12 text-white" />
+            <TikTokIcon className="h-3.5 w-3.5 lg:h-12 lg:w-12 text-white" />
           </motion.div>
         </motion.div>
       </BlurFade>
@@ -86,7 +86,7 @@ function TikTokLogo3D() {
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-screen items-start lg:items-center overflow-hidden bg-[#0B1F3B] pt-24 lg:pt-16 px-6">
+    <section className="relative flex overflow-hidden bg-[#0B1F3B] pt-24 pb-14 sm:pb-20 lg:min-h-screen lg:items-center lg:pt-16 lg:pb-0 px-6">
       {/* Interactive grid background */}
       <div className="absolute inset-0 z-0">
         <InteractiveGridPattern
@@ -108,40 +108,44 @@ export function HeroSection() {
         }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl pt-8 pb-32 md:py-20 lg:py-28">
-        {/* Grid layout on desktop, overlapping background on mobile */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl lg:py-28">
+        {/* Grid layout */}
         <div className="relative flex flex-col lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
-          {/* ── Left: Content ── */}
-          <div className="relative z-10 w-[85%] sm:w-[70%] lg:w-full lg:col-span-7">
+
+          {/* ── Left: all content ── */}
+          <div className="relative z-10 lg:col-span-7">
+
             {/* Headline */}
             <BlurFade delay={0.1}>
-              <h1 className="mb-4 sm:mb-6 text-[38px] leading-[1.1] font-normal tracking-tight text-white sm:text-5xl lg:text-[64px]">
+              <h1 className="text-[32px] leading-[1.15] font-normal tracking-tight text-white sm:text-5xl lg:text-[64px]">
                 Own TikTok Shop as a <span className="text-[#2F80ED] font-semibold">revenue channel</span>
               </h1>
             </BlurFade>
 
-            {/* Sub-headline */}
+            {/* Phone mockup — mobile only, sits between headline and body */}
+            <div className="lg:hidden my-8 flex justify-center">
+              <div className="relative w-[115px] h-[245px]">
+                <TikTokLogo3D />
+                <div className="absolute top-0 left-0 origin-top-left scale-[0.465] pointer-events-auto">
+                  <PhoneMockup3D />
+                </div>
+              </div>
+            </div>
+
+            {/* Body text */}
             <BlurFade delay={0.22}>
-              <p className="mb-5 text-base leading-relaxed text-white/55 md:text-lg">
+              <p className="mt-4 mb-0 text-base leading-relaxed text-white/55 lg:mt-6 lg:mb-5 lg:text-lg">
                 Stackd partners with established consumer brands to build and
                 operate the live commerce, creator and performance systems
                 behind TikTok Shop — as a fully accountable revenue function.
               </p>
             </BlurFade>
 
-            {/* Qualification line */}
-            {/* <BlurFade delay={0.32}>
-              <p className="mb-10 text-sm font-medium text-[#2FB7A8] italic">
-                Best suited for growing consumer brands ready to treat TikTok
-                Shop as a serious revenue channel.
-              </p>
-            </BlurFade> */}
-
             {/* CTA */}
             <BlurFade delay={0.42}>
               <motion.a
                 href="/book"
-                className="mt-6 sm:mt-8 lg:mt-12 inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-6 py-3 sm:px-8 sm:py-4 text-sm font-semibold tracking-wide text-white shadow-lg shadow-[#2F80ED]/30"
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-md bg-[#2F80ED] px-6 py-3 text-sm font-semibold tracking-wide text-white shadow-lg shadow-[#2F80ED]/30 sm:px-8 sm:py-4 lg:mt-12 lg:inline-flex lg:w-auto lg:justify-start"
                 whileHover={{ scale: 1.03, backgroundColor: "#2570d4" }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -153,35 +157,34 @@ export function HeroSection() {
 
             {/* Stats row */}
             <BlurFade delay={0.58}>
-              <div className="mt-8 sm:mt-12 flex flex-col gap-6 border-t border-white/[0.08] pt-8 md:flex-row sm:gap-10">
+              <div className="mt-8 flex flex-row gap-4 border-t border-white/[0.08] pt-6 sm:mt-12 sm:gap-10">
                 {[
                   { value: "100%", label: "Performance aligned" },
                   { value: "0", label: "Internal hires needed" },
                   { value: "Full-stack", label: "Live commerce ops" },
                 ].map((stat) => (
-                  <div key={stat.label}>
-                    <div className="text-2xl font-bold text-white">
+                  <div key={stat.label} className="flex-1">
+                    <div className="text-lg font-bold text-white sm:text-2xl">
                       {stat.value}
                     </div>
-                    <div className="mt-0.5 text-xs text-white/35">
+                    <div className="mt-0.5 text-[10px] text-white/35 sm:text-xs">
                       {stat.label}
                     </div>
                   </div>
                 ))}
               </div>
             </BlurFade>
+
           </div>
 
-          {/* ── Right: Visuals (Phone + TikTok Logo) ── */}
-          <div className="absolute right-[-35%] md:right-[-30%] top-[280px] md:top-[280px] z-0 flex w-[110%] sm:w-[100%] lg:col-span-5 lg:relative lg:right-auto lg:top-auto lg:z-10 lg:w-full lg:justify-center items-center justify-end pointer-events-none lg:pointer-events-auto">
-            {/* Floating TikTok Logo */}
+          {/* ── Right: Phone + TikTok Logo — desktop only ── */}
+          <div className="relative z-10 hidden lg:flex lg:col-span-5 lg:w-full lg:justify-center lg:items-center pointer-events-auto">
             <TikTokLogo3D />
-
-            {/* 3D Phone Mockup */}
             <div className="w-full pointer-events-auto">
               <PhoneMockup3D />
             </div>
           </div>
+
         </div>
       </div>
     </section>
