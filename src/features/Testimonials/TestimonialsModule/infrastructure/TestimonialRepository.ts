@@ -21,6 +21,9 @@ export class TestimonialRepository implements ITestimonialRepository {
       role: props.role,
       body: props.body,
       image_url: props.image_url,
+      image_url_64: props.image_url_64 || null,
+      image_url_256: props.image_url_256 || null,
+      image_url_512: props.image_url_512 || null,
       ranking_index: props.rankingIndex,
       updated_at: new Date().toISOString(), // Required by your Supabase Insert type
     };
@@ -34,6 +37,9 @@ export class TestimonialRepository implements ITestimonialRepository {
       role: row.role,
       body: row.body,
       image_url: row.image_url,
+      image_url_64: row.image_url_64 || undefined,
+      image_url_256: row.image_url_256 || undefined,
+      image_url_512: row.image_url_512 || undefined,
       rankingIndex: row.ranking_index,
     };
   }

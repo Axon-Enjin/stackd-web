@@ -19,8 +19,12 @@ export class CreateMemberUseCase {
       );
     }
 
-    const imageUrl = await this.imageService.uploadFile(image);
-    const newMember = Member.create(imageUrl, memberRequestObj);
+    const uploadResult = await this.imageService.uploadFile(image);
+    const newMember = Member.create(uploadResult.url, memberRequestObj, {
+      url64: uploadResult.url64,
+      url256: uploadResult.url256,
+      url512: uploadResult.url512,
+    });
     await this.memberRepository.saveNewMember(newMember);
 
     return newMember;

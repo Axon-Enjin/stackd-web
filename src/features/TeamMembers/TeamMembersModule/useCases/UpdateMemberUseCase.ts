@@ -36,8 +36,13 @@ export class UpdateMemberUseCase {
 
     if (newImage) {
       await this.imageService.deleteFile(member.props.image_url);
-      const imageUrl = await this.imageService.uploadFile(newImage);
-      member.setImageUrl(imageUrl);
+      const uploadResult = await this.imageService.uploadFile(newImage);
+      member.setImageUrls({
+        url: uploadResult.url,
+        url64: uploadResult.url64,
+        url256: uploadResult.url256,
+        url512: uploadResult.url512,
+      });
     }
 
     await this.memberRepository.persistUpdates(member);

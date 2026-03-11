@@ -10,6 +10,9 @@ import { Loader2 } from "lucide-react";
 interface Member {
   id: string;
   imageUrl?: string;
+  imageUrl64?: string | null;
+  imageUrl256?: string | null;
+  imageUrl512?: string | null;
   firstName: string;
   lastName: string;
   middleName?: string;
@@ -66,7 +69,7 @@ export function FounderCredibilitySection() {
                   <div className="absolute inset-0 sm:relative sm:w-[45%] md:absolute md:w-full h-full shrink-0 overflow-hidden z-0">
                     {member.imageUrl ? (
                       <img
-                        src={member.imageUrl}
+                        src={member.imageUrl512 || member.imageUrl}
                         alt={getFullName(member)}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />

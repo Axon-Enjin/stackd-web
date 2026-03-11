@@ -8,7 +8,7 @@ export class UploadFile {
   constructor(
     private fileStorage: IFileStorage,
     private fileRepository: IFileRepository,
-  ) {}
+  ) { }
 
   async execute(
     file: FileBuffer,
@@ -31,6 +31,12 @@ export class UploadFile {
       filePath,
       previewUrl: uploadedFile.public_url,
       storageReference: uploadedFile.storage_reference,
+      previewUrl64: uploadedFile.preview_url_64,
+      previewUrl256: uploadedFile.preview_url_256,
+      previewUrl512: uploadedFile.preview_url_512,
+      storageRef64: uploadedFile.storage_ref_64,
+      storageRef256: uploadedFile.storage_ref_256,
+      storageRef512: uploadedFile.storage_ref_512,
     });
 
     const createdFileRecord: FileRecord =

@@ -1,5 +1,8 @@
 export type TestimonialProps = {
   image_url: string;
+  image_url_64?: string | null;
+  image_url_256?: string | null;
+  image_url_512?: string | null;
   name: string;
   role: string;
   body: string;
@@ -11,7 +14,7 @@ export type TestimonialProps = {
 
 export type TestimonialCreateDTO = Omit<
   TestimonialProps,
-  "id" | "rankingIndex" | "image_url"
+  "id" | "rankingIndex" | "image_url" | "image_url_64" | "image_url_256" | "image_url_512"
 >;
 
 export type TestimonialUpdateDTO = Partial<TestimonialCreateDTO>;
@@ -30,12 +33,15 @@ export class Testimonial {
     return new Testimonial(props);
   }
 
-  static create(image_url: string, props: TestimonialCreateDTO) {
+  static create(image_url: string, props: TestimonialCreateDTO, imageUrls?: { url64?: string; url256?: string; url512?: string }) {
     return new Testimonial({
       ...props,
       id: crypto.randomUUID(),
-      rankingIndex: Date.now(), // always returns a number higher than the last time you call it
+      rankingIndex: Date.now(),
       image_url,
+      image_url_64: imageUrls?.url64 || null,
+      image_url_256: imageUrls?.url256 || null,
+      image_url_512: imageUrls?.url512 || null,
     });
   }
 
@@ -48,6 +54,13 @@ export class Testimonial {
 
   setImageUrl(imageUrl: string) {
     this._props.image_url = imageUrl;
+  }
+
+  setImageUrls(urls: { url: string; url64?: string; url256?: string; url512?: string }) {
+    this._props.image_url = urls.url;
+    this._props.image_url_64 = urls.url64 || null;
+    this._props.image_url_256 = urls.url256 || null;
+    this._props.image_url_512 = urls.url512 || null;
   }
 
   setRankingIndex(rankingIndex: number) {

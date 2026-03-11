@@ -53,7 +53,13 @@ export type Database = {
           file_path: string
           id: string
           preview_url: string
+          preview_url_256: string | null
+          preview_url_512: string | null
+          preview_url_64: string | null
           storage_ref: string
+          storage_ref_256: string | null
+          storage_ref_512: string | null
+          storage_ref_64: string | null
           updated_at: string
         }
         Insert: {
@@ -64,7 +70,13 @@ export type Database = {
           file_path: string
           id?: string
           preview_url: string
+          preview_url_256?: string | null
+          preview_url_512?: string | null
+          preview_url_64?: string | null
           storage_ref: string
+          storage_ref_256?: string | null
+          storage_ref_512?: string | null
+          storage_ref_64?: string | null
           updated_at?: string
         }
         Update: {
@@ -75,7 +87,13 @@ export type Database = {
           file_path?: string
           id?: string
           preview_url?: string
+          preview_url_256?: string | null
+          preview_url_512?: string | null
+          preview_url_64?: string | null
           storage_ref?: string
+          storage_ref_256?: string | null
+          storage_ref_512?: string | null
+          storage_ref_64?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -88,6 +106,9 @@ export type Database = {
           first_name: string
           id: string
           image_url: string
+          image_url_256: string | null
+          image_url_512: string | null
+          image_url_64: string | null
           last_name: string
           linkedinUrl: string | null
           middle_name: string | null
@@ -102,6 +123,9 @@ export type Database = {
           first_name: string
           id?: string
           image_url: string
+          image_url_256?: string | null
+          image_url_512?: string | null
+          image_url_64?: string | null
           last_name: string
           linkedinUrl?: string | null
           middle_name?: string | null
@@ -116,6 +140,9 @@ export type Database = {
           first_name?: string
           id?: string
           image_url?: string
+          image_url_256?: string | null
+          image_url_512?: string | null
+          image_url_64?: string | null
           last_name?: string
           linkedinUrl?: string | null
           middle_name?: string | null
@@ -152,6 +179,9 @@ export type Database = {
           created_at: string
           id: string
           image_url: string
+          image_url_256: string | null
+          image_url_512: string | null
+          image_url_64: string | null
           name: string
           ranking_index: number
           role: string
@@ -162,6 +192,9 @@ export type Database = {
           created_at?: string
           id?: string
           image_url: string
+          image_url_256?: string | null
+          image_url_512?: string | null
+          image_url_64?: string | null
           name: string
           ranking_index: number
           role: string
@@ -172,6 +205,9 @@ export type Database = {
           created_at?: string
           id?: string
           image_url?: string
+          image_url_256?: string | null
+          image_url_512?: string | null
+          image_url_64?: string | null
           name?: string
           ranking_index?: number
           role?: string

@@ -4,6 +4,12 @@ export type FileRecordPrototypeProps = {
   filePath: string;
   previewUrl: string;
   storageReference: string;
+  previewUrl64?: string | null;
+  previewUrl256?: string | null;
+  previewUrl512?: string | null;
+  storageRef64?: string | null;
+  storageRef256?: string | null;
+  storageRef512?: string | null;
 };
 
 export type FileRecordMetadataProps = {
@@ -14,11 +20,11 @@ export type FileRecordMetadataProps = {
 };
 
 export type FileRecordUpdateProps = Partial<
-  Omit<FileRecordPrototypeProps, "previewUrl" | "storageReference">
+  Omit<FileRecordPrototypeProps, "previewUrl" | "storageReference" | "previewUrl64" | "previewUrl256" | "previewUrl512" | "storageRef64" | "storageRef256" | "storageRef512">
 >;
 
 export class FileRecordPrototype {
-  constructor(public props: FileRecordPrototypeProps) {}
+  constructor(public props: FileRecordPrototypeProps) { }
 }
 
 /**
@@ -27,7 +33,7 @@ export class FileRecordPrototype {
 export class FileRecord {
   private constructor(
     public props: FileRecordPrototypeProps & FileRecordMetadataProps,
-  ) {}
+  ) { }
 
   static hydrate(props: FileRecordPrototypeProps & FileRecordMetadataProps) {
     return new FileRecord(props);

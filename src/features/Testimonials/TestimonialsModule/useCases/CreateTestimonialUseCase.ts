@@ -19,8 +19,12 @@ export class CreateTestimonialUseCase {
       );
     }
 
-    const imageUrl = await this.imageService.uploadFile(image);
-    const newTestimonial = Testimonial.create(imageUrl, testimonialRequestObj);
+    const uploadResult = await this.imageService.uploadFile(image);
+    const newTestimonial = Testimonial.create(uploadResult.url, testimonialRequestObj, {
+      url64: uploadResult.url64,
+      url256: uploadResult.url256,
+      url512: uploadResult.url512,
+    });
     await this.testimonialRepository.saveNew(newTestimonial);
 
     return newTestimonial;
