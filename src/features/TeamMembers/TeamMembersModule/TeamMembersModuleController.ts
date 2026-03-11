@@ -4,6 +4,7 @@ import { DeleteMemberUseCase } from "./useCases/DeleteMemberUseCase";
 import { GetOneMember } from "./useCases/GetOneMemberUseCase";
 import { ListMembers } from "./useCases/ListMembers";
 import { UpdateMemberUseCase } from "./useCases/UpdateMemberUseCase";
+import { GetMemberByNameUseCase } from "./useCases/GetMemberByNameUseCase";
 
 export class TeamMembersModuleController {
   constructor(
@@ -11,7 +12,8 @@ export class TeamMembersModuleController {
     private deleteMemberUseCase: DeleteMemberUseCase,
     private listMembersUseCase: ListMembers,
     private updateMemberUseCase: UpdateMemberUseCase,
-    private getOneMemberUseCase: GetOneMember
+    private getOneMemberUseCase: GetOneMember,
+    private getMemberByNameUseCase: GetMemberByNameUseCase
   ) { }
 
   /**
@@ -34,6 +36,11 @@ export class TeamMembersModuleController {
 
   async getOneMember(memberId: string) {
     const result = await this.getOneMemberUseCase.execute(memberId);
+    return this.mapMemberToResponse(result);
+  }
+
+  async getMemberByName(name: string) {
+    const result = await this.getMemberByNameUseCase.execute(name);
     return this.mapMemberToResponse(result);
   }
 

@@ -2,6 +2,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { IMemberRepository } from "../domain/IMemberRepository";
 import { Member, MemberProps } from "../domain/Member";
 import { Tables, TablesInsert } from "@/types/supabase.types";
+import { toTeamSlug } from "@/lib/utils";
 // Adjust this import path to wherever your Database type is exported
 
 type TeamMemberRow = Tables<{ schema: "client_stackd" }, "team_member">;
@@ -94,6 +95,16 @@ export class MemberRepository implements IMemberRepository {
     if (!data) return null;
 
     return Member.hydrate(this.toDomain(data));
+  }
+
+  async findByName(name: string): Promise<Member | null> {
+    // We fetch all members because name query is a computed slug from first and last name.
+    // If table size grows significantly, we could query ilike or add a slug column.
+    const allMembers = await this.listAll();
+    const found = allMembers.find(
+      (m) => toTeamSlug(m.props.firstName, m.props.lastName) === name
+    );
+    return found || null;
   }
 
   async listPaginated(

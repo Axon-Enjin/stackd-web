@@ -7,6 +7,7 @@ import { ListMembers } from "./useCases/ListMembers";
 import { UpdateMemberUseCase } from "./useCases/UpdateMemberUseCase";
 import { filesModuleController } from "@/features/FileSystem/FileSystemModule";
 import { GetOneMember } from "./useCases/GetOneMemberUseCase";
+import { GetMemberByNameUseCase } from "./useCases/GetMemberByNameUseCase";
 
 /**
  * 1. Infrastructure Dependencies
@@ -37,6 +38,7 @@ const updateMemberUseCase = new UpdateMemberUseCase(
 );
 
 const getOneMemberUseCase = new GetOneMember(memberRepository);
+const getMemberByNameUseCase = new GetMemberByNameUseCase(memberRepository);
 
 /**
  * 3. Exporting Default Controller
@@ -48,6 +50,7 @@ export const teamMembersModuleController = new TeamMembersModuleController(
   listMembersUseCase,
   updateMemberUseCase,
   getOneMemberUseCase,
+  getMemberByNameUseCase,
 );
 
 // Exporting the class type for type-safety in other modules

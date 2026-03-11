@@ -6,8 +6,7 @@ import { ArrowLeft, Linkedin, Loader2 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { BlurFade } from "@/components/magicui/BlurFade";
-import { usePaginatedTeamMembersQuery } from "@/features/TeamMembers/hooks/usePaginatedTeamMembersQuery";
-import { toTeamSlug } from "@/lib/utils";
+import { useTeamMemberByNameQuery } from "@/features/TeamMembers/hooks/useTeamMemberByNameQuery";
 
 interface Member {
   id: string;
@@ -28,12 +27,7 @@ function getFullName(member: Member) {
 
 export default function TeamMemberPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
-  const { data: response, isLoading } = usePaginatedTeamMembersQuery(1, 100);
-  const members: Member[] = response?.data || [];
-
-  const member = members.find(
-    (m) => toTeamSlug(m.firstName, m.lastName) === slug
-  );
+  const { data: member, isLoading } = useTeamMemberByNameQuery(slug) as { data: Member | undefined, isLoading: boolean };
 
   return (
     <div className="min-h-screen flex flex-col bg-soft-white">

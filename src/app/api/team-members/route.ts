@@ -9,6 +9,26 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = createRegularHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
 
+  // Support ?name=joe-bloggs for fetching a single member by slug name
+  const nameParam = searchParams.get("name");
+  if (nameParam) {
+    const data = await teamMembersModuleController.getMemberByName(nameParam);
+    if (!data) {
+      return NextResponse.json(
+        { message: "Member not found" },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json(
+      {
+        status: "success",
+        message: "GET team member by name",
+        data,
+      },
+      { status: 200 },
+    );
+  }
+
   // Support ?all=true for fetching all items (used by sort modal)
   if (searchParams.get("all") === "true") {
     const data = await teamMembersModuleController.listAllMembers();
