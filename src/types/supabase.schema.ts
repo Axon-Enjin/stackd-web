@@ -86,12 +86,14 @@ export const clientStackdFileRecordUpdateSchema = z.object({
 });
 
 export const clientStackdTeamMemberRowSchema = z.object({
+  achievements: jsonSchema.nullable(),
   bio: z.string(),
   created_at: z.string(),
   first_name: z.string(),
   id: z.string(),
   image_url: z.string(),
   last_name: z.string(),
+  linkedinUrl: z.string().nullable(),
   middle_name: z.string().nullable(),
   ranking_index: z.number(),
   role: z.string(),
@@ -99,12 +101,14 @@ export const clientStackdTeamMemberRowSchema = z.object({
 });
 
 export const clientStackdTeamMemberInsertSchema = z.object({
+  achievements: jsonSchema.optional().nullable(),
   bio: z.string(),
   created_at: z.string().optional(),
   first_name: z.string(),
   id: z.string().optional(),
   image_url: z.string(),
   last_name: z.string(),
+  linkedinUrl: z.string().optional().nullable(),
   middle_name: z.string().optional().nullable(),
   ranking_index: z.number(),
   role: z.string(),
@@ -112,12 +116,14 @@ export const clientStackdTeamMemberInsertSchema = z.object({
 });
 
 export const clientStackdTeamMemberUpdateSchema = z.object({
+  achievements: jsonSchema.optional().nullable(),
   bio: z.string().optional(),
   created_at: z.string().optional(),
   first_name: z.string().optional(),
   id: z.string().optional(),
   image_url: z.string().optional(),
   last_name: z.string().optional(),
+  linkedinUrl: z.string().optional().nullable(),
   middle_name: z.string().optional().nullable(),
   ranking_index: z.number().optional(),
   role: z.string().optional(),
@@ -198,3 +204,7 @@ export const clientStackdUsersUpdateSchema = z.object({
   role: z.string().optional(),
   updated_at: z.string().optional().nullable(),
 });
+
+export const clientStackdIsAdminArgsSchema = z.never();
+
+export const clientStackdIsAdminReturnsSchema = z.boolean();

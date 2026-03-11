@@ -39,6 +39,8 @@ export class MemberRepository implements IMemberRepository {
       bio: row.bio,
       role: row.role,
       rankingIndex: row.ranking_index,
+      achievements: row.achievements as string[] || [],
+      linkedinProfile: row.linkedinUrl || undefined,
     };
   }
 

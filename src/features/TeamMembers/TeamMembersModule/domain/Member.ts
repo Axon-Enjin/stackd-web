@@ -6,6 +6,10 @@ export type MemberProps = {
   role: string;
   bio: string;
 
+  linkedinProfile?: string, 
+
+  achievements: string[]
+
   // metadata
   id: string;
   rankingIndex: number;
