@@ -17,6 +17,8 @@ interface Member {
   middleName?: string;
   role: string;
   bio: string;
+  linkedinProfile?: string | null;
+  achievements?: string[];
 }
 
 function getFullName(member: Member) {
@@ -112,18 +114,38 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                     </div>
                   </BlurFade>
 
-                  <BlurFade delay={0.28}>
-                    <div className="pt-6 border-t border-[#E8ECF2]">
-                      <a
-                        href="#"
-                        className="inline-flex items-center gap-2 text-navy/50 hover:text-brand-blue text-sm font-semibold uppercase tracking-widest transition-colors duration-200"
-                        aria-label={`${getFullName(member)} on LinkedIn`}
-                      >
-                        <Linkedin size={16} />
-                        LinkedIn Profile
-                      </a>
-                    </div>
-                  </BlurFade>
+                  {/* Achievements */}
+                  {member.achievements && member.achievements.length > 0 && (
+                    <BlurFade delay={0.27}>
+                      <div className="mb-8 border-l-2 border-brand-blue/30 pl-5">
+                        <ul className="space-y-2.5">
+                          {member.achievements.map((achievement, i) => (
+                            <li key={i} className="text-sm text-[#1A1A1A]/70 leading-relaxed">
+                              {achievement}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </BlurFade>
+                  )}
+
+                  {/* LinkedIn */}
+                  {member.linkedinProfile && (
+                    <BlurFade delay={0.32}>
+                      <div className="pt-6 border-t border-[#E8ECF2]">
+                        <a
+                          href={member.linkedinProfile}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-navy/50 hover:text-brand-blue text-sm font-semibold uppercase tracking-widest transition-colors duration-200"
+                          aria-label={`${getFullName(member)} on LinkedIn`}
+                        >
+                          <Linkedin size={16} />
+                          LinkedIn Profile
+                        </a>
+                      </div>
+                    </BlurFade>
+                  )}
                 </div>
               </div>
             </>
