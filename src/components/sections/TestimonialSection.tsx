@@ -22,7 +22,7 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
             <div className="absolute inset-0 z-0">
                 {testimonial.imageUrl ? (
                     <img
-                        src={testimonial.imageUrl}
+                        src={testimonial.imageUrl512 || testimonial.imageUrl}
                         alt={testimonial.title}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
@@ -52,7 +52,7 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
                 <div className="w-10 h-px bg-brand-blue/60 mb-4" />
                 <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border-2 border-white/20">
-                        <img src={testimonial.imageUrl} alt={testimonial.title} className="w-full h-full object-cover" />
+                        <img src={testimonial.imageUrl64 || testimonial.imageUrl} alt={testimonial.title} className="w-full h-full object-cover" />
                     </div>
                     <div>
                         <p className="text-white font-bold text-sm leading-tight">{testimonial.title}</p>
@@ -104,8 +104,8 @@ export function TestimonialSection() {
         perPage === 3
             ? "grid-cols-3"
             : perPage === 2
-              ? "grid-cols-2"
-              : "grid-cols-1";
+                ? "grid-cols-2"
+                : "grid-cols-1";
 
     if (isLoading) {
         return (
@@ -204,11 +204,10 @@ export function TestimonialSection() {
                                             setPage(i);
                                         }}
                                         aria-label={`Go to page ${i + 1}`}
-                                        className={`rounded-full transition-all duration-300 ${
-                                            i === page
+                                        className={`rounded-full transition-all duration-300 ${i === page
                                                 ? "w-6 h-2.5 bg-navy"
                                                 : "w-2.5 h-2.5 bg-navy/20 hover:bg-navy/40"
-                                        }`}
+                                            }`}
                                     />
                                 ))}
                             </div>

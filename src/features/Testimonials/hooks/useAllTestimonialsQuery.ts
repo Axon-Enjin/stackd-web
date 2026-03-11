@@ -3,6 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 export type TestimonialItem = {
   id: string;
   imageUrl: string;
+  imageUrl64?: string | null;
+  imageUrl256?: string | null;
+  imageUrl512?: string | null;
   title: string;
   description: string;
   body: string;

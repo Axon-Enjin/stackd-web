@@ -32,6 +32,9 @@ import { toast } from "react-toastify";
 export interface Testimonial {
   id: string;
   imageUrl: string;
+  imageUrl64?: string | null;
+  imageUrl256?: string | null;
+  imageUrl512?: string | null;
   name: string;
   role: string;
   body: string;
@@ -347,7 +350,7 @@ function TestimonialRow({
         }}
       >
         <img
-          src={testimonial.imageUrl || "/placeholder-avatar.png"}
+          src={testimonial.imageUrl64 || testimonial.imageUrl || "/placeholder-avatar.png"}
           alt={testimonial.name}
           className="h-11 w-11 rounded-full border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-1"
         />
@@ -456,7 +459,7 @@ function TestimonialDetailModal({
               onClick={() => { if (testimonial.imageUrl) onPhotoClick(testimonial.imageUrl); }}
             >
               <img
-                src={testimonial.imageUrl || "/placeholder-avatar.png"}
+                src={testimonial.imageUrl256 || testimonial.imageUrl || "/placeholder-avatar.png"}
                 alt={testimonial.name}
                 className="h-24 w-24 rounded-full border-2 border-gray-100 object-cover shadow-sm transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-2"
               />

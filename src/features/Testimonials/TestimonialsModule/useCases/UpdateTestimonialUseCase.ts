@@ -37,9 +37,14 @@ export class UpdateTestimonialUseCase {
 
     let oldImageUrl: string | null = null;
     if (newImage) {
-      const imageUrl = await this.imageService.uploadFile(newImage);
+      const uploadResult = await this.imageService.uploadFile(newImage);
       oldImageUrl = testimonial.props.image_url;
-      testimonial.setImageUrl(imageUrl);
+      testimonial.setImageUrls({
+        url: uploadResult.url,
+        url64: uploadResult.url64,
+        url256: uploadResult.url256,
+        url512: uploadResult.url512,
+      });
     }
 
     // persist updates first before deleting old image

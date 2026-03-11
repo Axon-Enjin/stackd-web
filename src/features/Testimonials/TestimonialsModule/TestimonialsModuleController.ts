@@ -21,6 +21,9 @@ export class TestimonialsModuleController {
     return {
       id: testimonial.props.id,
       imageUrl: testimonial.props.image_url,
+      imageUrl64: testimonial.props.image_url_64 ?? null,
+      imageUrl256: testimonial.props.image_url_256 ?? null,
+      imageUrl512: testimonial.props.image_url_512 ?? null,
       title: testimonial.props.name,
       description: testimonial.props.role,
       body: testimonial.props.body,

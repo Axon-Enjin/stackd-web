@@ -179,6 +179,9 @@ export type Database = {
           created_at: string
           id: string
           image_url: string
+          image_url_256: string | null
+          image_url_512: string | null
+          image_url_64: string | null
           name: string
           ranking_index: number
           role: string
@@ -189,6 +192,9 @@ export type Database = {
           created_at?: string
           id?: string
           image_url: string
+          image_url_256?: string | null
+          image_url_512?: string | null
+          image_url_64?: string | null
           name: string
           ranking_index: number
           role: string
@@ -199,6 +205,9 @@ export type Database = {
           created_at?: string
           id?: string
           image_url?: string
+          image_url_256?: string | null
+          image_url_512?: string | null
+          image_url_64?: string | null
           name?: string
           ranking_index?: number
           role?: string
