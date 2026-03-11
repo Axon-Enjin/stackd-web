@@ -3,7 +3,7 @@ import { Booking } from "../domain/Booking";
 import { IBookingRepository } from "../domain/IBookingRepository";
 import { configs } from "@/configs/configs";
 import { addMinutes, isBefore, isAfter, format } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { toZonedTime, formatInTimeZone } from "date-fns-tz";
 
 export class GoogleCalendarRepository implements IBookingRepository {
   private adminCalendarId = configs.googleAuth.adminCalendarId;
@@ -144,9 +144,13 @@ export class GoogleCalendarRepository implements IBookingRepository {
       adminEmail = cal.data.id || adminEmail;
     }
 
+    const clientDate = formatInTimeZone(booking.startTime, booking.timezone, "EEEE, MMM d, yyyy");
+    const clientTimeStart = formatInTimeZone(booking.startTime, booking.timezone, "h:mm a");
+    const clientTimeEnd = formatInTimeZone(booking.endTime, booking.timezone, "h:mm a");
+
     const event: any = {
-      summary: `Strategy Call: ${booking.name}`,
-      description: `Strategy call booked via website.\nEmail: ${booking.email}`,
+      summary: `TikTok Shop Revenue Review: ${booking.name}`,
+      description: `TikTok Shop Revenue Review booked via website.\n\nEmail: ${booking.email}\nCustomer Local Time: ${clientDate} from ${clientTimeStart} to ${clientTimeEnd} (${booking.timezone})`,
       start: {
         dateTime: booking.startTime.toISOString(),
         timeZone: booking.timezone,
