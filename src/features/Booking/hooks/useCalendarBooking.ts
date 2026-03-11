@@ -12,8 +12,8 @@ export function useCalendarBooking() {
   const [submitting, setSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [confirmedBooking, setConfirmedBooking] = useState<any>(null);
+  const [serviceError, setServiceError] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
-
   const [timezone, setTimezone] = useState<string>(() =>
     typeof window !== "undefined"
       ? Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -43,7 +43,12 @@ export function useCalendarBooking() {
           setIsSuccess(true);
         } else {
           const err = await res.json();
-          setAuthError(`Failed to book: ${err.error}`);
+          if (res.status === 503 || err.code === "CALENDAR_AUTH_ERROR") {
+            setServiceError(true);
+            setAuthError("Service temporarily unavailable. Please try manual booking.");
+          } else {
+            setAuthError(`Failed to book: ${err.error}`);
+          }
         }
       } catch (error) {
         console.error(error);
@@ -69,6 +74,7 @@ export function useCalendarBooking() {
     setSelectedSlot(null);
     setAvailableSlots([]);
     setAuthError(null);
+    setServiceError(false);
 
     if (!date) return;
 
@@ -81,6 +87,10 @@ export function useCalendarBooking() {
         const data = await res.json();
         setAvailableSlots(data.slots.map((s: string) => new Date(s)));
       } else {
+        const err = await res.json();
+        if (res.status === 503 || err.code === "CALENDAR_AUTH_ERROR") {
+          setServiceError(true);
+        }
         console.error("Failed to fetch slots");
       }
     } catch (error) {
@@ -119,8 +129,9 @@ export function useCalendarBooking() {
     authError,
     timezone,
     setTimezone,
-    isInitialLoad: false, // Set to false since we don't do initial loading checks anymore
+    isInitialLoad: false, 
     handleDateSelect,
     handleBookingSubmit,
+    serviceError,
   };
 }

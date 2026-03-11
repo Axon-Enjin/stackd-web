@@ -39,6 +39,7 @@ export function CalendarBookingUI() {
     isInitialLoad,
     handleDateSelect,
     handleBookingSubmit,
+    serviceError,
   } = useCalendarBooking();
 
   const [showTzPicker, setShowTzPicker] = useState(false);
@@ -82,6 +83,27 @@ export function CalendarBookingUI() {
         <p className="text-lg font-medium text-[#1A1A1A]/60">
           Preparing your booking...
         </p>
+      </div>
+    );
+  }
+
+  if (serviceError) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-red-100 bg-red-50/30 p-12 text-center shadow-sm">
+        <AlertCircle size={48} className="mb-4 text-red-500" />
+        <h3 className="mb-2 text-xl font-bold text-[#0B1F3B]">
+          Online Booking Temporarily Unavailable
+        </h3>
+        <p className="mb-6 max-w-md text-[#1A1A1A]/60">
+          We&apos;re experiencing a technical issue with our automated calendar. 
+          Please email us directly to schedule your <strong>TikTok Shop Revenue Review</strong>.
+        </p>
+        <a 
+          href="mailto:stackdcommerce@gmail.com?subject=TikTok%20Shop%20Revenue%20Review%20Booking"
+          className="rounded-lg bg-[#0B1F3B] px-8 py-3 font-semibold text-white shadow-md transition-colors hover:bg-[#0f2a4d]"
+        >
+          Email stackdcommerce@gmail.com
+        </a>
       </div>
     );
   }
@@ -268,7 +290,20 @@ export function CalendarBookingUI() {
                 <span className="font-medium">
                   {timezone} ({getGMTOffset(timezone)})
                 </span>
-                . Business hours are set to 9:00 AM – 5:00 PM US Eastern Time.
+                . Our business hours (9:00 PM – 12:00 AM PHT) are{" "}
+                <span className="font-medium">
+                  {(() => {
+                    const now = new Date();
+                    const dateStr = format(now, "yyyy-MM-dd");
+                    // 9 PM PHT
+                    const startLocal = formatInTimeZone(`${dateStr}T21:00:00+08:00`, timezone, "h:mm a");
+                    // 12 AM PHT (next day)
+                    const endLocal = formatInTimeZone(`${dateStr}T23:59:59+08:00`, timezone, "h:mm a");
+                    
+                    return `${startLocal} – ${endLocal}`;
+                  })()}
+                </span>{" "}
+                in your local time.
               </div>
             </div>
 
