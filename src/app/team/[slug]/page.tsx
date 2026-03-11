@@ -6,8 +6,7 @@ import { ArrowLeft, Linkedin, Loader2 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { BlurFade } from "@/components/magicui/BlurFade";
-import { usePaginatedTeamMembersQuery } from "@/features/TeamMembers/hooks/usePaginatedTeamMembersQuery";
-import { toTeamSlug } from "@/lib/utils";
+import { useTeamMemberByNameQuery } from "@/features/TeamMembers/hooks/useTeamMemberByNameQuery";
 
 interface Member {
   id: string;
@@ -17,6 +16,8 @@ interface Member {
   middleName?: string;
   role: string;
   bio: string;
+  linkedinProfile?: string | null;
+  achievements?: string[];
 }
 
 function getFullName(member: Member) {
@@ -26,12 +27,7 @@ function getFullName(member: Member) {
 
 export default function TeamMemberPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
-  const { data: response, isLoading } = usePaginatedTeamMembersQuery(1, 100);
-  const members: Member[] = response?.data || [];
-
-  const member = members.find(
-    (m) => toTeamSlug(m.firstName, m.lastName) === slug
-  );
+  const { data: member, isLoading } = useTeamMemberByNameQuery(slug) as { data: Member | undefined, isLoading: boolean };
 
   return (
     <div className="min-h-screen flex flex-col bg-soft-white">
@@ -71,10 +67,10 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
           ) : (
             <>
               <div className="flex flex-col md:flex-row gap-10 items-start">
-                {/* Avatar */}
-                <BlurFade delay={0.1}>
-                  <div className="shrink-0 flex justify-center w-full md:w-auto">
-                    <div className="w-48 h-48 md:w-64 md:h-80 rounded-2xl bg-navy/5 border border-[#E8ECF2] overflow-hidden">
+                {/* Left Column (Avatar + Achievements) */}
+                <div className="shrink-0 w-full md:w-64 flex flex-col gap-8">
+                  <BlurFade delay={0.1}>
+                    <div className="w-full max-w-64 aspect-[4/5] mx-auto md:mx-0 rounded-2xl bg-navy/5 border border-[#E8ECF2] overflow-hidden">
                       {member.imageUrl ? (
                         <img
                           src={member.imageUrl}
@@ -89,8 +85,23 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                         </div>
                       )}
                     </div>
-                  </div>
-                </BlurFade>
+                  </BlurFade>
+
+                  {/* Achievements (Desktop: under photo) */}
+                  {member.achievements && member.achievements.length > 0 && (
+                    <BlurFade delay={0.27}>
+                      <div className="hidden md:block border-l-2 border-brand-blue/30 pl-5">
+                        <ul className="space-y-2.5">
+                          {member.achievements.map((achievement, i) => (
+                            <li key={i} className="text-sm text-[#1A1A1A]/70 leading-relaxed">
+                              {achievement}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </BlurFade>
+                  )}
+                </div>
 
                 {/* Details */}
                 <div className="grow">
@@ -112,18 +123,38 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                     </div>
                   </BlurFade>
 
-                  <BlurFade delay={0.28}>
-                    <div className="pt-6 border-t border-[#E8ECF2]">
-                      <a
-                        href="#"
-                        className="inline-flex items-center gap-2 text-navy/50 hover:text-brand-blue text-sm font-semibold uppercase tracking-widest transition-colors duration-200"
-                        aria-label={`${getFullName(member)} on LinkedIn`}
-                      >
-                        <Linkedin size={16} />
-                        LinkedIn Profile
-                      </a>
-                    </div>
-                  </BlurFade>
+                  {/* Achievements (Mobile: under bio) */}
+                  {member.achievements && member.achievements.length > 0 && (
+                    <BlurFade delay={0.27}>
+                      <div className="md:hidden mb-8 border-l-2 border-brand-blue/30 pl-5">
+                        <ul className="space-y-2.5">
+                          {member.achievements.map((achievement, i) => (
+                            <li key={i} className="text-sm text-[#1A1A1A]/70 leading-relaxed">
+                              {achievement}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </BlurFade>
+                  )}
+
+                  {/* LinkedIn */}
+                  {member.linkedinProfile && (
+                    <BlurFade delay={0.32}>
+                      <div className="pt-6 border-t border-[#E8ECF2]">
+                        <a
+                          href={member.linkedinProfile}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-navy/50 hover:text-brand-blue text-sm font-semibold uppercase tracking-widest transition-colors duration-200"
+                          aria-label={`${getFullName(member)} on LinkedIn`}
+                        >
+                          <Linkedin size={16} />
+                          LinkedIn Profile
+                        </a>
+                      </div>
+                    </BlurFade>
+                  )}
                 </div>
               </div>
             </>

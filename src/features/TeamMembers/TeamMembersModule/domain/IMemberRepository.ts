@@ -5,6 +5,7 @@ export abstract class IMemberRepository {
   abstract persistUpdates(member: Member): Promise<Member>;
   abstract deleteById(id: string): Promise<boolean>;
   abstract findById(id: string): Promise<Member | null>;
+  abstract findByName(name: string): Promise<Member | null>;
   abstract listPaginated(
     pageNumber: number,
     pageSize: number,
