@@ -9,6 +9,8 @@ const NAV_LINKS = [
   { label: "How We Work", href: "/#how-we-work" },
   { label: "Our Team", href: "/#team" },
   { label: "FAQ", href: "/#faq" },
+  { label: "Terms", href: "/terms" },
+  { label: "Privacy", href: "/privacy" },
 ];
 
 export function Navbar() {
