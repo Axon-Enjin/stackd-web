@@ -3,6 +3,7 @@
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
 import { BlurFade } from "@/components/magicui/BlurFade";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 
 const SERVICES = [
   "Structured live programming",
@@ -22,16 +23,11 @@ export function OurPositionSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left — positioning copy */}
           <div>
-            <BlurFade delay={0.05}>
-              <span className="text-xs font-semibold tracking-[0.18em] uppercase text-[#2FB7A8] mb-4 block">
-                Our Position
-              </span>
-            </BlurFade>
-            <BlurFade delay={0.12}>
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-bold text-[#0B1F3B] leading-tight tracking-tight mb-8">
-                Stackd Operates TikTok Shop as a Revenue Department
-              </h2>
-            </BlurFade>
+            <SectionHeader
+              eyebrow="Our Position"
+              heading="Stackd Operates TikTok Shop as a Revenue Department"
+              baseDelay={0.05}
+            />
 
             <div className="space-y-4">
               {[
