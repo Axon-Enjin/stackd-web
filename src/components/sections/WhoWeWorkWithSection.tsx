@@ -65,8 +65,7 @@ export function WhoWeWorkWithSection() {
                 gradientColor="#2F80ED18"
                 gradientSize={220}
               >
-                <div className="w-1.5 h-1.5 rounded-full bg-[#2FB7A8] mb-5" />
-                <h3 className="text-white font-semibold text-base mb-3 leading-snug">
+                <h3 className="flex items-center gap-3 text-white font-semibold text-base mb-3 leading-snug before:content-[''] before:shrink-0 before:w-1 before:h-6 before:bg-[#2FB7A8] before:rounded-full">
                   {item.label}
                 </h3>
                 <p className="text-white/45 text-sm leading-relaxed">
