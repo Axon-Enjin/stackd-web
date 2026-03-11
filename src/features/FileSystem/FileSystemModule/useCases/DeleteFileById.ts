@@ -1,11 +1,11 @@
- import { IFileRepository } from "../domain/IFileRepository";
+import { IFileRepository } from "../domain/IFileRepository";
 import { IFileStorage } from "../domain/IFileStorage";
 
 export class DeleteFileById {
   constructor(
     private fileRepository: IFileRepository,
     private fileStorage: IFileStorage,
-  ) {}
+  ) { }
 
   async execute(fileId: string): Promise<boolean> {
     /**
@@ -23,7 +23,14 @@ export class DeleteFileById {
       return true;
     }
 
-    await this.fileStorage.deleteFile(file.props.storageReference);
+    const storageRefsToDelete = [
+      file.props.storageReference,
+      file.props.storageRef64,
+      file.props.storageRef256,
+      file.props.storageRef512,
+    ].filter((ref): ref is string => !!ref);
+
+    await this.fileStorage.deleteFile(storageRefsToDelete);
 
     await this.fileRepository.deleteById(fileId);
 

@@ -15,7 +15,7 @@ export class FilesModuleController {
     private updateFileByIdUseCase: UpdateFileById,
     private uploadFileUseCase: UploadFile,
     private deleteFileByPreviewUrlUseCase: DeleteFileByPreviewUrl,
-  ) {}
+  ) { }
 
   async deleteFileByPreviewUrl(publicUrl: string) {
     const result = await this.deleteFileByPreviewUrlUseCase.execute(publicUrl);
@@ -44,6 +44,9 @@ export class FilesModuleController {
       downloadUrl: result.props.previewUrl,
       deletedAt: result.props.deletedAt,
       storageReference: result.props.storageReference,
+      previewUrl64: result.props.previewUrl64,
+      previewUrl256: result.props.previewUrl256,
+      previewUrl512: result.props.previewUrl512,
     };
 
     return convertedResult;
@@ -67,6 +70,9 @@ export class FilesModuleController {
         downloadUrl: f.props.previewUrl,
         deletedAt: f.props.deletedAt,
         storageReference: f.props.storageReference,
+        previewUrl64: f.props.previewUrl64,
+        previewUrl256: f.props.previewUrl256,
+        previewUrl512: f.props.previewUrl512,
       })),
       count: result.count,
     };
@@ -87,6 +93,9 @@ export class FilesModuleController {
       downloadUrl: result.props.previewUrl,
       deletedAt: result.props.deletedAt,
       storageReference: result.props.storageReference,
+      previewUrl64: result.props.previewUrl64,
+      previewUrl256: result.props.previewUrl256,
+      previewUrl512: result.props.previewUrl512,
     };
 
     return convertedResult;
@@ -119,6 +128,9 @@ export class FilesModuleController {
       downloadUrl: result.props.previewUrl,
       deletedAt: result.props.deletedAt,
       storageReference: result.props.storageReference,
+      previewUrl64: result.props.previewUrl64,
+      previewUrl256: result.props.previewUrl256,
+      previewUrl512: result.props.previewUrl512,
     };
 
     return convertedResult;

@@ -57,7 +57,13 @@ export const clientStackdFileRecordRowSchema = z.object({
   file_path: z.string(),
   id: z.string(),
   preview_url: z.string(),
+  preview_url_256: z.string().nullable(),
+  preview_url_512: z.string().nullable(),
+  preview_url_64: z.string().nullable(),
   storage_ref: z.string(),
+  storage_ref_256: z.string().nullable(),
+  storage_ref_512: z.string().nullable(),
+  storage_ref_64: z.string().nullable(),
   updated_at: z.string(),
 });
 
@@ -69,7 +75,13 @@ export const clientStackdFileRecordInsertSchema = z.object({
   file_path: z.string(),
   id: z.string().optional(),
   preview_url: z.string(),
+  preview_url_256: z.string().optional().nullable(),
+  preview_url_512: z.string().optional().nullable(),
+  preview_url_64: z.string().optional().nullable(),
   storage_ref: z.string(),
+  storage_ref_256: z.string().optional().nullable(),
+  storage_ref_512: z.string().optional().nullable(),
+  storage_ref_64: z.string().optional().nullable(),
   updated_at: z.string().optional(),
 });
 
@@ -81,7 +93,13 @@ export const clientStackdFileRecordUpdateSchema = z.object({
   file_path: z.string().optional(),
   id: z.string().optional(),
   preview_url: z.string().optional(),
+  preview_url_256: z.string().optional().nullable(),
+  preview_url_512: z.string().optional().nullable(),
+  preview_url_64: z.string().optional().nullable(),
   storage_ref: z.string().optional(),
+  storage_ref_256: z.string().optional().nullable(),
+  storage_ref_512: z.string().optional().nullable(),
+  storage_ref_64: z.string().optional().nullable(),
   updated_at: z.string().optional(),
 });
 

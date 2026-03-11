@@ -23,6 +23,12 @@ export class SupabaseFileRepository implements IFileRepository {
       file_path: props.filePath,
       preview_url: props.previewUrl,
       storage_ref: props.storageReference,
+      preview_url_64: props.previewUrl64 || null,
+      preview_url_256: props.previewUrl256 || null,
+      preview_url_512: props.previewUrl512 || null,
+      storage_ref_64: props.storageRef64 || null,
+      storage_ref_256: props.storageRef256 || null,
+      storage_ref_512: props.storageRef512 || null,
     };
   }
 
@@ -39,6 +45,12 @@ export class SupabaseFileRepository implements IFileRepository {
       ...(props.storageReference !== undefined && {
         storage_ref: props.storageReference,
       }),
+      ...(props.previewUrl64 !== undefined && { preview_url_64: props.previewUrl64 }),
+      ...(props.previewUrl256 !== undefined && { preview_url_256: props.previewUrl256 }),
+      ...(props.previewUrl512 !== undefined && { preview_url_512: props.previewUrl512 }),
+      ...(props.storageRef64 !== undefined && { storage_ref_64: props.storageRef64 }),
+      ...(props.storageRef256 !== undefined && { storage_ref_256: props.storageRef256 }),
+      ...(props.storageRef512 !== undefined && { storage_ref_512: props.storageRef512 }),
       ...(props.id !== undefined && { id: props.id }),
       ...(props.createdAt !== undefined && { created_at: props.createdAt }),
       ...(props.updatedAt !== undefined && { updated_at: props.updatedAt }),
@@ -55,6 +67,12 @@ export class SupabaseFileRepository implements IFileRepository {
       filePath: row.file_path,
       previewUrl: row.preview_url,
       storageReference: row.storage_ref,
+      previewUrl64: row.preview_url_64,
+      previewUrl256: row.preview_url_256,
+      previewUrl512: row.preview_url_512,
+      storageRef64: row.storage_ref_64,
+      storageRef256: row.storage_ref_256,
+      storageRef512: row.storage_ref_512,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
       deletedAt: row.deleted_at,
