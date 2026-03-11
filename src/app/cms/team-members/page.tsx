@@ -358,21 +358,10 @@ function MemberRow({
 
       {/* Text */}
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-gray-900">
-            {truncateWithEllipsis(fullName, 30)}
-          </h3>
-          {member.linkedinProfile && (
-            <Linkedin size={13} className="shrink-0 text-[#0A66C2]" />
-          )}
-        </div>
+        <h3 className="text-sm font-semibold text-gray-900">
+          {truncateWithEllipsis(fullName, 30)}
+        </h3>
         <p className="mt-0.5 text-xs text-gray-500">{truncateWithEllipsis(member.role, 30)}</p>
-        {member.achievements && member.achievements.length > 0 && (
-          <p className="mt-0.5 flex items-center gap-1 text-xs text-amber-600">
-            <Trophy size={11} />
-            {member.achievements.length} achievement{member.achievements.length !== 1 ? "s" : ""}
-          </p>
-        )}
       </div>
 
       {/* Loading spinner for delete */}
@@ -820,72 +809,69 @@ function MemberModal({
                   className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
                 ></textarea>
               </div>
+
+              {/* LinkedIn Profile */}
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  LinkedIn Profile URL (Optional)
+                </label>
+                <input
+                  name="linkedinProfile"
+                  type="url"
+                  defaultValue={member?.linkedinProfile ?? ""}
+                  placeholder="https://linkedin.com/in/username"
+                  className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                />
+              </div>
+
+              {/* Achievements */}
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Achievements (Optional)
+                </label>
+
+                {/* Achievement List */}
+                {achievements.length > 0 && (
+                  <ul className="mb-3 space-y-1.5">
+                    {achievements.map((a, i) => (
+                      <li key={i} className="flex items-center gap-2 rounded-sm border border-gray-100 bg-gray-50 px-3 py-2 text-sm text-gray-700">
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400" />
+                        <span className="flex-1 break-all">{a}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeAchievement(i)}
+                          className="shrink-0 text-gray-400 transition-colors hover:text-red-500"
+                        >
+                          <X size={14} />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Add Achievement Input */}
+                <input
+                  type="text"
+                  value={newAchievement}
+                  onChange={(e) => setNewAchievement(e.target.value)}
+                  onKeyDown={handleAchievementKeyDown}
+                  placeholder="e.g. Best Innovator Award 2024"
+                  className="w-full rounded-sm border p-2.5 text-sm outline-none focus:ring-2 focus:ring-[#2F80ED]"
+                />
+                <div className="mt-1.5 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={addAchievement}
+                    disabled={!newAchievement.trim()}
+                    className="rounded-sm border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-40"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* LinkedIn Profile */}
-          <div className="mt-4">
-            <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-gray-700">
-              <Linkedin size={15} className="text-[#0A66C2]" />
-              LinkedIn Profile URL (Optional)
-            </label>
-            <input
-              name="linkedinProfile"
-              type="url"
-              defaultValue={member?.linkedinProfile ?? ""}
-              placeholder="https://linkedin.com/in/username"
-              className="w-full rounded-sm border p-2.5 outline-none focus:ring-2 focus:ring-[#2F80ED]"
-            />
-          </div>
-
-          {/* Achievements */}
-          <div className="mt-4">
-            <label className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700">
-              <Trophy size={15} className="text-amber-500" />
-              Achievements (Optional)
-            </label>
-
-            {/* Achievement List */}
-            {achievements.length > 0 && (
-              <ul className="mb-3 space-y-1.5">
-                {achievements.map((a, i) => (
-                  <li key={i} className="flex items-center gap-2 rounded-sm border border-gray-100 bg-gray-50 px-3 py-2 text-sm text-gray-700">
-                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
-                    <span className="flex-1 break-all">{a}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeAchievement(i)}
-                      className="shrink-0 text-gray-400 transition-colors hover:text-red-500"
-                    >
-                      <X size={14} />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {/* Add Achievement Input */}
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={newAchievement}
-                onChange={(e) => setNewAchievement(e.target.value)}
-                onKeyDown={handleAchievementKeyDown}
-                placeholder="Type an achievement and press Enter or Add"
-                className="flex-1 rounded-sm border p-2.5 text-sm outline-none focus:ring-2 focus:ring-[#2F80ED]"
-              />
-              <button
-                type="button"
-                onClick={addAchievement}
-                disabled={!newAchievement.trim()}
-                className="flex items-center gap-1.5 rounded-sm border border-gray-200 px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-40"
-              >
-                <Plus size={15} />
-                Add
-              </button>
-            </div>
-            <p className="mt-1 text-xs text-gray-400">Press Enter or click Add after each achievement.</p>
-          </div>
 
           <div className="mt-8 flex justify-end gap-2 border-t border-gray-200 pt-6">
             <button
