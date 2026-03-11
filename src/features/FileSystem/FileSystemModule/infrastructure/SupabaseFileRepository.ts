@@ -113,7 +113,9 @@ export class SupabaseFileRepository implements IFileRepository {
     const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .select("*")
-      .eq("preview_url", previewUrl)
+      .or(
+        `preview_url.eq.${previewUrl},preview_url_64.eq.${previewUrl},preview_url_256.eq.${previewUrl},preview_url_512.eq.${previewUrl}`,
+      )
       .maybeSingle();
 
     if (error) throw new Error(`Failed to find file by URL: ${error.message}`);
