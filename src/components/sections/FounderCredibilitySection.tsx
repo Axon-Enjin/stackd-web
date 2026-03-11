@@ -13,7 +13,7 @@ interface Member {
   firstName: string;
   lastName: string;
   middleName?: string;
-  role: string; 
+  role: string;
   bio: string;
 }
 
@@ -21,8 +21,8 @@ export function FounderCredibilitySection() {
   const { data: response, isLoading } = usePaginatedTeamMembersQuery(1, 4);
   const members: Member[] = response?.data || [];
 
-  // We want to show up to the first 3 team members
-  const displayMembers = members.slice(0, 3);
+  // We want to show up to the first 4 team members
+  const displayMembers = members.slice(0, 4);
 
   const getFullName = (member: Member) => {
     const middle = member.middleName ? `${member.middleName.charAt(0)}.` : "";
@@ -53,7 +53,7 @@ export function FounderCredibilitySection() {
           </BlurFade>
         </div>
 
-        <div className={`grid grid-cols-1 ${displayMembers.length === 1 ? 'md:grid-cols-1 max-w-2xl mx-auto' : displayMembers.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'lg:grid-cols-3 md:grid-cols-2'} gap-6`}>
+        <div className={`grid grid-cols-1 ${displayMembers.length === 1 ? 'md:grid-cols-1 max-w-xl mx-auto' : displayMembers.length === 2 ? 'md:grid-cols-2 max-w-3xl mx-auto' : displayMembers.length === 4 ? 'md:grid-cols-2 lg:grid-cols-4 max-w-full' : 'lg:grid-cols-3 md:grid-cols-2 max-w-full'} gap-6`}>
           {isLoading ? (
             <div className="col-span-full flex justify-center py-12">
               <Loader2 className="animate-spin text-[#2F80ED]" size={40} />
