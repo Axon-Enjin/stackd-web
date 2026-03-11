@@ -32,6 +32,29 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Check if it's a hash link
+    if (href.includes("#")) {
+      const hash = href.split("#")[1];
+      const targetElement = document.getElementById(hash);
+
+      // If the element exists on the current page, manually scroll to it
+      if (targetElement) {
+        e.preventDefault();
+        targetElement.scrollIntoView({ behavior: "smooth" });
+        // Update the URL history without triggering a jump
+        window.history.pushState(null, "", `/#${hash}`);
+        setIsOpen(false); // Close mobile menu if it was open
+        return;
+      }
+    }
+    
+    // For non-hash links or if the element isn't on the current page, 
+    // just close the menu and let Next.js handle the routing normally
+    setIsOpen(false);
+  };
+
   return (
     <motion.header
       className="fixed top-0 right-0 left-0 z-50"
@@ -59,6 +82,7 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
               className="text-sm font-medium text-white/60 transition-colors duration-200 hover:text-white"
             >
               {link.label}
