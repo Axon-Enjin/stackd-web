@@ -19,7 +19,7 @@ export function OurPositionSection() {
   return (
     <section className="bg-white py-24 px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left — positioning copy */}
           <div>
             <BlurFade delay={0.05}>
@@ -66,25 +66,30 @@ export function OurPositionSection() {
 
           {/* Right — structured service list */}
           <div ref={listRef}>
-            <div
-              className="bg-[#0B1F3B] rounded-xl overflow-hidden border border-[#0B1F3B]/10"
+            <motion.div
+              className="bg-[#0B1F3B] rounded-xl overflow-hidden border border-[#0B1F3B]/10 w-full"
               style={{
-                boxShadow: "0 20px 60px rgba(11,31,59,0.15)",
+                boxShadow: "0 4px 12px rgba(11,31,59,0.08), 0 16px 40px rgba(11,31,59,0.10)",
               }}
+              whileHover={{
+                y: -6,
+                boxShadow: "0 8px 20px rgba(11,31,59,0.12), 0 28px 56px rgba(11,31,59,0.22)",
+              }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
               {/* Card header */}
-              <div className="px-6 py-4 border-b border-white/[0.07] flex items-center justify-between">
+              <div className="px-6 py-4 border-b border-white/20 bg-white/[0.04] flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <motion.div
                     className="w-2 h-2 rounded-full bg-[#2FB7A8]"
                     animate={{ opacity: [1, 0.3, 1] }}
                     transition={{ duration: 1.8, repeat: Infinity }}
                   />
-                  <span className="text-white/50 text-xs font-medium tracking-wide uppercase">
+                  <span className="text-white/75 text-xs font-medium tracking-wide uppercase">
                     Revenue Operations
                   </span>
                 </div>
-                <span className="text-white/20 text-[10px]">Full-system</span>
+                <span className="text-white/40 text-[10px]">Full-system</span>
               </div>
 
               {/* Services */}
@@ -113,7 +118,7 @@ export function OurPositionSection() {
                   </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
