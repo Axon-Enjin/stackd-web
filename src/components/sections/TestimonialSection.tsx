@@ -17,9 +17,9 @@ const slideVariants = {
 
 function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
     return (
-        <div className="rounded-2xl overflow-hidden relative group bg-[#0f2a4a] h-[340px] sm:h-[380px] lg:h-[420px]">
+        <div className="rounded-2xl overflow-hidden relative group bg-[#0f2a4a] ">
             {/* Background image */}
-            <div className="absolute inset-0 z-0">
+            {/* <div className="absolute inset-0 z-0">
                 {testimonial.imageUrl ? (
                     <img
                         src={testimonial.imageUrl512 || testimonial.imageUrl}
@@ -33,10 +33,10 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
                         </span>
                     </div>
                 )}
-            </div>
+            </div> */}
 
             {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-linear-to-t from-navy via-navy/80 via-40% to-navy/10 opacity-90 transition-opacity duration-300 group-hover:opacity-100 z-10 pointer-events-none" />
+            {/* <div className="absolute inset-0 bg-linear-to-t from-navy via-navy/80 via-40% to-navy/10 opacity-90 transition-opacity duration-300 group-hover:opacity-100 z-10 pointer-events-none" /> */}
 
             {/* Shine sweep on hover */}
             <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-2xl">
@@ -44,16 +44,16 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
             </div>
 
             {/* Content */}
-            <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end translate-y-3 transition-transform duration-300 group-hover:translate-y-0 z-30 pointer-events-none">
-                <span className="text-brand-blue text-5xl font-serif leading-none mb-3 select-none">&ldquo;</span>
+            <div className=" inset-0 p-6 sm:p-8 flex flex-col justify-end translate-y-3 transition-transform duration-300 group-hover:translate-y-0 z-30 pointer-events-none ">
+                <span className="text-brand-blue text-5xl font-serif leading-none elect-none">&ldquo;</span>
                 <p className="text-white/85 text-sm leading-relaxed line-clamp-4 mb-5">
                     {testimonial.body}
                 </p>
                 <div className="w-10 h-px bg-brand-blue/60 mb-4" />
                 <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border-2 border-white/20">
+                    {/* <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border-2 border-white/20">
                         <img src={testimonial.imageUrl64 || testimonial.imageUrl} alt={testimonial.title} className="w-full h-full object-cover" />
-                    </div>
+                    </div> */}
                     <div>
                         <p className="text-white font-bold text-sm leading-tight">{testimonial.title}</p>
                         <p className="text-brand-blue text-xs font-bold uppercase tracking-widest mt-0.5">{testimonial.description}</p>

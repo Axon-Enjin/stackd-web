@@ -71,9 +71,9 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
             <>
               <div className="flex flex-col md:flex-row gap-10 items-start">
                 {/* Left Column (Avatar + Achievements) */}
-                <div className="shrink-0 w-full md:w-64 flex flex-col gap-8">
+                <div className="shrink-0 w-full md:w-64 flex flex-col gap-8 md:bg-[#0B1F3B] md:p-4 md:pb-8 md:rounded-3xl">
                   <BlurFade delay={0.1}>
-                    <div className="w-full max-w-64 aspect-[4/5] mx-auto md:mx-0 rounded-2xl bg-navy/5 border border-[#E8ECF2] overflow-hidden">
+                    <div className="w-full max-w-64 aspect-[4/5] mx-auto md:mx-0 rounded-2xl bg-navy/5   overflow-hidden">
                       {member.imageUrl ? (
                         <img
                           src={member.imageUrl512 || member.imageUrl}
@@ -93,10 +93,10 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                   {/* Achievements (Desktop: under photo) */}
                   {member.achievements && member.achievements.length > 0 && (
                     <BlurFade delay={0.27}>
-                      <div className="hidden md:block border-l-2 border-brand-blue/30 pl-5">
+                      <div className="hidden md:block border-l-2 border-white/20 pl-5">
                         <ul className="space-y-2.5">
                           {member.achievements.map((achievement, i) => (
-                            <li key={i} className="text-sm text-[#1A1A1A]/70 leading-relaxed">
+                            <li key={i} className="text-sm text-white leading-relaxed md:font-normal md:text-xs">
                               {achievement}
                             </li>
                           ))}
