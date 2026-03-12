@@ -36,7 +36,7 @@ export const PATCH = createRegularHandler(
     // 2. Extract the update fields
     const updateDTO: any = {};
 
-    const fields = ["name", "role", "body"];
+    const fields = ["name", "role", "company", "body"];
     fields.forEach((field) => {
       const value = formData.get(field);
       if (value !== null) {

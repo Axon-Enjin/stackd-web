@@ -3,7 +3,10 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { BlurFade } from "@/components/magicui/BlurFade";
-import { useAllTestimonialsQuery, type TestimonialItem } from "@/features/Testimonials/hooks/useAllTestimonialsQuery";
+import {
+    useAllTestimonialsQuery,
+    type TestimonialItem,
+} from "@/features/Testimonials/hooks/useAllTestimonialsQuery";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -17,7 +20,7 @@ const slideVariants = {
 
 function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
     return (
-        <div className="rounded-2xl overflow-hidden relative group bg-[#0f2a4a] ">
+        <div className="group relative overflow-hidden rounded-2xl bg-[#0f2a4a]">
             {/* Background image */}
             {/* <div className="absolute inset-0 z-0">
                 {testimonial.imageUrl ? (
@@ -39,24 +42,35 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
             {/* <div className="absolute inset-0 bg-linear-to-t from-navy via-navy/80 via-40% to-navy/10 opacity-90 transition-opacity duration-300 group-hover:opacity-100 z-10 pointer-events-none" /> */}
 
             {/* Shine sweep on hover */}
-            <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-2xl">
+            <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden rounded-2xl">
                 <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/8 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full" />
             </div>
 
             {/* Content */}
-            <div className=" inset-0 p-6 sm:p-8 flex flex-col justify-end translate-y-3 transition-transform duration-300 group-hover:translate-y-0 z-30 pointer-events-none ">
-                <span className="text-brand-blue text-5xl font-serif leading-none elect-none">&ldquo;</span>
-                <p className="text-white/85 text-sm leading-relaxed line-clamp-4 mb-5">
+            <div className="pointer-events-none inset-0 z-30 flex translate-y-3 flex-col justify-end p-6 transition-transform duration-300 group-hover:translate-y-0 sm:p-8">
+                <span className="text-brand-blue elect-none font-serif text-5xl leading-none">
+                    &ldquo;
+                </span>
+                <p className="mb-5 line-clamp-4 text-sm leading-relaxed text-white/85">
                     {testimonial.body}
                 </p>
-                <div className="w-10 h-px bg-brand-blue/60 mb-4" />
+                <div className="bg-brand-blue/60 mb-4 h-px w-10" />
                 <div className="flex items-center gap-3">
                     {/* <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border-2 border-white/20">
                         <img src={testimonial.imageUrl64 || testimonial.imageUrl} alt={testimonial.title} className="w-full h-full object-cover" />
                     </div> */}
                     <div>
-                        <p className="text-white font-bold text-sm leading-tight">{testimonial.title}</p>
-                        <p className="text-brand-blue text-xs font-bold uppercase tracking-widest mt-0.5">{testimonial.description}</p>
+                        <p className="text-sm leading-tight font-bold text-white">
+                            {testimonial.title}
+                        </p>
+                        <p className="text-brand-blue mt-0.5 text-xs font-bold tracking-widest uppercase">
+                            {testimonial.description}{testimonial.company && ","}
+                        </p>
+                        {testimonial.company && (
+                            <p className="text-brand-blue mt-0.5 text-xs font-bold tracking-widest uppercase">
+                                {testimonial.company}
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -76,7 +90,9 @@ export function TestimonialSection() {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const prevPerPage = useRef(perPage);
 
-    const totalPages = testimonials ? Math.ceil(testimonials.length / perPage) : 0;
+    const totalPages = testimonials
+        ? Math.ceil(testimonials.length / perPage)
+        : 0;
 
     // Reset to page 0 when perPage changes (responsive resize)
     useEffect(() => {
@@ -97,7 +113,9 @@ export function TestimonialSection() {
     useEffect(() => {
         if (paused || totalPages <= 1) return;
         timerRef.current = setTimeout(() => go(1), AUTO_SCROLL_MS);
-        return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+        return () => {
+            if (timerRef.current) clearTimeout(timerRef.current);
+        };
     }, [page, paused, go, totalPages]);
 
     const gridCols =
@@ -109,11 +127,14 @@ export function TestimonialSection() {
 
     if (isLoading) {
         return (
-            <section className="bg-soft-white py-24 px-6">
-                <div className="max-w-6xl mx-auto">
+            <section className="bg-soft-white px-6 py-24">
+                <div className="mx-auto max-w-6xl">
                     <div className={`grid ${gridCols} gap-6`}>
                         {[...Array(perPage)].map((_, i) => (
-                            <div key={i} className="rounded-2xl bg-navy/10 h-[340px] sm:h-[380px] lg:h-[420px] animate-pulse" />
+                            <div
+                                key={i}
+                                className="bg-navy/10 h-[340px] animate-pulse rounded-2xl sm:h-[380px] lg:h-[420px]"
+                            />
                         ))}
                     </div>
                 </div>
@@ -125,30 +146,34 @@ export function TestimonialSection() {
         return null;
     }
 
-    const visibleCards = testimonials.slice(page * perPage, page * perPage + perPage);
+    const visibleCards = testimonials.slice(
+        page * perPage,
+        page * perPage + perPage,
+    );
 
     const navBtnClass =
         "w-11 h-11 rounded-full border border-[#E8ECF2] bg-white shadow-sm flex items-center justify-center text-navy/50 hover:text-brand-blue hover:border-brand-blue hover:shadow-md transition-all duration-200 shrink-0";
 
     return (
-        <section className="bg-soft-white py-24 px-6">
-            <div className="max-w-6xl mx-auto">
+        <section className="bg-soft-white px-6 py-24">
+            <div className="mx-auto max-w-6xl">
                 {/* Header */}
                 <BlurFade delay={0.05}>
-                    <p className="text-xs font-semibold tracking-[0.18em] uppercase text-brand-blue mb-4">
+                    <p className="text-brand-blue mb-4 text-xs font-semibold tracking-[0.18em] uppercase">
                         Client Success
                     </p>
                 </BlurFade>
                 <BlurFade delay={0.1}>
-                    <h2 className="text-3xl md:text-4xl font-bold text-navy leading-tight tracking-tight mb-5">
+                    <h2 className="text-navy mb-5 text-3xl leading-tight font-bold tracking-tight md:text-4xl">
                         What our partners say.
                     </h2>
                 </BlurFade>
-                <div className="max-w-3xl mb-12">
+                <div className="mb-12 max-w-3xl">
                     <BlurFade delay={0.2}>
-                        <p className="text-[#1A1A1A]/60 text-base md:text-lg leading-relaxed">
-                            Don&apos;t just take our word for it. Hear from the brands that have rapidly
-                            scaled their direct-to-consumer revenue using our live commerce system.
+                        <p className="text-base leading-relaxed text-[#1A1A1A]/60 md:text-lg">
+                            Don&apos;t just take our word for it. Hear from the brands that
+                            have rapidly scaled their direct-to-consumer revenue using our
+                            live commerce system.
                         </p>
                     </BlurFade>
                 </div>
@@ -162,7 +187,11 @@ export function TestimonialSection() {
                         {/* Arrows flanking the cards */}
                         <div className="flex items-center gap-3 sm:gap-4">
                             {totalPages > 1 && (
-                                <button onClick={() => go(-1)} aria-label="Previous testimonials" className={navBtnClass}>
+                                <button
+                                    onClick={() => go(-1)}
+                                    aria-label="Previous testimonials"
+                                    className={navBtnClass}
+                                >
                                     <ChevronLeft size={18} />
                                 </button>
                             )}
@@ -176,18 +205,28 @@ export function TestimonialSection() {
                                         initial="enter"
                                         animate="center"
                                         exit="exit"
-                                        transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                        transition={{
+                                            duration: 0.22,
+                                            ease: [0.25, 0.46, 0.45, 0.94],
+                                        }}
                                         className={`grid ${gridCols} gap-4 sm:gap-6`}
                                     >
                                         {visibleCards.map((testimonial) => (
-                                            <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+                                            <TestimonialCard
+                                                key={testimonial.id}
+                                                testimonial={testimonial}
+                                            />
                                         ))}
                                     </motion.div>
                                 </AnimatePresence>
                             </div>
 
                             {totalPages > 1 && (
-                                <button onClick={() => go(1)} aria-label="Next testimonials" className={navBtnClass}>
+                                <button
+                                    onClick={() => go(1)}
+                                    aria-label="Next testimonials"
+                                    className={navBtnClass}
+                                >
                                     <ChevronRight size={18} />
                                 </button>
                             )}
@@ -195,7 +234,7 @@ export function TestimonialSection() {
 
                         {/* Dot indicators — centered below */}
                         {totalPages > 1 && (
-                            <div className="flex items-center justify-center gap-2 mt-8">
+                            <div className="mt-8 flex items-center justify-center gap-2">
                                 {Array.from({ length: totalPages }).map((_, i) => (
                                     <button
                                         key={i}
@@ -205,8 +244,8 @@ export function TestimonialSection() {
                                         }}
                                         aria-label={`Go to page ${i + 1}`}
                                         className={`rounded-full transition-all duration-300 ${i === page
-                                                ? "w-6 h-2.5 bg-navy"
-                                                : "w-2.5 h-2.5 bg-navy/20 hover:bg-navy/40"
+                                            ? "bg-navy h-2.5 w-6"
+                                            : "bg-navy/20 hover:bg-navy/40 h-2.5 w-2.5"
                                             }`}
                                     />
                                 ))}
@@ -218,6 +257,3 @@ export function TestimonialSection() {
         </section>
     );
 }
-
-
-

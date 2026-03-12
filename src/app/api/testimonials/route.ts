@@ -62,6 +62,7 @@ export const POST = createRegularHandler(
     // 2. Extract and validate text fields
     const name = formData.get("name") as string;
     const role = formData.get("role") as string;
+    const company = (formData.get("company") as string) || null;
     const body = formData.get("body") as string;
 
     if (!name || !role || !body)
@@ -71,6 +72,7 @@ export const POST = createRegularHandler(
     const newTestimonial = await testimonialsModuleController.createTestimonial(
       name,
       role,
+      company,
       body,
       image,
     );

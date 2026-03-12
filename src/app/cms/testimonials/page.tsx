@@ -37,6 +37,7 @@ export interface Testimonial {
   imageUrl512?: string | null;
   name: string;
   role: string;
+  company: string | null;
   body: string;
   rankingIndex: number;
 }
@@ -93,6 +94,7 @@ function TestimonialsAdminPageContent() {
     ...t,
     name: t.name || t.title,
     role: t.role || t.description,
+    company: t.company || null,
   }));
 
   const meta = response?.meta;
@@ -367,7 +369,7 @@ function TestimonialRow({
           {truncateWithEllipsis(testimonial.name, 30)}
         </h3>
         <p className="mt-0.5   text-xs text-gray-500">
-          {truncateWithEllipsis(testimonial.role, 30)} — "{truncateWithEllipsis(testimonial.body, 30)}"
+          {truncateWithEllipsis(testimonial.role, 30)}{testimonial.company ? `, ${truncateWithEllipsis(testimonial.company, 20)}` : ""} — "{truncateWithEllipsis(testimonial.body, 30)}"
         </p>
       </div>
 
@@ -483,10 +485,18 @@ function TestimonialDetailModal({
             </div>
             <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
               <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-                Role / Company
+                Role
               </label>
               <p className="mt-1 text-sm font-medium text-[#2F80ED]">
                 {testimonial.role}
+              </p>
+            </div>
+            <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+                Company
+              </label>
+              <p className="mt-1 text-sm font-medium text-[#2F80ED]">
+                {testimonial.company || "—"}
               </p>
             </div>
             <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
@@ -563,12 +573,15 @@ function TestimonialModal({
 
     const nameVal = rawFormData.get("name") as string;
     const roleVal = rawFormData.get("role") as string;
+    const companyVal = rawFormData.get("company") as string;
 
     apiFormData.append("name", nameVal);
     apiFormData.append("title", nameVal);
 
     apiFormData.append("role", roleVal);
     apiFormData.append("description", roleVal);
+
+    apiFormData.append("company", companyVal || "");
 
     apiFormData.append("body", rawFormData.get("body") as string);
 
@@ -703,16 +716,28 @@ function TestimonialModal({
 
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Role / Company *
+                    Role *
                   </label>
                   <input
                     name="role"
                     defaultValue={testimonial?.role}
                     required
                     className="w-full rounded-sm border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
-                    placeholder="e.g. CEO at TechCorp"
+                    placeholder="e.g. CEO"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Company
+                </label>
+                <input
+                  name="company"
+                  defaultValue={testimonial?.company || ""}
+                  className="w-full rounded-sm border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
+                  placeholder="e.g. TechCorp"
+                />
               </div>
 
               <div>
