@@ -46,7 +46,7 @@ export function FinalCTASection() {
                             whileTap={{ scale: 0.97 }}
                             transition={{ type: "spring", stiffness: 400, damping: 25 }}
                         >
-                            Request a Strategy Conversation
+                           Book a Strategy Call
                             <ArrowRight size={15} />
                         </motion.a>
                     </BlurFade>
