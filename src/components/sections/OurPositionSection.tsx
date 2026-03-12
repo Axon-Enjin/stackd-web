@@ -36,7 +36,7 @@ export function OurPositionSection() {
                 'We do not "manage social."',
               ].map((line, i) => (
                 <BlurFade key={line} delay={0.2 + i * 0.08}>
-                  <p className="text-[#1A1A1A]/50 text-base leading-relaxed line-through decoration-[#0B1F3B]/20">
+                  <p className="text-[#1A1A1A]/50 text-base leading-relaxed   decoration-[#0B1F3B]/20">
                     {line}
                   </p>
                 </BlurFade>
@@ -53,7 +53,10 @@ export function OurPositionSection() {
             <BlurFade delay={0.58}>
               <div className="mt-4 pt-4 border-t border-[#E8ECF2]">
                 <p className="text-[#0B1F3B] font-semibold text-base">
-                  TikTok Shop becomes a managed revenue function — not a side
+                  TikTok Shop becomes a managed revenue function 
+                </p>
+                <p className="text-[#0B1F3B] font-semibold text-base">
+                  — not a side
                   initiative.
                 </p>
               </div>
