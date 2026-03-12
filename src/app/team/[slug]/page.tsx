@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { BlurFade } from "@/components/magicui/BlurFade";
 import { useTeamMemberByNameQuery } from "@/features/TeamMembers/hooks/useTeamMemberByNameQuery";
+import { FaLinkedin } from "react-icons/fa";
 
 interface Member {
   id: string;
@@ -25,23 +26,32 @@ interface Member {
 
 function getFullName(member: Member) {
   const middle = member.middleName ? `${member.middleName.charAt(0)}.` : "";
-  return `${member.firstName} ${middle} ${member.lastName}`.replace(/\s+/g, " ").trim();
+  return `${member.firstName} ${middle} ${member.lastName}`
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-export default function TeamMemberPage({ params }: { params: Promise<{ slug: string }> }) {
+export default function TeamMemberPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = use(params);
-  const { data: member, isLoading } = useTeamMemberByNameQuery(slug) as { data: Member | undefined, isLoading: boolean };
+  const { data: member, isLoading } = useTeamMemberByNameQuery(slug) as {
+    data: Member | undefined;
+    isLoading: boolean;
+  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-soft-white">
+    <div className="bg-soft-white flex min-h-screen flex-col">
       <Navbar />
-      <main className="grow pt-28 pb-24 px-6">
-        <div className="max-w-4xl mx-auto">
+      <main className="grow px-6 pt-28 pb-24">
+        <div className="mx-auto max-w-4xl">
           {/* Back link */}
           <BlurFade delay={0.05}>
             <Link
               href="/#team"
-              className="inline-flex items-center gap-2 text-sm font-medium text-navy/50 hover:text-brand-blue transition-colors duration-200 mb-10"
+              className="text-navy/50 hover:text-brand-blue mb-10 inline-flex items-center gap-2 text-sm font-medium transition-colors duration-200"
             >
               <ArrowLeft size={15} />
               Back to Team
@@ -49,19 +59,22 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
           </BlurFade>
 
           {isLoading ? (
-            <div className="flex justify-center items-center py-32">
-              <Loader2 className="animate-spin text-brand-blue" size={48} />
+            <div className="flex items-center justify-center py-32">
+              <Loader2 className="text-brand-blue animate-spin" size={48} />
             </div>
           ) : !member ? (
             <BlurFade delay={0.1}>
               <div className="flex flex-col items-center justify-center py-32 text-center">
-                <p className="text-navy font-semibold text-xl mb-3">Member not found</p>
-                <p className="text-[#1A1A1A]/50 text-sm mb-8">
-                  This team member profile doesn&apos;t exist or may have been removed.
+                <p className="text-navy mb-3 text-xl font-semibold">
+                  Member not found
+                </p>
+                <p className="mb-8 text-sm text-[#1A1A1A]/50">
+                  This team member profile doesn&apos;t exist or may have been
+                  removed.
                 </p>
                 <Link
                   href="/#team"
-                  className="rounded-md bg-brand-blue px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2570d4] transition-colors duration-200"
+                  className="bg-brand-blue rounded-md px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2570d4]"
                 >
                   View the team
                 </Link>
@@ -69,22 +82,36 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
             </BlurFade>
           ) : (
             <>
-              <div className="flex flex-col md:flex-row gap-10 items-start">
+              <div className="flex flex-col items-start gap-10 md:flex-row">
                 {/* Left Column (Avatar + Achievements) */}
-                <div className="shrink-0 w-full md:w-64 flex flex-col gap-8">
+                <div className="relative flex w-full shrink-0 flex-col gap-8 md:w-64 md:rounded-3xl md:bg-[#0B1F3B] md:p-4 md:pb-8">
                   <BlurFade delay={0.1}>
-                    <div className="w-full max-w-64 aspect-[4/5] mx-auto md:mx-0 rounded-2xl bg-navy/5 border border-[#E8ECF2] overflow-hidden">
+                    <div className="bg-navy/5 mx-auto aspect-[4/5] w-full max-w-64 overflow-hidden rounded-2xl md:mx-0 relative">
                       {member.imageUrl ? (
                         <img
                           src={member.imageUrl512 || member.imageUrl}
                           alt={getFullName(member)}
-                          className="w-full h-full object-cover"
+                          className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full bg-linear-to-br from-navy/10 to-brand-blue/10 flex items-center justify-center">
+                        <div className="from-navy/10 to-brand-blue/10 flex h-full w-full items-center justify-center bg-linear-to-br">
                           <span className="text-navy/30 text-5xl font-bold uppercase">
                             {member.firstName.charAt(0)}
                           </span>
+                        </div>
+                      )}
+
+                      {member.linkedinProfile && (
+                       <div className="absolute right-2 bottom-2 cursor-pointer text-3xl text-[#4cbcf8] transition-transform duration-300 hover:scale-115">
+                          <a
+                            href={member.linkedinProfile}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className=""
+                            aria-label={`${getFullName(member)} on LinkedIn`}
+                          >
+                            <FaLinkedin />
+                          </a>
                         </div>
                       )}
                     </div>
@@ -93,10 +120,13 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                   {/* Achievements (Desktop: under photo) */}
                   {member.achievements && member.achievements.length > 0 && (
                     <BlurFade delay={0.27}>
-                      <div className="hidden md:block border-l-2 border-brand-blue/30 pl-5">
+                      <div className="hidden border-l-2 border-white/20 pl-5 md:block">
                         <ul className="space-y-2.5">
                           {member.achievements.map((achievement, i) => (
-                            <li key={i} className="text-sm text-[#1A1A1A]/70 leading-relaxed">
+                            <li
+                              key={i}
+                              className="text-sm leading-relaxed text-white md:text-xs md:font-normal"
+                            >
                               {achievement}
                             </li>
                           ))}
@@ -109,19 +139,19 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                 {/* Details */}
                 <div className="grow">
                   <BlurFade delay={0.15}>
-                    <span className="text-xs font-semibold tracking-[0.18em] uppercase text-brand-teal mb-3 block">
+                    {/* <span className="text-xs font-semibold tracking-[0.18em] uppercase text-brand-teal mb-3 block">
                       Stackd Team
-                    </span>
-                    <h1 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-navy leading-tight tracking-tight mb-2">
+                    </span> */}
+                    <h1 className="text-navy mb-2 text-3xl leading-tight font-bold tracking-tight md:text-4xl lg:text-[42px]">
                       {getFullName(member)}
                     </h1>
-                    <p className="text-brand-blue text-sm font-semibold uppercase tracking-wider mb-6">
+                    <p className="text-brand-blue mb-6 text-sm font-semibold tracking-wider uppercase">
                       {member.role}
                     </p>
                   </BlurFade>
 
                   <BlurFade delay={0.22}>
-                    <div className="prose prose-sm max-w-none text-[#1A1A1A]/70 leading-relaxed whitespace-pre-wrap mb-8">
+                    <div className="prose prose-sm mb-8 max-w-none leading-relaxed whitespace-pre-wrap text-[#1A1A1A]/70">
                       {member.bio}
                     </div>
                   </BlurFade>
@@ -129,10 +159,13 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                   {/* Achievements (Mobile: under bio) */}
                   {member.achievements && member.achievements.length > 0 && (
                     <BlurFade delay={0.27}>
-                      <div className="md:hidden mb-8 border-l-2 border-brand-blue/30 pl-5">
+                      <div className="border-brand-blue/30 mb-8 border-l-2 pl-5 md:hidden">
                         <ul className="space-y-2.5">
                           {member.achievements.map((achievement, i) => (
-                            <li key={i} className="text-sm text-[#1A1A1A]/70 leading-relaxed">
+                            <li
+                              key={i}
+                              className="text-sm leading-relaxed text-[#1A1A1A]/70"
+                            >
                               {achievement}
                             </li>
                           ))}
@@ -142,7 +175,7 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                   )}
 
                   {/* LinkedIn */}
-                  {member.linkedinProfile && (
+                  {/* {member.linkedinProfile && (
                     <BlurFade delay={0.32}>
                       <div className="pt-6 border-t border-[#E8ECF2]">
                         <a
@@ -157,7 +190,7 @@ export default function TeamMemberPage({ params }: { params: Promise<{ slug: str
                         </a>
                       </div>
                     </BlurFade>
-                  )}
+                  )} */}
                 </div>
               </div>
             </>
