@@ -1,4 +1,7 @@
+"use client";
+
 import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
+import { motion } from "motion/react";
 import Link from "next/link";
 export function Footer() {
   return (
@@ -29,14 +32,7 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-2 md:items-end">
-            <Link
-              href="/book"
-              className="inline-flex items-center gap-2 rounded-md bg-[#2F80ED] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2570d4]"
-            >
-              Request a Strategy Conversation →
-            </Link>
-          </div>
+         
         </div>
 
         <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center">
