@@ -5,6 +5,7 @@ export type TestimonialProps = {
   image_url_512?: string | null;
   name: string;
   role: string;
+  company: string | null;
   body: string;
 
   // metadata

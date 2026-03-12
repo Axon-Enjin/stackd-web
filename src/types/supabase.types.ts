@@ -176,6 +176,7 @@ export type Database = {
       testimonial: {
         Row: {
           body: string
+          company: string | null
           created_at: string
           id: string
           image_url: string
@@ -189,6 +190,7 @@ export type Database = {
         }
         Insert: {
           body: string
+          company?: string | null
           created_at?: string
           id?: string
           image_url: string
@@ -202,6 +204,7 @@ export type Database = {
         }
         Update: {
           body?: string
+          company?: string | null
           created_at?: string
           id?: string
           image_url?: string

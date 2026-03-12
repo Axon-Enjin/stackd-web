@@ -8,6 +8,7 @@ export type TestimonialItem = {
   imageUrl512?: string | null;
   title: string;
   description: string;
+  company: string | null;
   body: string;
   rankingIndex: number;
 };
