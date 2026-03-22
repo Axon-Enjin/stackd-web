@@ -15,12 +15,20 @@ export class SupabaseCustomAuthRepository implements ICustomAuthRepository {
   }
 
   private toDomain(row: any): User {
-    return User.hydrate({
-      id: row.id,
-      username: row.username,
-      password: row.password,
-      createdAt: new Date(row.created_at),
-    });
+    try {
+      console.log("[AuthRepo] Row data from DB:", JSON.stringify(row));
+      const user = User.hydrate({
+        id: row.id,
+        username: row.username,
+        password: row.password,
+        createdAt: new Date(row.created_at),
+      });
+      console.log("[AuthRepo] Hydrated user:", user.username);
+      return user;
+    } catch (error: any) {
+      console.error("[AuthRepo] Failed to hydrate User from DB row:", error.message);
+      throw error;
+    }
   }
 
   async saveNew(user: User): Promise<User> {

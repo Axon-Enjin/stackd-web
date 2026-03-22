@@ -8,10 +8,6 @@ export async function GET(request: NextRequest) {
 
     if (authHeader && authHeader.startsWith("Bearer ")) {
       token = authHeader.substring(7);
-    } else {
-      // Fallback to cookie if needed
-      const cookieToken = request.cookies.get("auth_token");
-      if (cookieToken) token = cookieToken.value;
     }
 
     if (!token) {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, User, LogOut, ChevronDown, ExternalLink } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
+import { apiFetch } from "@/lib/clientApi";
 
 interface AdminTopbarProps {
   onToggleSidebar: () => void;
@@ -34,7 +35,7 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      const res = await fetch("/api/custom-auth/logout", { method: "POST" });
+      const res = await apiFetch("/api/custom-auth/logout", { method: "POST" });
       if (res.ok) {
         logout();
         router.push("/cms/login");

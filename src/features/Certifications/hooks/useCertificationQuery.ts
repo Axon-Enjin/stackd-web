@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/clientApi";
 // Import your specific type here, e.g., CertificationProps
 
 export const useCertificationQuery = (certificationId: string | null) => {
   const query = useQuery({
     queryKey: ["certifications", certificationId],
     queryFn: async () => {
-      const response = await fetch(`/api/certifications/${certificationId}`);
+      const response = await apiFetch(`/api/certifications/${certificationId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch certification");
       }

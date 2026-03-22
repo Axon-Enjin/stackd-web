@@ -34,7 +34,7 @@ export default function LoginPage() {
       }
 
       if (data.user) {
-        login(data.user);
+        login(data.user, data.token);
         router.push("/cms");
         router.refresh();
       } else {

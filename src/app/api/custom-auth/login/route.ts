@@ -14,18 +14,7 @@ export async function POST(request: Request) {
 
     const { user, token } = await customAuthModuleController.login(username, password);
 
-    const response = NextResponse.json({ success: true, user, token });
-
-    // Set the auth_token cookie
-    response.cookies.set("auth_token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-      path: "/",
-    });
-
-    return response;
+    return NextResponse.json({ success: true, user, token });
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || "Authentication failed" },

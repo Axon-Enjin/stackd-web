@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { User, Lock, Save, AlertCircle, CheckCircle2, ChevronLeft, UserCircle, ShieldCheck, Fingerprint, Loader2 } from "lucide-react";
+import { apiFetch } from "@/lib/clientApi";
 
 type ViewMode = "details" | "change-username" | "change-password";
 
@@ -51,7 +52,7 @@ export default function ProfilePage() {
     setSuccess("");
 
     try {
-      const res = await fetch("/api/custom-auth/update-profile", {
+      const res = await apiFetch("/api/custom-auth/update-profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -89,7 +90,7 @@ export default function ProfilePage() {
     setSuccess("");
 
     try {
-      const res = await fetch("/api/custom-auth/update-profile", {
+      const res = await apiFetch("/api/custom-auth/update-profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

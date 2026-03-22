@@ -23,7 +23,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { X, GripVertical, Loader2, ArrowUpDown, AlertTriangle } from "lucide-react";
 import { extractApiError } from "@/lib/apiError";
-import { useSupabaseAuthContext } from "@/providers/SupabaseAuthProvider";
+import { apiFetch } from "@/lib/clientApi";
 
 // ==========================================
 // Types
@@ -75,8 +75,6 @@ export function SortContentsModal({
     const [activeId, setActiveId] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    const supabaseAuthContext = useSupabaseAuthContext();
-
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
         useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
@@ -90,11 +88,7 @@ export function SortContentsModal({
         const fetchAll = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`${apiPath}?all=true`, {
-                    headers: {
-                        Authorization: `Bearer ${supabaseAuthContext.supabaseAccessToken}`,
-                    },
-                });
+                const res = await apiFetch(`${apiPath}?all=true`);
                 if (!res.ok) throw new Error("Failed to fetch items");
                 const json = await res.json();
                 setItems(json.data || []);
@@ -129,12 +123,9 @@ export function SortContentsModal({
             const formData = new FormData();
             formData.append("rankingIndex", rankingIndex.toString());
 
-            const res = await fetch(`${apiPath}/${id}`, {
+            const res = await apiFetch(`${apiPath}/${id}`, {
                 method: "PATCH",
                 body: formData,
-                headers: {
-                    Authorization: `Bearer ${supabaseAuthContext.supabaseAccessToken}`,
-                },
             });
 
             if (!res.ok) {

@@ -4,6 +4,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { useState } from "react";
+import { apiFetch } from "@/lib/clientApi";
 
 export function LogoutButton() {
   const logout = useUserStore((state) => state.logout);
@@ -13,7 +14,7 @@ export function LogoutButton() {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      const res = await fetch("/api/custom-auth/logout", {
+      const res = await apiFetch("/api/custom-auth/logout", {
         method: "POST",
       });
 

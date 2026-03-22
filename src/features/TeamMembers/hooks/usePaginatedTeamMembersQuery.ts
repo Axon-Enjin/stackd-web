@@ -1,5 +1,6 @@
 import { useQuery, keepPreviousData, useQueryClient } from "@tanstack/react-query";
 import { toTeamSlug } from "@/lib/utils";
+import { apiFetch } from "@/lib/clientApi";
 
 export function usePaginatedTeamMembersQuery(
     pageNumber: number = 1,
@@ -10,7 +11,7 @@ export function usePaginatedTeamMembersQuery(
     return useQuery({
         queryKey: ["team-members", pageNumber, pageSize],
         queryFn: async () => {
-            const response = await fetch(
+            const response = await apiFetch(
                 `/api/team-members?pageNumber=${pageNumber}&pageSize=${pageSize}`,
             );
             if (!response.ok) {
