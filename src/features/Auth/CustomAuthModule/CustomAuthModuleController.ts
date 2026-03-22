@@ -31,6 +31,7 @@ export class CustomAuthModuleController {
   async changeUsername(currentUsername: string, newUsername: string, passwordRaw: string) {
     const user = await this.changeUsernameUseCase.execute(currentUsername, newUsername, passwordRaw);
     return {
+      id: user.id,
       username: user.username,
     };
   }
