@@ -24,6 +24,10 @@ export class TestimonialsModuleController {
       imageUrl64: testimonial.props.image_url_64 ?? null,
       imageUrl256: testimonial.props.image_url_256 ?? null,
       imageUrl512: testimonial.props.image_url_512 ?? null,
+      companyLogoUrl: testimonial.props.company_logo_url ?? null,
+      companyLogoUrl64: testimonial.props.company_logo_url_64 ?? null,
+      companyLogoUrl256: testimonial.props.company_logo_url_256 ?? null,
+      companyLogoUrl512: testimonial.props.company_logo_url_512 ?? null,
       title: testimonial.props.name,
       description: testimonial.props.role,
       company: testimonial.props.company ?? null,
@@ -33,8 +37,7 @@ export class TestimonialsModuleController {
   }
 
   async getOneTestimonial(testimonialId: string) {
-    const result =
-      await this.getOneTestimonialUseCase.execute(testimonialId);
+    const result = await this.getOneTestimonialUseCase.execute(testimonialId);
     return this.mapTestimonialToResponse(result);
   }
 
@@ -44,6 +47,7 @@ export class TestimonialsModuleController {
     company: string | null,
     body: string,
     image: File,
+    companyLogo?: File,
   ) {
     const result = await this.createTestimonialUseCase.execute(
       {
@@ -53,6 +57,7 @@ export class TestimonialsModuleController {
         body: body,
       },
       image,
+      companyLogo,
     );
     return this.mapTestimonialToResponse(result);
   }
@@ -62,12 +67,14 @@ export class TestimonialsModuleController {
     testimonialRequestObj: TestimonialUpdateDTO,
     newImage?: File,
     rankingIndex?: number,
+    newCompanyLogo?: File,
   ) {
     const result = await this.updateTestimonialUseCase.execute(
       testimonialId,
       testimonialRequestObj,
       newImage,
       rankingIndex,
+      newCompanyLogo,
     );
     return this.mapTestimonialToResponse(result);
   }

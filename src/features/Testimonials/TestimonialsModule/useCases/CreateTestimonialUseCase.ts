@@ -11,7 +11,11 @@ export class CreateTestimonialUseCase {
     private readonly imageService: IImageService,
   ) { }
 
-  async execute(testimonialRequestObj: TestimonialCreateDTO, image: File) {
+  async execute(
+    testimonialRequestObj: TestimonialCreateDTO,
+    image: File,
+    companyLogo?: File,
+  ) {
     const currentCount = await this.testimonialRepository.countAll();
     if (currentCount >= MAX_TESTIMONIALS) {
       throw new LimitExceededError(
@@ -20,11 +24,29 @@ export class CreateTestimonialUseCase {
     }
 
     const uploadResult = await this.imageService.uploadFile(image);
-    const newTestimonial = Testimonial.create(uploadResult.url, testimonialRequestObj, {
-      url64: uploadResult.url64,
-      url256: uploadResult.url256,
-      url512: uploadResult.url512,
-    });
+
+    let companyLogoResult;
+    if (companyLogo) {
+      companyLogoResult = await this.imageService.uploadFile(companyLogo);
+    }
+
+    const newTestimonial = Testimonial.create(
+      uploadResult.url,
+      testimonialRequestObj,
+      {
+        url64: uploadResult.url64,
+        url256: uploadResult.url256,
+        url512: uploadResult.url512,
+      },
+      companyLogoResult
+        ? {
+          url: companyLogoResult.url,
+          url64: companyLogoResult.url64,
+          url256: companyLogoResult.url256,
+          url512: companyLogoResult.url512,
+        }
+        : undefined,
+    );
     await this.testimonialRepository.saveNew(newTestimonial);
 
     return newTestimonial;

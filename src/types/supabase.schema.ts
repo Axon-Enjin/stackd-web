@@ -181,6 +181,10 @@ export const clientStackdTestResourceUpdateSchema = z.object({
 export const clientStackdTestimonialRowSchema = z.object({
   body: z.string(),
   company: z.string().nullable(),
+  company_logo_url: z.string().nullable(),
+  company_logo_url_256: z.string().nullable(),
+  company_logo_url_512: z.string().nullable(),
+  company_logo_url_64: z.string().nullable(),
   created_at: z.string(),
   id: z.string(),
   image_url: z.string(),
@@ -196,6 +200,10 @@ export const clientStackdTestimonialRowSchema = z.object({
 export const clientStackdTestimonialInsertSchema = z.object({
   body: z.string(),
   company: z.string().optional().nullable(),
+  company_logo_url: z.string().optional().nullable(),
+  company_logo_url_256: z.string().optional().nullable(),
+  company_logo_url_512: z.string().optional().nullable(),
+  company_logo_url_64: z.string().optional().nullable(),
   created_at: z.string().optional(),
   id: z.string().optional(),
   image_url: z.string(),
@@ -211,6 +219,10 @@ export const clientStackdTestimonialInsertSchema = z.object({
 export const clientStackdTestimonialUpdateSchema = z.object({
   body: z.string().optional(),
   company: z.string().optional().nullable(),
+  company_logo_url: z.string().optional().nullable(),
+  company_logo_url_256: z.string().optional().nullable(),
+  company_logo_url_512: z.string().optional().nullable(),
+  company_logo_url_64: z.string().optional().nullable(),
   created_at: z.string().optional(),
   id: z.string().optional(),
   image_url: z.string().optional(),

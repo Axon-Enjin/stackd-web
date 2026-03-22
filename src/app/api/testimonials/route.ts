@@ -57,6 +57,7 @@ export const POST = createRegularHandler(
 
     // 1. Extract the file
     const image = formData.get("image") as File;
+    const companyLogo = formData.get("companyLogo") as File | null;
     if (!image) throw new BadRequestError("Image is required");
 
     // 2. Extract and validate text fields
@@ -75,6 +76,7 @@ export const POST = createRegularHandler(
       company,
       body,
       image,
+      companyLogo || undefined,
     );
 
     return NextResponse.json(newTestimonial, { status: 201 });

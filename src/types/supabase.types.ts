@@ -177,6 +177,10 @@ export type Database = {
         Row: {
           body: string
           company: string | null
+          company_logo_url: string | null
+          company_logo_url_256: string | null
+          company_logo_url_512: string | null
+          company_logo_url_64: string | null
           created_at: string
           id: string
           image_url: string
@@ -191,6 +195,10 @@ export type Database = {
         Insert: {
           body: string
           company?: string | null
+          company_logo_url?: string | null
+          company_logo_url_256?: string | null
+          company_logo_url_512?: string | null
+          company_logo_url_64?: string | null
           created_at?: string
           id?: string
           image_url: string
@@ -205,6 +213,10 @@ export type Database = {
         Update: {
           body?: string
           company?: string | null
+          company_logo_url?: string | null
+          company_logo_url_256?: string | null
+          company_logo_url_512?: string | null
+          company_logo_url_64?: string | null
           created_at?: string
           id?: string
           image_url?: string

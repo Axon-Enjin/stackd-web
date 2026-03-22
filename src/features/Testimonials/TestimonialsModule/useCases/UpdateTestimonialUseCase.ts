@@ -13,6 +13,7 @@ export class UpdateTestimonialUseCase {
     testimonialRequestObj: TestimonialUpdateDTO,
     newImage?: File,
     rankingIndex?: number,
+    newCompanyLogo?: File,
   ) {
     /**
      * get testimonial
@@ -47,11 +48,27 @@ export class UpdateTestimonialUseCase {
       });
     }
 
+    let oldCompanyLogoUrl: string | null = null;
+    if (newCompanyLogo) {
+      const uploadResult = await this.imageService.uploadFile(newCompanyLogo);
+      oldCompanyLogoUrl = testimonial.props.company_logo_url || null;
+      testimonial.setCompanyLogoUrls({
+        url: uploadResult.url,
+        url64: uploadResult.url64,
+        url256: uploadResult.url256,
+        url512: uploadResult.url512,
+      });
+    }
+
     // persist updates first before deleting old image
     await this.testimonialRepository.persistUpdates(testimonial);
 
     if (oldImageUrl) {
       await this.imageService.deleteFile(oldImageUrl);
+    }
+
+    if (oldCompanyLogoUrl) {
+      await this.imageService.deleteFile(oldCompanyLogoUrl);
     }
 
     return testimonial;

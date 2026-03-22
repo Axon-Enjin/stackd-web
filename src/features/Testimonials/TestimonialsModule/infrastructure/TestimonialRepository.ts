@@ -25,6 +25,10 @@ export class TestimonialRepository implements ITestimonialRepository {
       image_url_64: props.image_url_64 || null,
       image_url_256: props.image_url_256 || null,
       image_url_512: props.image_url_512 || null,
+      company_logo_url: props.company_logo_url || null,
+      company_logo_url_64: props.company_logo_url_64 || null,
+      company_logo_url_256: props.company_logo_url_256 || null,
+      company_logo_url_512: props.company_logo_url_512 || null,
       ranking_index: props.rankingIndex,
       updated_at: new Date().toISOString(), // Required by your Supabase Insert type
     };
@@ -42,6 +46,10 @@ export class TestimonialRepository implements ITestimonialRepository {
       image_url_64: row.image_url_64 || undefined,
       image_url_256: row.image_url_256 || undefined,
       image_url_512: row.image_url_512 || undefined,
+      company_logo_url: row.company_logo_url || undefined,
+      company_logo_url_64: row.company_logo_url_64 || undefined,
+      company_logo_url_256: row.company_logo_url_256 || undefined,
+      company_logo_url_512: row.company_logo_url_512 || undefined,
       rankingIndex: row.ranking_index,
     };
   }

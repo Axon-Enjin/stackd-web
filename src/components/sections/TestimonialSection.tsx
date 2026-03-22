@@ -56,20 +56,34 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
                 </p>
                 <div className="bg-brand-blue/60 mb-4 h-px w-10" />
                 <div className="flex items-center gap-3">
-                    {/* <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border-2 border-white/20">
-                        <img src={testimonial.imageUrl64 || testimonial.imageUrl} alt={testimonial.title} className="w-full h-full object-cover" />
-                    </div> */}
-                    <div>
-                        <p className="text-sm leading-tight font-bold text-white">
+                    {/* Client Avatar */}
+                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-white/20">
+                        <img
+                            src={testimonial.imageUrl256 || testimonial.imageUrl}
+                            alt={testimonial.title}
+                            className="h-full w-full object-cover"
+                        />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold leading-tight text-white">
                             {testimonial.title}
                         </p>
-                        {(testimonial.description || testimonial.company) && (
-                            <p className="text-brand-blue mt-0.5 text-xs font-bold tracking-widest uppercase">
+                        <div className="mt-0.5 flex items-center gap-2">
+                            <p className="text-brand-blue truncate text-[10px] font-bold tracking-widest uppercase">
                                 {testimonial.description}
                                 {testimonial.description && testimonial.company && ", "}
                                 {testimonial.company}
                             </p>
-                        )}
+                            {testimonial.companyLogoUrl && (
+                                <div className="h-4 w-4 shrink-0 overflow-hidden rounded-sm bg-white/10 p-0.5">
+                                    <img
+                                        src={testimonial.companyLogoUrl64 || testimonial.companyLogoUrl}
+                                        alt="Company logo"
+                                        className="h-full w-full object-contain brightness-0 invert"
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
