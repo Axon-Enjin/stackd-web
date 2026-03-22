@@ -17,14 +17,10 @@ export class MockCustomAuthRepository implements ICustomAuthRepository {
     return user;
   }
 
-  async deleteByEmail(email: string): Promise<boolean> {
+  async deleteByUsername(username: string): Promise<boolean> {
     const initialLength = this.users.length;
-    this.users = this.users.filter((u) => u.email !== email);
+    this.users = this.users.filter((u) => u.username !== username);
     return this.users.length < initialLength;
-  }
-
-  async findByEmail(email: string): Promise<User | null> {
-    return this.users.find((u) => u.email === email) || null;
   }
 
   async findByUsername(username: string): Promise<User | null> {

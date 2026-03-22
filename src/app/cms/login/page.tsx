@@ -5,7 +5,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +24,7 @@ export default function LoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await res.json();
@@ -33,16 +33,12 @@ export default function LoginPage() {
         throw new Error(data.error || "Login failed");
       }
 
-      // Fetch the actual user data after login (optional, if your login endpoint doesn't return user info directly)
-      const sessionRes = await fetch("/api/custom-auth/session");
-      const sessionData = await sessionRes.json();
-
-      if (sessionData.user) {
-        login(sessionData.user);
+      if (data.user) {
+        login(data.user);
         router.push("/cms");
         router.refresh();
       } else {
-        throw new Error("Failed to retrieve user session.");
+        throw new Error("Failed to retrieve user data from login.");
       }
     } catch (err: any) {
       setError(err.message);
@@ -77,14 +73,14 @@ export default function LoginPage() {
             <div className="space-y-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Email
+                  Username
                 </label>
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="w-full rounded border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 transition-all outline-none focus:ring-2 focus:ring-black dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:focus:ring-white"
-                  placeholder="admin@stackd.com"
+                  placeholder="admin"
                   required
                 />
               </div>

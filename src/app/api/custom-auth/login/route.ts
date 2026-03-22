@@ -3,18 +3,18 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const { username, password } = await request.json();
 
-    if (!email || !password) {
+    if (!username || !password) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { error: "Username and password are required" },
         { status: 400 },
       );
     }
 
-    const { token } = await customAuthModuleController.login(email, password);
+    const { user, token } = await customAuthModuleController.login(username, password);
 
-    const response = NextResponse.json({ success: true, token });
+    const response = NextResponse.json({ success: true, user, token });
 
     // Set the auth_token cookie
     response.cookies.set("auth_token", token, {

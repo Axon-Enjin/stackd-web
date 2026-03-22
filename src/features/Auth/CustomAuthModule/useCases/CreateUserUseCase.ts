@@ -7,17 +7,13 @@ export class CreateUserUseCase {
     private readonly encryptionService: IEncryptionService
   ) {}
 
-  async execute(email: string, username: string, passwordRaw: string): Promise<User> {
-    const existing = await this.repository.findByEmail(email);
-    if (existing) throw new Error("Email already in use.");
-
+  async execute(username: string, passwordRaw: string): Promise<User> {
     const existingUser = await this.repository.findByUsername(username);
     if (existingUser) throw new Error("Username already in use.");
 
     const hashedPassword = await this.encryptionService.hash(passwordRaw);
 
     const user = User.create({
-      email,
       username,
       password: hashedPassword,
     });

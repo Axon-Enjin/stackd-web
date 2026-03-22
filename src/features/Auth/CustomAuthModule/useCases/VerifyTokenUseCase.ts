@@ -9,14 +9,13 @@ export class VerifyTokenUseCase {
   async execute(token: string) {
     try {
       const payload = await this.jwtService.verify(token);
-      if (!payload || !payload.email) return null;
+      if (!payload || !payload.username) return null;
 
-      const user = await this.repository.findByEmail(payload.email);
+      const user = await this.repository.findByUsername(payload.username);
       if (!user) return null;
 
       return {
         id: user.id,
-        email: user.email,
         username: user.username,
       };
     } catch (error) {

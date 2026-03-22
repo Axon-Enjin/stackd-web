@@ -3,8 +3,7 @@ import { User } from "./User";
 export abstract class ICustomAuthRepository {
   abstract saveNew(user: User): Promise<User>;
   abstract persistUpdates(user: User): Promise<User>;
-  abstract deleteByEmail(email: string): Promise<boolean>;
-  abstract findByEmail(email: string): Promise<User | null>;
+  abstract deleteByUsername(username: string): Promise<boolean>;
   abstract findByUsername(username: string): Promise<User | null>;
 }
 

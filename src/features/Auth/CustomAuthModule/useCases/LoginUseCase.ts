@@ -1,3 +1,4 @@
+import { User } from "../domain/User";
 import { ICustomAuthRepository, IEncryptionService, IJWTService } from "../domain/Interfaces";
 
 export class LoginUseCase {
@@ -7,8 +8,8 @@ export class LoginUseCase {
     private readonly jwtService: IJWTService
   ) {}
 
-  async execute(email: string, passwordRaw: string): Promise<string> {
-    const user = await this.repository.findByEmail(email);
+  async execute(username: string, passwordRaw: string): Promise<{ user: User, token: string }> {
+    const user = await this.repository.findByUsername(username);
     if (!user) throw new Error("Invalid credentials.");
 
     const isValid = await this.encryptionService.compare(passwordRaw, user.password);
@@ -16,10 +17,9 @@ export class LoginUseCase {
 
     const token = await this.jwtService.sign({
       id: user.id,
-      email: user.email,
       username: user.username,
     });
 
-    return token;
+    return { user, token };
   }
 }

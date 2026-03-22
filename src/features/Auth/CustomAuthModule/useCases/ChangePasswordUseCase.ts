@@ -7,8 +7,8 @@ export class ChangePasswordUseCase {
     private readonly encryptionService: IEncryptionService
   ) {}
 
-  async execute(email: string, newPasswordRaw: string, oldPasswordRaw: string): Promise<User> {
-    const user = await this.repository.findByEmail(email);
+  async execute(username: string, newPasswordRaw: string, oldPasswordRaw: string): Promise<User> {
+    const user = await this.repository.findByUsername(username);
     if (!user) throw new Error("User not found.");
 
     const isValid = await this.encryptionService.compare(oldPasswordRaw, user.password);

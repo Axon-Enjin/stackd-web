@@ -2,7 +2,6 @@ import { z } from "zod";
 
 const UserSchema = z.object({
   id: z.string().uuid().optional(),
-  email: z.string().email(),
   username: z.string().min(3),
   password: z.string().min(6), // Hashed or raw (managed by infra/useCases)
   createdAt: z.date().optional(),
@@ -18,7 +17,6 @@ export class User {
   }
 
   get id() { return this._props.id; }
-  get email() { return this._props.email; }
   get username() { return this._props.username; }
   get password() { return this._props.password; }
   get createdAt() { return this._props.createdAt; }

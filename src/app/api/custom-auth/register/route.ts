@@ -3,16 +3,16 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { email, username, password } = await request.json();
+    const { username, password } = await request.json();
 
-    if (!email || !username || !password) {
+    if (!username || !password) {
       return NextResponse.json(
-        { error: "Email, username, and password are required" },
+        { error: "Username and password are required" },
         { status: 400 },
       );
     }
 
-    const result = await customAuthModuleController.createUser(email, username, password);
+    const result = await customAuthModuleController.createUser(username, password);
 
     return NextResponse.json(result, { status: 201 });
   } catch (error: any) {
