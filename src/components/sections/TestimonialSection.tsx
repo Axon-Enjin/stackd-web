@@ -20,73 +20,55 @@ const slideVariants = {
 
 function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
     return (
-        <div className="group relative overflow-hidden rounded-2xl bg-[#0f2a4a]">
-            {/* Background image */}
-            {/* <div className="absolute inset-0 z-0">
-                {testimonial.imageUrl ? (
-                    <img
-                        src={testimonial.imageUrl512 || testimonial.imageUrl}
-                        alt={testimonial.title}
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                ) : (
-                    <div className="absolute inset-0 w-full h-full bg-linear-to-br from-navy to-navy/80 flex items-center justify-center">
-                        <span className="text-white/10 text-8xl font-bold uppercase">
-                            {testimonial.title.charAt(0)}
-                        </span>
-                    </div>
-                )}
-            </div> */}
-
-            {/* Gradient overlay */}
-            {/* <div className="absolute inset-0 bg-linear-to-t from-navy via-navy/80 via-40% to-navy/10 opacity-90 transition-opacity duration-300 group-hover:opacity-100 z-10 pointer-events-none" /> */}
-
-            {/* Shine sweep on hover */}
-            <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden rounded-2xl">
-                <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/8 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full" />
-            </div>
-
-            {/* Content */}
-            <div className="pointer-events-none inset-0 z-30 flex translate-y-3 flex-col justify-end p-6 transition-transform duration-300 group-hover:translate-y-0 sm:p-8">
-                <span className="text-brand-blue elect-none font-serif text-5xl leading-none">
+        <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/5 bg-navy p-10 shadow-xl transition-all duration-300 hover:border-brand-blue/30 hover:shadow-brand-blue/10">
+            {/* Top Row: Logo (if exists) & Quote Icon */}
+            <div className="mb-8 flex items-start justify-between">
+                <div className="flex h-14 w-auto items-center overflow-hidden">
+                    {testimonial.companyLogoUrl ? (
+                        <img
+                            src={testimonial.companyLogoUrl256 || testimonial.companyLogoUrl}
+                            alt="Company logo"
+                            className="h-full w-full object-contain object-left opacity-90 brightness-0 invert transition-opacity group-hover:opacity-100"
+                        />
+                    ) : (
+                        <div className="h-px w-16 bg-white/20" />
+                    )}
+                </div>
+                <span className="font-serif text-5xl leading-none text-brand-blue/30">
                     &ldquo;
                 </span>
-                <p className="mb-5 line-clamp-4 text-sm leading-relaxed text-white/85">
+            </div>
+
+            {/* Quote Body */}
+            <div className="mb-10 flex-1">
+                <p className="text-base leading-relaxed text-white/90 md:text-lg">
                     {testimonial.body}
                 </p>
-                <div className="bg-brand-blue/60 mb-4 h-px w-10" />
-                <div className="flex items-center gap-3">
-                    {/* Client Avatar */}
-                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-white/20">
-                        <img
-                            src={testimonial.imageUrl256 || testimonial.imageUrl}
-                            alt={testimonial.title}
-                            className="h-full w-full object-cover"
-                        />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                        <p className="text-sm font-bold leading-tight text-white">
-                            {testimonial.title}
-                        </p>
-                        <div className="mt-0.5 flex items-center gap-2">
-                            <p className="text-brand-blue truncate text-[10px] font-bold tracking-widest uppercase">
-                                {testimonial.description}
-                                {testimonial.description && testimonial.company && ", "}
-                                {testimonial.company}
-                            </p>
-                            {testimonial.companyLogoUrl && (
-                                <div className="h-4 w-4 shrink-0 overflow-hidden rounded-sm bg-white/10 p-0.5">
-                                    <img
-                                        src={testimonial.companyLogoUrl64 || testimonial.companyLogoUrl}
-                                        alt="Company logo"
-                                        className="h-full w-full object-contain brightness-0 invert"
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div>
+            </div>
+
+            {/* Attribution: Large Avatar & Info */}
+            <div className="mt-auto flex items-center gap-5 pt-8 border-t border-white/10">
+                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-brand-blue/30 bg-white/5 shadow-inner transition-transform duration-300">
+                    <img
+                        src={testimonial.imageUrl256 || testimonial.imageUrl}
+                        alt={testimonial.title}
+                        className="h-full w-full object-cover"
+                    />
+                </div>
+                <div className="min-w-0">
+                    <h4 className="truncate text-lg font-bold text-white">
+                        {testimonial.title}
+                    </h4>
+                    <p className="truncate text-xs font-bold tracking-[0.12em] uppercase text-brand-blue/80">
+                        {testimonial.description}
+                        {testimonial.description && testimonial.company && " — "}
+                        {testimonial.company}
+                    </p>
                 </div>
             </div>
+
+            {/* Decorative background element */}
+            <div className="absolute -right-4 -top-4 h-32 w-32 rounded-full bg-brand-blue/5 blur-3xl" />
         </div>
     );
 }
@@ -95,7 +77,8 @@ export function TestimonialSection() {
     const { data: testimonials, isLoading, isError } = useAllTestimonialsQuery();
     const { isBreakpoint } = useBreakpoint();
 
-    const perPage = isBreakpoint("lg") ? 3 : isBreakpoint("md") ? 2 : 1;
+    // Changed to 2 cards per row on large screens for a wider layout
+    const perPage = isBreakpoint("lg") ? 2 : 1;
 
     const [page, setPage] = useState(0);
     const [direction, setDirection] = useState(1);
@@ -131,12 +114,7 @@ export function TestimonialSection() {
         };
     }, [page, paused, go, totalPages]);
 
-    const gridCols =
-        perPage === 3
-            ? "grid-cols-3"
-            : perPage === 2
-                ? "grid-cols-2"
-                : "grid-cols-1";
+    const gridCols = perPage === 2 ? "grid-cols-2" : "grid-cols-1";
 
     if (isLoading) {
         return (
@@ -197,9 +175,35 @@ export function TestimonialSection() {
                         onMouseEnter={() => setPaused(true)}
                         onMouseLeave={() => setPaused(false)}
                     >
-                        {/* Arrows flanking the cards */}
-                        <div className="flex items-center gap-3 sm:gap-4">
-                            {totalPages > 1 && (
+                        {/* Container for cards - no side arrows here */}
+                        <div className="overflow-hidden">
+                            <AnimatePresence mode="wait" custom={direction}>
+                                <motion.div
+                                    key={`${page}-${perPage}`}
+                                    custom={direction}
+                                    variants={slideVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    transition={{
+                                        duration: 0.22,
+                                        ease: [0.25, 0.46, 0.45, 0.94],
+                                    }}
+                                    className={`grid ${gridCols} gap-6`}
+                                >
+                                    {visibleCards.map((testimonial) => (
+                                        <TestimonialCard
+                                            key={testimonial.id}
+                                            testimonial={testimonial}
+                                        />
+                                    ))}
+                                </motion.div>
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Pagination Controls — Arrows flanking dots */}
+                        {totalPages > 1 && (
+                            <div className="mt-12 flex items-center justify-center gap-8">
                                 <button
                                     onClick={() => go(-1)}
                                     aria-label="Previous testimonials"
@@ -207,34 +211,24 @@ export function TestimonialSection() {
                                 >
                                     <ChevronLeft size={18} />
                                 </button>
-                            )}
 
-                            <div className="flex-1 overflow-hidden">
-                                <AnimatePresence mode="wait" custom={direction}>
-                                    <motion.div
-                                        key={`${page}-${perPage}`}
-                                        custom={direction}
-                                        variants={slideVariants}
-                                        initial="enter"
-                                        animate="center"
-                                        exit="exit"
-                                        transition={{
-                                            duration: 0.22,
-                                            ease: [0.25, 0.46, 0.45, 0.94],
-                                        }}
-                                        className={`grid ${gridCols} gap-4 sm:gap-6`}
-                                    >
-                                        {visibleCards.map((testimonial) => (
-                                            <TestimonialCard
-                                                key={testimonial.id}
-                                                testimonial={testimonial}
-                                            />
-                                        ))}
-                                    </motion.div>
-                                </AnimatePresence>
-                            </div>
+                                <div className="flex items-center gap-2.5">
+                                    {Array.from({ length: totalPages }).map((_, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => {
+                                                setDirection(i > page ? 1 : -1);
+                                                setPage(i);
+                                            }}
+                                            aria-label={`Go to page ${i + 1}`}
+                                            className={`rounded-full transition-all duration-300 ${i === page
+                                                ? "bg-navy h-2 w-8"
+                                                : "bg-navy/20 hover:bg-navy/40 h-2 w-2"
+                                                }`}
+                                        />
+                                    ))}
+                                </div>
 
-                            {totalPages > 1 && (
                                 <button
                                     onClick={() => go(1)}
                                     aria-label="Next testimonials"
@@ -242,26 +236,6 @@ export function TestimonialSection() {
                                 >
                                     <ChevronRight size={18} />
                                 </button>
-                            )}
-                        </div>
-
-                        {/* Dot indicators — centered below */}
-                        {totalPages > 1 && (
-                            <div className="mt-8 flex items-center justify-center gap-2">
-                                {Array.from({ length: totalPages }).map((_, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => {
-                                            setDirection(i > page ? 1 : -1);
-                                            setPage(i);
-                                        }}
-                                        aria-label={`Go to page ${i + 1}`}
-                                        className={`rounded-full transition-all duration-300 ${i === page
-                                            ? "bg-navy h-2.5 w-6"
-                                            : "bg-navy/20 hover:bg-navy/40 h-2.5 w-2.5"
-                                            }`}
-                                    />
-                                ))}
                             </div>
                         )}
                     </div>
