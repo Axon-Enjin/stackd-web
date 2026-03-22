@@ -1,4 +1,5 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/clientApi";
 
 export function usePaginatedCertificationsQuery(
   pageNumber: number = 1,
@@ -7,7 +8,7 @@ export function usePaginatedCertificationsQuery(
   return useQuery({
     queryKey: ["certifications", pageNumber, pageSize],
     queryFn: async () => {
-      const response = await fetch(
+      const response = await apiFetch(
         `/api/certifications?pageNumber=${pageNumber}&pageSize=${pageSize}`,
       );
       if (!response.ok) {

@@ -235,6 +235,27 @@ export const clientStackdTestimonialUpdateSchema = z.object({
   updated_at: z.string().optional(),
 });
 
+export const clientStackdUserCredentialsRowSchema = z.object({
+  created_at: z.string().nullable(),
+  id: z.string(),
+  password: z.string(),
+  username: z.string(),
+});
+
+export const clientStackdUserCredentialsInsertSchema = z.object({
+  created_at: z.string().optional().nullable(),
+  id: z.string().optional(),
+  password: z.string(),
+  username: z.string(),
+});
+
+export const clientStackdUserCredentialsUpdateSchema = z.object({
+  created_at: z.string().optional().nullable(),
+  id: z.string().optional(),
+  password: z.string().optional(),
+  username: z.string().optional(),
+});
+
 export const clientStackdUsersRowSchema = z.object({
   created_at: z.string().nullable(),
   id: z.string(),

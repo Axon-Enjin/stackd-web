@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, User, LogOut, ChevronDown, ExternalLink } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
+import { apiFetch } from "@/lib/clientApi";
 
 interface AdminTopbarProps {
   onToggleSidebar: () => void;
@@ -34,7 +35,7 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      const res = await fetch("/api/auth/logout", { method: "POST" });
+      const res = await apiFetch("/api/custom-auth/logout", { method: "POST" });
       if (res.ok) {
         logout();
         router.push("/cms/login");
@@ -91,6 +92,14 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
           {/* Dropdown menu */}
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 origin-top-right overflow-hidden rounded border border-gray-100 bg-white py-1 shadow-xl animate-in fade-in slide-in-from-top-2">
+              <Link
+                href="/cms/profile"
+                onClick={() => setIsDropdownOpen(false)}
+                className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                <User size={16} className="text-gray-400" />
+                My Profile
+              </Link>
               <Link
                 href="/"
                 onClick={() => setIsDropdownOpen(false)}

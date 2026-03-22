@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/clientApi";
 
 export type TestimonialItem = {
   id: string;
@@ -21,7 +22,7 @@ export function useAllTestimonialsQuery() {
   return useQuery<TestimonialItem[]>({
     queryKey: ["testimonials", "all"],
     queryFn: async () => {
-      const response = await fetch("/api/testimonials?all=true");
+      const response = await apiFetch("/api/testimonials?all=true");
       if (!response.ok) {
         throw new Error("Failed to fetch testimonials");
       }
