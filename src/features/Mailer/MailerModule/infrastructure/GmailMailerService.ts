@@ -23,7 +23,7 @@ export class GmailMailerService implements IMailerService {
     try {
       const gmail = this.getGmailClient();
 
-      // Build MIME message
+      // Build MIME message with standard \r\n endings
       const subject = email.subject;
       const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString("base64")}?=`;
       const messageParts = [
@@ -34,7 +34,7 @@ export class GmailMailerService implements IMailerService {
         "",
         email.content,
       ];
-      const message = messageParts.join("\n");
+      const message = messageParts.join("\r\n");
 
       // The body needs to be base64url encoded
       const encodedMessage = Buffer.from(message)
@@ -51,8 +51,13 @@ export class GmailMailerService implements IMailerService {
       });
 
       return true;
-    } catch (error) {
-      console.error("[GmailMailerService] Failed to send email:", error);
+    } catch (error: any) {
+      // Log more specific details about the Google API error
+      console.error("[GmailMailerService] Failed to send email:");
+      console.error("Error Message:", error.message);
+      if (error.response?.data) {
+        console.error("Response Data:", JSON.stringify(error.response.data, null, 2));
+      }
       return false;
     }
   }
