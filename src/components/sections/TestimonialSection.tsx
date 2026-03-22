@@ -30,9 +30,7 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
                             alt="Company logo"
                             className="h-full w-full object-contain object-left transition-opacity"
                         />
-                    ) : (
-                        <div className="h-px w-16 bg-white/20" />
-                    )}
+                    ) : null}
                 </div>
                 <span className="font-serif text-5xl leading-none text-brand-blue/30">
                     &ldquo;
@@ -41,8 +39,8 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
 
             {/* Quote Body */}
             <div className="mb-10 flex-1">
-                <p className="text-base leading-relaxed text-white/90 md:text-lg">
-                    {testimonial.body}
+                <p className="whitespace-pre-wrap text-base leading-relaxed text-white/90 md:text-lg">
+                    &ldquo;{testimonial.body}&rdquo;
                 </p>
             </div>
 
@@ -77,8 +75,7 @@ export function TestimonialSection() {
     const { data: testimonials, isLoading, isError } = useAllTestimonialsQuery();
     const { isBreakpoint } = useBreakpoint();
 
-    // Changed to 2 cards per row on large screens for a wider layout
-    const perPage = isBreakpoint("lg") ? 2 : 1;
+    const perPage = testimonials?.length === 1 ? 1 : isBreakpoint("lg") ? 2 : 1;
 
     const [page, setPage] = useState(0);
     const [direction, setDirection] = useState(1);
