@@ -19,7 +19,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/custom-auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,14 +33,17 @@ export default function LoginPage() {
         throw new Error(data.error || "Login failed");
       }
 
-      // Check if user is actually an admin
-      if (data.user.role !== "admin") {
-        throw new Error("Unauthorized: Admin access required.");
-      }
+      // Fetch the actual user data after login (optional, if your login endpoint doesn't return user info directly)
+      const sessionRes = await fetch("/api/custom-auth/session");
+      const sessionData = await sessionRes.json();
 
-      login(data.user);
-      router.push("/cms");
-      router.refresh();
+      if (sessionData.user) {
+        login(sessionData.user);
+        router.push("/cms");
+        router.refresh();
+      } else {
+        throw new Error("Failed to retrieve user session.");
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {

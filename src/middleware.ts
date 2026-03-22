@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createSupabaseServerClient } from "./lib/supabase/server";
+import { customAuthModuleController } from "@/features/Auth/CustomAuthModule";
 
 export async function middleware(request: NextRequest) {
   // Determine if the route is a protected admin route
@@ -8,24 +8,35 @@ export async function middleware(request: NextRequest) {
 
   // Exclude the login page itself from the protection loop
   if (request.nextUrl.pathname === "/cms/login") {
-    // Optionally check if they are already logged in, but not strictly necessary here.
     return NextResponse.next();
   }
 
   if (isAdminRoute) {
-    const supabase = await createSupabaseServerClient();
+    const token = request.cookies.get("auth_token")?.value;
 
-    // We only need to check if they have a valid session to protect the route generally
-    // The exact role authorization (admin vs user) happens securely in our API routes/server actions.
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.getSession();
-
-    if (error || !session) {
+    if (!token) {
       // Redirect to login if unauthenticated
       const url = request.nextUrl.clone();
-      url.pathname = "/cms/login"; // Ensure you have a page here
+      url.pathname = "/cms/login";
+      return NextResponse.redirect(url);
+    }
+
+    try {
+      // Verify token
+      const user = await customAuthModuleController.verifyToken(token);
+
+      if (!user) {
+        // Redirect to login if token is invalid
+        const url = request.nextUrl.clone();
+        url.pathname = "/cms/login";
+        return NextResponse.redirect(url);
+      }
+      
+      // If user exists, they can access the cms (no roles needed as per requirements)
+    } catch (error) {
+      // Redirect to login on error
+      const url = request.nextUrl.clone();
+      url.pathname = "/cms/login";
       return NextResponse.redirect(url);
     }
   }

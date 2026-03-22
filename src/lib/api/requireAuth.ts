@@ -1,39 +1,41 @@
-import { configs } from "@/configs/configs";
-import { OAuth2Client } from "google-auth-library";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { UnauthorizedError } from "../errors/HttpError";
-import { createSupabaseServerClient } from "../supabase/server";
+import { customAuthModuleController } from "@/features/Auth/CustomAuthModule";
 
 export const requireAuth = async (request: NextRequest) => {
+  // 1. Check Authorization header (Bearer token)
   const authHeader = request.headers.get("Authorization");
-  if (!authHeader?.startsWith("Bearer")) {
+  let token = "";
+
+  if (authHeader?.startsWith("Bearer ")) {
+    token = authHeader.split(" ")[1];
+  } else {
+    // 2. Fallback to auth_token cookie
+    const cookieToken = request.cookies.get("auth_token")?.value;
+    if (cookieToken) {
+      token = cookieToken;
+    }
+  }
+
+  if (!token) {
     throw new UnauthorizedError(
-      "Unauthorized. Missing token. Please provide a valid token.",
+      "Unauthorized. Missing token. Please provide a valid token or login.",
     );
   }
 
-  const supabaseAccessToken = authHeader?.startsWith("Bearer ")
-    ? authHeader.split(" ")[1]
-    : undefined;
+  try {
+    // 3. Verify token using Custom Auth
+    const user = await customAuthModuleController.verifyToken(token);
 
-  if (!supabaseAccessToken) {
-    throw new UnauthorizedError("Unauthorized. You passed an invalid token.");
-  }
+    if (!user) {
+      throw new UnauthorizedError("Unauthorized. Invalid or expired token.");
+    }
 
-  const supabase = await createSupabaseServerClient();
-  // Get user from Supabase using the extracted token
-  const { data: user, error: userError } =
-    await supabase.auth.getUser(supabaseAccessToken);
-
-  if (userError) {
+    // Success
+    return true;
+  } catch (error) {
     throw new UnauthorizedError(
-      "Unauthorized. An error occured while loading user using the token you passed.",
+      "Unauthorized. An error occurred while verifying your session.",
     );
   }
-
-  if (!user) {
-    throw new UnauthorizedError("Unauthorized. User not found.");
-  }
-
-  return true;
 };

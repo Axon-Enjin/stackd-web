@@ -7,6 +7,7 @@ import { ChangeUsernameUseCase } from "./useCases/ChangeUsernameUseCase";
 import { ChangePasswordUseCase } from "./useCases/ChangePasswordUseCase";
 import { ChangeEmailUseCase } from "./useCases/ChangeEmailUseCase";
 import { LoginUseCase } from "./useCases/LoginUseCase";
+import { VerifyTokenUseCase } from "./useCases/VerifyTokenUseCase";
 
 // In production, you would use SupabaseCustomAuthRepository and real Encryption/JWT services
 const repository = new MockCustomAuthRepository();
@@ -19,6 +20,7 @@ const changeUsernameUseCase = new ChangeUsernameUseCase(repository, encryptionSe
 const changePasswordUseCase = new ChangePasswordUseCase(repository, encryptionService);
 const changeEmailUseCase = new ChangeEmailUseCase(repository, encryptionService);
 const loginUseCase = new LoginUseCase(repository, encryptionService, jwtService);
+const verifyTokenUseCase = new VerifyTokenUseCase(jwtService, repository);
 
 export const customAuthModuleController = new CustomAuthModuleController(
   createUserUseCase,
@@ -26,7 +28,8 @@ export const customAuthModuleController = new CustomAuthModuleController(
   changeUsernameUseCase,
   changePasswordUseCase,
   changeEmailUseCase,
-  loginUseCase
+  loginUseCase,
+  verifyTokenUseCase
 );
 
 export * from "./CustomAuthModuleController";

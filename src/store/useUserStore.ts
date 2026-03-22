@@ -7,7 +7,7 @@ export const useUserStore = create<UserState>((set) => ({
   initialize: async () => {
     set({ loading: true });
     try {
-      const response = await fetch("/api/auth/session");
+      const response = await fetch("/api/custom-auth/session");
       if (response.ok) {
         const data = await response.json();
         set({ user: data.user, loading: false });
@@ -22,7 +22,7 @@ export const useUserStore = create<UserState>((set) => ({
   login: (user: AuthUser) => set({ user, loading: false }),
   logout: async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      await fetch("/api/custom-auth/logout", { method: "POST" });
     } catch (error) {
       console.error("Failed to logout on server", error);
     } finally {

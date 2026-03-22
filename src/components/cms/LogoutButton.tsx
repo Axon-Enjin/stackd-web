@@ -13,7 +13,7 @@ export function LogoutButton() {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      const res = await fetch("/api/auth/logout", {
+      const res = await fetch("/api/custom-auth/logout", {
         method: "POST",
       });
 

@@ -4,6 +4,7 @@ import { ChangeUsernameUseCase } from "./useCases/ChangeUsernameUseCase";
 import { ChangePasswordUseCase } from "./useCases/ChangePasswordUseCase";
 import { ChangeEmailUseCase } from "./useCases/ChangeEmailUseCase";
 import { LoginUseCase } from "./useCases/LoginUseCase";
+import { VerifyTokenUseCase } from "./useCases/VerifyTokenUseCase";
 
 export class CustomAuthModuleController {
   constructor(
@@ -12,7 +13,8 @@ export class CustomAuthModuleController {
     private readonly changeUsernameUseCase: ChangeUsernameUseCase,
     private readonly changePasswordUseCase: ChangePasswordUseCase,
     private readonly changeEmailUseCase: ChangeEmailUseCase,
-    private readonly loginUseCase: LoginUseCase
+    private readonly loginUseCase: LoginUseCase,
+    private readonly verifyTokenUseCase: VerifyTokenUseCase
   ) {}
 
   async createUser(email: string, username: string, passwordRaw: string) {
@@ -53,5 +55,9 @@ export class CustomAuthModuleController {
   async login(email: string, passwordRaw: string) {
     const token = await this.loginUseCase.execute(email, passwordRaw);
     return { token };
+  }
+
+  async verifyToken(token: string) {
+    return await this.verifyTokenUseCase.execute(token);
   }
 }

@@ -3,11 +3,31 @@ import { ICustomAuthRepository } from "../domain/Interfaces";
 import { User, UserProps } from "../domain/User";
 
 export class SupabaseCustomAuthRepository implements ICustomAuthRepository {
-  private readonly TABLE_NAME = "custom_users";
+  private readonly TABLE_NAME = "user_credentials";
+
+  private toPersistence(user: User) {
+    return {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      password: user.password,
+      created_at: user.createdAt,
+    };
+  }
+
+  private toDomain(row: any): User {
+    return User.hydrate({
+      id: row.id,
+      email: row.email,
+      username: row.username,
+      password: row.password,
+      createdAt: new Date(row.created_at),
+    });
+  }
 
   async saveNew(user: User): Promise<User> {
     const supabase = await createSupabaseServerClient();
-    const { error } = await supabase.from(this.TABLE_NAME).insert(user.props);
+    const { error } = await supabase.from(this.TABLE_NAME).insert(this.toPersistence(user));
     if (error) throw new Error(`Failed to save user: ${error.message}`);
     return user;
   }
@@ -16,7 +36,7 @@ export class SupabaseCustomAuthRepository implements ICustomAuthRepository {
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase
       .from(this.TABLE_NAME)
-      .update(user.props)
+      .update(this.toPersistence(user))
       .eq("id", user.id);
     if (error) throw new Error(`Failed to update user: ${error.message}`);
     return user;
@@ -38,7 +58,7 @@ export class SupabaseCustomAuthRepository implements ICustomAuthRepository {
       .single();
 
     if (error || !data) return null;
-    return User.hydrate(data as UserProps);
+    return this.toDomain(data);
   }
 
   async findByUsername(username: string): Promise<User | null> {
@@ -50,6 +70,6 @@ export class SupabaseCustomAuthRepository implements ICustomAuthRepository {
       .single();
 
     if (error || !data) return null;
-    return User.hydrate(data as UserProps);
+    return this.toDomain(data);
   }
 }
