@@ -22,7 +22,5 @@ Your job is to:
 
 7. Create the index file which initializes and exports the classe and an instance of the controller, classes of the use cases, and classes of the interfaces. 
 
-8. Create the test cases for each use case and the controller using vitest. 
-
-9. Create a short and straight to the point summary of your changes.
+8. Create a short and straight to the point summary of your changes.
 '''
