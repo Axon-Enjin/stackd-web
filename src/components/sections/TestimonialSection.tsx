@@ -28,7 +28,7 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
                         <img
                             src={testimonial.companyLogoUrl256 || testimonial.companyLogoUrl}
                             alt="Company logo"
-                            className="h-full w-full object-contain object-left opacity-90 brightness-0 invert transition-opacity group-hover:opacity-100"
+                            className="h-full w-full object-contain object-left transition-opacity"
                         />
                     ) : (
                         <div className="h-px w-16 bg-white/20" />
