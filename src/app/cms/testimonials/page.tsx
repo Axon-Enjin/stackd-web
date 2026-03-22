@@ -35,8 +35,12 @@ export interface Testimonial {
   imageUrl64?: string | null;
   imageUrl256?: string | null;
   imageUrl512?: string | null;
+  companyLogoUrl?: string | null;
+  companyLogoUrl64?: string | null;
+  companyLogoUrl256?: string | null;
+  companyLogoUrl512?: string | null;
   name: string;
-  role: string;
+  role: string | null;
   company: string | null;
   body: string;
   rankingIndex: number;
@@ -343,33 +347,55 @@ function TestimonialRow({
       className={`group relative flex items-center gap-4 px-5 py-4 transition-all duration-500 hover:bg-gray-50 ${isDeleting ? "opacity-50" : "cursor-pointer"} ${isHighlighted ? "bg-blue-50/50" : ""}`}
       onClick={() => !isDeleting && onView()}
     >
-      {/* Avatar */}
-      <div
-        className="group/avatar relative shrink-0"
-        onClick={(e) => {
-          e.stopPropagation();
-          if (testimonial.imageUrl) onPhotoClick(testimonial.imageUrl);
-        }}
-      >
-        <img
-          src={testimonial.imageUrl64 || testimonial.imageUrl || "/placeholder-avatar.png"}
-          alt={testimonial.name}
-          className="h-11 w-11 rounded-full border border-gray-200 object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-1"
-        />
-        {testimonial.imageUrl && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-colors group-hover/avatar:bg-black/30">
-            <ZoomIn size={14} className="text-white opacity-0 transition-opacity group-hover/avatar:opacity-100" />
+      {/* Avatar and Logo container */}
+      <div className="flex -space-x-3 items-end">
+        <div
+          className="group/avatar relative shrink-0"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (testimonial.imageUrl) onPhotoClick(testimonial.imageUrl);
+          }}
+        >
+          <img
+            src={testimonial.imageUrl64 || testimonial.imageUrl || "/placeholder-avatar.png"}
+            alt={testimonial.name}
+            className="h-11 w-11 rounded-full border-2 border-white bg-white shadow-sm object-cover transition-shadow group-hover/avatar:ring-2 group-hover/avatar:ring-[#2F80ED] group-hover/avatar:ring-offset-1"
+          />
+          {testimonial.imageUrl && (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-colors group-hover/avatar:bg-black/30">
+              <ZoomIn size={14} className="text-white opacity-0 transition-opacity group-hover/avatar:opacity-100" />
+            </div>
+          )}
+        </div>
+
+        {testimonial.companyLogoUrl && (
+          <div
+            className="z-10 h-6 w-6 rounded border border-gray-100 bg-white p-0.5 shadow-sm overflow-hidden"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPhotoClick(testimonial.companyLogoUrl!);
+            }}
+          >
+            <img
+              src={testimonial.companyLogoUrl64 || testimonial.companyLogoUrl}
+              alt="Company logo"
+              className="h-full w-full object-contain"
+            />
           </div>
         )}
       </div>
 
       {/* Text */}
       <div className="min-w-0 flex-1">
-        <h3 className="  text-sm font-semibold text-gray-900">
+        <h3 className="text-sm font-semibold text-gray-900">
           {truncateWithEllipsis(testimonial.name, 30)}
         </h3>
-        <p className="mt-0.5   text-xs text-gray-500">
-          {truncateWithEllipsis(testimonial.role, 30)}{testimonial.company ? `, ${truncateWithEllipsis(testimonial.company, 20)}` : ""} — "{truncateWithEllipsis(testimonial.body, 30)}"
+        <p className="mt-0.5 text-xs text-gray-500">
+          {testimonial.role && truncateWithEllipsis(testimonial.role, 30)}
+          {testimonial.role && testimonial.company && ", "}
+          {testimonial.company && truncateWithEllipsis(testimonial.company, 20)}
+          {(testimonial.role || testimonial.company) && " — "}
+          &ldquo;{truncateWithEllipsis(testimonial.body, 30)}&rdquo;
         </p>
       </div>
 
@@ -495,16 +521,29 @@ function TestimonialDetailModal({
               <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
                 Company
               </label>
-              <p className="mt-1 text-sm font-medium text-[#2F80ED]">
-                {testimonial.company || "—"}
-              </p>
+              <div className="mt-1 flex items-center gap-3">
+                <p className="text-sm font-medium text-[#2F80ED]">
+                  {testimonial.company || "—"}
+                </p>
+                {testimonial.companyLogoUrl && (
+                  <img
+                    src={testimonial.companyLogoUrl64 || testimonial.companyLogoUrl}
+                    alt="Company Logo"
+                    className="h-8 w-8 rounded-sm border border-gray-200 object-contain bg-white p-0.5"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onPhotoClick(testimonial.companyLogoUrl!);
+                    }}
+                  />
+                )}
+              </div>
             </div>
             <div className="rounded-sm border border-gray-100 bg-gray-50/50 px-4 py-3">
               <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
                 Testimonial Quote
               </label>
               <p className="mt-1 text-sm leading-relaxed text-gray-700 italic whitespace-pre-wrap">
-                "{testimonial.body}"
+                &ldquo;{testimonial.body}&rdquo;
               </p>
             </div>
           </div>
@@ -552,8 +591,12 @@ function TestimonialModal({
 }) {
   const isEditing = !!testimonial;
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const companyLogoInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(
     testimonial?.imageUrl || null,
+  );
+  const [companyLogoPreview, setCompanyLogoPreview] = useState<string | null>(
+    testimonial?.companyLogoUrl || null,
   );
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -590,6 +633,11 @@ function TestimonialModal({
       apiFormData.append("image", imageFile);
     }
 
+    const companyLogoFile = rawFormData.get("companyLogo") as File;
+    if (companyLogoFile && companyLogoFile.size > 0) {
+      apiFormData.append("companyLogo", companyLogoFile);
+    }
+
     try {
       if (isEditing && testimonial) {
         await updateMutation.mutateAsync({
@@ -623,9 +671,16 @@ function TestimonialModal({
     }
   };
 
+  const handleCompanyLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setCompanyLogoPreview(URL.createObjectURL(file));
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={() => onClose()}>
-      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-sm border border-gray-200 bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-2xl sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
+      <div className="flex max-h-[95vh] w-full flex-col overflow-hidden rounded-t-sm border border-gray-200 bg-white shadow-2xl sm:max-h-[90vh] sm:max-w-3xl sm:rounded-sm" onClick={(e) => e.stopPropagation()}>
         <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50/80 px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-[#2F80ED]/10">
@@ -659,43 +714,76 @@ function TestimonialModal({
 
           <div className="flex flex-col gap-6 md:flex-row">
             {/* Image Upload Section */}
-            <div className="flex flex-col items-center gap-3 md:w-1/3">
-              <label className="w-full text-center text-sm font-medium text-gray-700">
-                Client Photo
-              </label>
-              <div
-                className="flex h-32 w-32 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-[#2F80ED] hover:bg-gray-100"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                {preview ? (
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center text-gray-400">
-                    <ImageIcon size={32} className="mb-1 text-gray-300" />
-                    <span className="px-2 text-center text-xs">
-                      Upload Avatar
-                    </span>
-                  </div>
-                )}
+            <div className="flex flex-col gap-6 md:w-1/3">
+              <div className="flex flex-col items-center gap-3">
+                <label className="w-full text-center text-sm font-medium text-gray-700">
+                  Client Photo
+                </label>
+                <div
+                  className="flex h-32 w-32 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-[#2F80ED] hover:bg-gray-100"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {preview ? (
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center text-gray-400">
+                      <ImageIcon size={32} className="mb-1 text-gray-300" />
+                      <span className="px-2 text-center text-xs">
+                        Upload Avatar
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                  required={!isEditing}
+                />
+                <p className="text-center text-xs text-gray-500">
+                  Square image recommended.
+                </p>
               </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                name="image"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageChange}
-                required={!isEditing}
-              />
-              <p className="text-center text-xs text-gray-500">
-                Square image recommended.
-                <br />
-                Max 2MB.
-              </p>
+
+              <div className="flex flex-col items-center gap-3">
+                <label className="w-full text-center text-sm font-medium text-gray-700">
+                  Company Logo (Optional)
+                </label>
+                <div
+                  className="flex h-20 w-32 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-[#2F80ED] hover:bg-gray-100"
+                  onClick={() => companyLogoInputRef.current?.click()}
+                >
+                  {companyLogoPreview ? (
+                    <img
+                      src={companyLogoPreview}
+                      alt="Company Logo Preview"
+                      className="h-full w-full object-contain p-2"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center text-gray-400">
+                      <ImageIcon size={24} className="mb-1 text-gray-300" />
+                      <span className="px-2 text-center text-xs">
+                        Upload Logo
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <input
+                  ref={companyLogoInputRef}
+                  type="file"
+                  name="companyLogo"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleCompanyLogoChange}
+                />
+              </div>
             </div>
 
             {/* Text Fields Section */}
@@ -716,12 +804,11 @@ function TestimonialModal({
 
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Role *
+                    Role
                   </label>
                   <input
                     name="role"
-                    defaultValue={testimonial?.role}
-                    required
+                    defaultValue={testimonial?.role || ""}
                     className="w-full rounded-sm border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
                     placeholder="e.g. CEO"
                   />

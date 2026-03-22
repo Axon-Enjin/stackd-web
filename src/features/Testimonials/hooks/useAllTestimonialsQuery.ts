@@ -6,6 +6,10 @@ export type TestimonialItem = {
   imageUrl64?: string | null;
   imageUrl256?: string | null;
   imageUrl512?: string | null;
+  companyLogoUrl?: string | null;
+  companyLogoUrl64?: string | null;
+  companyLogoUrl256?: string | null;
+  companyLogoUrl512?: string | null;
   title: string;
   description: string;
   company: string | null;
