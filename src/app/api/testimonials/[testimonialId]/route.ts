@@ -32,6 +32,7 @@ export const PATCH = createRegularHandler(
 
     // 1. Extract the optional new image
     const newImage = formData.get("image") as File | null;
+    const newCompanyLogo = formData.get("companyLogo") as File | null;
 
     // 2. Extract the update fields
     const updateDTO: any = {};
@@ -62,6 +63,7 @@ export const PATCH = createRegularHandler(
         updateDTO,
         newImage || undefined,
         rankingIndex,
+        newCompanyLogo || undefined,
       );
 
     return NextResponse.json(

@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/clientApi";
 // Import your specific type here, e.g., TestimonialProps
 
 export const useTestimonialQuery = (testimonialId: string | null) => {
   const query = useQuery({
     queryKey: ["testimonials", testimonialId],
     queryFn: async () => {
-      const response = await fetch(`/api/testimonials/${testimonialId}`);
+      const response = await apiFetch(`/api/testimonials/${testimonialId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch testimonial");
       }

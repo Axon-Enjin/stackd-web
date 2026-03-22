@@ -1,19 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { extractApiError } from "@/lib/apiError";
-import { useSupabaseAuthContext } from "@/providers/SupabaseAuthProvider";
+import { apiFetch } from "@/lib/clientApi";
 
 export const useUpdateCertificationMutation = () => {
   const queryClient = useQueryClient();
-  const supabaseAuthContext = useSupabaseAuthContext(); 
 
   return useMutation({
     mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => { 
-      const res = await fetch(`/api/certifications/${id}`, {
+      const res = await apiFetch(`/api/certifications/${id}`, {
         method: "PATCH",
         body: formData,
-        headers: {
-          Authorization: `Bearer ${supabaseAuthContext.supabaseAccessToken}`,
-        }
       });
 
       if (!res.ok) {

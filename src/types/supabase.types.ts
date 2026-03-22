@@ -177,6 +177,10 @@ export type Database = {
         Row: {
           body: string
           company: string | null
+          company_logo_url: string | null
+          company_logo_url_256: string | null
+          company_logo_url_512: string | null
+          company_logo_url_64: string | null
           created_at: string
           id: string
           image_url: string
@@ -185,12 +189,16 @@ export type Database = {
           image_url_64: string | null
           name: string
           ranking_index: number
-          role: string
+          role: string | null
           updated_at: string
         }
         Insert: {
           body: string
           company?: string | null
+          company_logo_url?: string | null
+          company_logo_url_256?: string | null
+          company_logo_url_512?: string | null
+          company_logo_url_64?: string | null
           created_at?: string
           id?: string
           image_url: string
@@ -199,12 +207,16 @@ export type Database = {
           image_url_64?: string | null
           name: string
           ranking_index: number
-          role: string
+          role?: string | null
           updated_at?: string
         }
         Update: {
           body?: string
           company?: string | null
+          company_logo_url?: string | null
+          company_logo_url_256?: string | null
+          company_logo_url_512?: string | null
+          company_logo_url_64?: string | null
           created_at?: string
           id?: string
           image_url?: string
@@ -213,8 +225,29 @@ export type Database = {
           image_url_64?: string | null
           name?: string
           ranking_index?: number
-          role?: string
+          role?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_credentials: {
+        Row: {
+          created_at: string | null
+          id: string
+          password: string
+          username: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          password: string
+          username: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          password?: string
+          username?: string
         }
         Relationships: []
       }

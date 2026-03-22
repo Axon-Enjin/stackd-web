@@ -7,6 +7,7 @@ import {
   Users,
   Award,
   MessageSquareQuote,
+  UserCircle,
   X,
   Globe,
   ExternalLink,
@@ -37,6 +38,11 @@ const NAV_ITEMS = [
     label: "Testimonials",
     href: "/cms/testimonials",
     icon: MessageSquareQuote,
+  },
+  {
+    label: "Profile",
+    href: "/cms/profile",
+    icon: UserCircle,
   },
 ];
 

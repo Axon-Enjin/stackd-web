@@ -181,6 +181,10 @@ export const clientStackdTestResourceUpdateSchema = z.object({
 export const clientStackdTestimonialRowSchema = z.object({
   body: z.string(),
   company: z.string().nullable(),
+  company_logo_url: z.string().nullable(),
+  company_logo_url_256: z.string().nullable(),
+  company_logo_url_512: z.string().nullable(),
+  company_logo_url_64: z.string().nullable(),
   created_at: z.string(),
   id: z.string(),
   image_url: z.string(),
@@ -189,13 +193,17 @@ export const clientStackdTestimonialRowSchema = z.object({
   image_url_64: z.string().nullable(),
   name: z.string(),
   ranking_index: z.number(),
-  role: z.string(),
+  role: z.string().nullable(),
   updated_at: z.string(),
 });
 
 export const clientStackdTestimonialInsertSchema = z.object({
   body: z.string(),
   company: z.string().optional().nullable(),
+  company_logo_url: z.string().optional().nullable(),
+  company_logo_url_256: z.string().optional().nullable(),
+  company_logo_url_512: z.string().optional().nullable(),
+  company_logo_url_64: z.string().optional().nullable(),
   created_at: z.string().optional(),
   id: z.string().optional(),
   image_url: z.string(),
@@ -204,13 +212,17 @@ export const clientStackdTestimonialInsertSchema = z.object({
   image_url_64: z.string().optional().nullable(),
   name: z.string(),
   ranking_index: z.number(),
-  role: z.string(),
+  role: z.string().optional().nullable(),
   updated_at: z.string().optional(),
 });
 
 export const clientStackdTestimonialUpdateSchema = z.object({
   body: z.string().optional(),
   company: z.string().optional().nullable(),
+  company_logo_url: z.string().optional().nullable(),
+  company_logo_url_256: z.string().optional().nullable(),
+  company_logo_url_512: z.string().optional().nullable(),
+  company_logo_url_64: z.string().optional().nullable(),
   created_at: z.string().optional(),
   id: z.string().optional(),
   image_url: z.string().optional(),
@@ -219,8 +231,29 @@ export const clientStackdTestimonialUpdateSchema = z.object({
   image_url_64: z.string().optional().nullable(),
   name: z.string().optional(),
   ranking_index: z.number().optional(),
-  role: z.string().optional(),
+  role: z.string().optional().nullable(),
   updated_at: z.string().optional(),
+});
+
+export const clientStackdUserCredentialsRowSchema = z.object({
+  created_at: z.string().nullable(),
+  id: z.string(),
+  password: z.string(),
+  username: z.string(),
+});
+
+export const clientStackdUserCredentialsInsertSchema = z.object({
+  created_at: z.string().optional().nullable(),
+  id: z.string().optional(),
+  password: z.string(),
+  username: z.string(),
+});
+
+export const clientStackdUserCredentialsUpdateSchema = z.object({
+  created_at: z.string().optional().nullable(),
+  id: z.string().optional(),
+  password: z.string().optional(),
+  username: z.string().optional(),
 });
 
 export const clientStackdUsersRowSchema = z.object({
