@@ -233,21 +233,18 @@ export type Database = {
       user_credentials: {
         Row: {
           created_at: string | null
-          email: string
           id: string
           password: string
           username: string
         }
         Insert: {
           created_at?: string | null
-          email: string
           id?: string
           password: string
           username: string
         }
         Update: {
           created_at?: string | null
-          email?: string
           id?: string
           password?: string
           username?: string

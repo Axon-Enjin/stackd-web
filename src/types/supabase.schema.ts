@@ -237,7 +237,6 @@ export const clientStackdTestimonialUpdateSchema = z.object({
 
 export const clientStackdUserCredentialsRowSchema = z.object({
   created_at: z.string().nullable(),
-  email: z.string(),
   id: z.string(),
   password: z.string(),
   username: z.string(),
@@ -245,7 +244,6 @@ export const clientStackdUserCredentialsRowSchema = z.object({
 
 export const clientStackdUserCredentialsInsertSchema = z.object({
   created_at: z.string().optional().nullable(),
-  email: z.string(),
   id: z.string().optional(),
   password: z.string(),
   username: z.string(),
@@ -253,7 +251,6 @@ export const clientStackdUserCredentialsInsertSchema = z.object({
 
 export const clientStackdUserCredentialsUpdateSchema = z.object({
   created_at: z.string().optional().nullable(),
-  email: z.string().optional(),
   id: z.string().optional(),
   password: z.string().optional(),
   username: z.string().optional(),

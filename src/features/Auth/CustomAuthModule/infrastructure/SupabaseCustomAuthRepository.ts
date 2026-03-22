@@ -10,7 +10,7 @@ export class SupabaseCustomAuthRepository implements ICustomAuthRepository {
       id: user.id,
       username: user.username,
       password: user.password,
-      created_at: user.createdAt,
+      created_at: user.createdAt?.toISOString(),
     };
   }
 
@@ -39,6 +39,7 @@ export class SupabaseCustomAuthRepository implements ICustomAuthRepository {
   }
 
   async persistUpdates(user: User): Promise<User> {
+    if (!user.id) throw new Error("User ID is required for updates");
     const supabase = createSupabaseServiceRoleClient();
     const { error } = await supabase
       .from(this.TABLE_NAME)
