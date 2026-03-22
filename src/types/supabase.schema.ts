@@ -189,7 +189,7 @@ export const clientStackdTestimonialRowSchema = z.object({
   image_url_64: z.string().nullable(),
   name: z.string(),
   ranking_index: z.number(),
-  role: z.string(),
+  role: z.string().nullable(),
   updated_at: z.string(),
 });
 
@@ -204,7 +204,7 @@ export const clientStackdTestimonialInsertSchema = z.object({
   image_url_64: z.string().optional().nullable(),
   name: z.string(),
   ranking_index: z.number(),
-  role: z.string(),
+  role: z.string().optional().nullable(),
   updated_at: z.string().optional(),
 });
 
@@ -219,7 +219,7 @@ export const clientStackdTestimonialUpdateSchema = z.object({
   image_url_64: z.string().optional().nullable(),
   name: z.string().optional(),
   ranking_index: z.number().optional(),
-  role: z.string().optional(),
+  role: z.string().optional().nullable(),
   updated_at: z.string().optional(),
 });
 

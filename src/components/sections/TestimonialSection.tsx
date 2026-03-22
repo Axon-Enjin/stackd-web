@@ -63,11 +63,10 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
                         <p className="text-sm leading-tight font-bold text-white">
                             {testimonial.title}
                         </p>
-                        <p className="text-brand-blue mt-0.5 text-xs font-bold tracking-widest uppercase">
-                            {testimonial.description}{testimonial.company && ","}
-                        </p>
-                        {testimonial.company && (
+                        {(testimonial.description || testimonial.company) && (
                             <p className="text-brand-blue mt-0.5 text-xs font-bold tracking-widest uppercase">
+                                {testimonial.description}
+                                {testimonial.description && testimonial.company && ", "}
                                 {testimonial.company}
                             </p>
                         )}

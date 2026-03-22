@@ -4,7 +4,7 @@ export type TestimonialProps = {
   image_url_256?: string | null;
   image_url_512?: string | null;
   name: string;
-  role: string;
+  role: string | null;
   company: string | null;
   body: string;
 

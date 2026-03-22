@@ -38,11 +38,17 @@ export class TestimonialsModuleController {
     return this.mapTestimonialToResponse(result);
   }
 
-  async createTestimonial(title: string, description: string, company: string | null, body: string, image: File) {
+  async createTestimonial(
+    name: string,
+    role: string | null,
+    company: string | null,
+    body: string,
+    image: File,
+  ) {
     const result = await this.createTestimonialUseCase.execute(
       {
-        name: title,
-        role: description,
+        name: name,
+        role: role,
         company: company,
         body: body,
       },

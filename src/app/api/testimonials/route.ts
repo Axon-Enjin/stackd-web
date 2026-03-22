@@ -61,12 +61,12 @@ export const POST = createRegularHandler(
 
     // 2. Extract and validate text fields
     const name = formData.get("name") as string;
-    const role = formData.get("role") as string;
+    const role = (formData.get("role") as string) || null;
     const company = (formData.get("company") as string) || null;
     const body = formData.get("body") as string;
 
-    if (!name || !role || !body)
-      throw new BadRequestError("Missing required fields (name, role, body)");
+    if (!name || !body)
+      throw new BadRequestError("Missing required fields (name, body)");
 
     // 3. Call the controller
     const newTestimonial = await testimonialsModuleController.createTestimonial(

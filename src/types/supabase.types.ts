@@ -185,7 +185,7 @@ export type Database = {
           image_url_64: string | null
           name: string
           ranking_index: number
-          role: string
+          role: string | null
           updated_at: string
         }
         Insert: {
@@ -199,7 +199,7 @@ export type Database = {
           image_url_64?: string | null
           name: string
           ranking_index: number
-          role: string
+          role?: string | null
           updated_at?: string
         }
         Update: {
@@ -213,7 +213,7 @@ export type Database = {
           image_url_64?: string | null
           name?: string
           ranking_index?: number
-          role?: string
+          role?: string | null
           updated_at?: string
         }
         Relationships: []

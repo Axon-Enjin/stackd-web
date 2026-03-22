@@ -36,7 +36,7 @@ export interface Testimonial {
   imageUrl256?: string | null;
   imageUrl512?: string | null;
   name: string;
-  role: string;
+  role: string | null;
   company: string | null;
   body: string;
   rankingIndex: number;
@@ -365,11 +365,15 @@ function TestimonialRow({
 
       {/* Text */}
       <div className="min-w-0 flex-1">
-        <h3 className="  text-sm font-semibold text-gray-900">
+        <h3 className="text-sm font-semibold text-gray-900">
           {truncateWithEllipsis(testimonial.name, 30)}
         </h3>
-        <p className="mt-0.5   text-xs text-gray-500">
-          {truncateWithEllipsis(testimonial.role, 30)}{testimonial.company ? `, ${truncateWithEllipsis(testimonial.company, 20)}` : ""} — "{truncateWithEllipsis(testimonial.body, 30)}"
+        <p className="mt-0.5 text-xs text-gray-500">
+          {testimonial.role && truncateWithEllipsis(testimonial.role, 30)}
+          {testimonial.role && testimonial.company && ", "}
+          {testimonial.company && truncateWithEllipsis(testimonial.company, 20)}
+          {(testimonial.role || testimonial.company) && " — "}
+          "{truncateWithEllipsis(testimonial.body, 30)}"
         </p>
       </div>
 
@@ -716,12 +720,11 @@ function TestimonialModal({
 
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Role *
+                    Role
                   </label>
                   <input
                     name="role"
-                    defaultValue={testimonial?.role}
-                    required
+                    defaultValue={testimonial?.role || ""}
                     className="w-full rounded-sm border border-gray-300 p-2.5 transition-shadow outline-none focus:border-[#2F80ED] focus:ring-1 focus:ring-[#2F80ED]"
                     placeholder="e.g. CEO"
                   />
