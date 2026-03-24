@@ -5,6 +5,7 @@ import { ProviderCompose } from "@/providers/ProviderCompose";
 import { BreakpointIndicator } from "@/components/widgets/BreakpointIndicator";
 import { configs } from "@/configs/configs"; 
 import { DebugNavigator } from "@/components/widgets/DebugNavigator";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,6 +41,7 @@ export default function RootLayout({
           {children}
           {isDev && <BreakpointIndicator />}
           {isDev && <DebugNavigator />}
+          <Analytics />
         </body>
       </html>
     </ProviderCompose>
