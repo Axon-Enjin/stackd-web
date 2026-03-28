@@ -5,7 +5,7 @@ import {
   BadRequestError,
   UnprocessableEntityError,
 } from "@/lib/errors/HttpError";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -77,7 +77,7 @@ export const POST = createRegularHandler(
         image,
       );
 
-    revalidatePath("/api/certifications");
+    revalidateTag("certifications", "default");
 
     return NextResponse.json(newCertification, { status: 201 });
   },

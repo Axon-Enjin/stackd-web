@@ -29,7 +29,7 @@ export default function CMSLayout({ children }: { children: React.ReactNode }) {
   // Show loading state while checking auth
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-zinc-950">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 ">
         <div className="text-center space-y-4">
           <Loader2 className="mx-auto h-8 w-8 animate-spin text-gray-400" />
           <p className="text-sm text-gray-500 font-medium">Verifying session...</p>
@@ -44,7 +44,7 @@ export default function CMSLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
+    <div className="min-h-screen bg-gray-50">
       {/* Topbar — sticky at top */}
       <AdminTopbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
