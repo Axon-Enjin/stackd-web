@@ -5,6 +5,7 @@ import {
   NotFoundError,
   UnprocessableEntityError,
 } from "@/lib/errors/HttpError";
+import { revalidatePath } from "next/cache";
 
 export const GET = createRegularHandler(
   async (
@@ -66,6 +67,8 @@ export const PATCH = createRegularHandler(
         newCompanyLogo || undefined,
       );
 
+    revalidatePath("/api/testimonials");
+
     return NextResponse.json(
       {
         message: "Testimonial updated successfully",
@@ -92,6 +95,8 @@ export const DELETE = createRegularHandler(
       await testimonialsModuleController.deleteTestimonial(testimonialId);
 
     if (!data) throw new NotFoundError("Resource not found");
+
+    revalidatePath("/api/testimonials");
 
     return NextResponse.json(
       { message: "ok", status: "success" },
