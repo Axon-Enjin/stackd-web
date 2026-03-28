@@ -142,18 +142,34 @@ export function HeroSection() {
             </BlurFade>
 
             {/* CTA */}
-            <BlurFade delay={0.42}>
-              <motion.a
-                href="/book"
-                className="mt-6 flex w-full items-center justify-center gap-2 rounded-md bg-[#2F80ED] px-6 py-3 text-sm font-semibold tracking-wide text-white shadow-lg shadow-[#2F80ED]/30 sm:px-8 sm:py-4 lg:mt-12 lg:inline-flex lg:w-auto lg:justify-start"
-                whileHover={{ scale: 1.03, backgroundColor: "#2570d4" }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              >
-                Request a Strategy Conversation
-                <ArrowRight size={15} />
-              </motion.a>
-            </BlurFade>
+            <div className="flex flex-col sm:flex-row gap-4 mt-8 lg:mt-12">
+              <BlurFade delay={0.42}>
+                <motion.a
+                  href="/book"
+                  className="flex w-full items-center justify-center gap-2 rounded-md bg-[#2F80ED] px-6 py-3 text-sm font-semibold tracking-wide text-white shadow-lg shadow-[#2F80ED]/30 sm:px-8 sm:py-4 lg:inline-flex lg:w-auto lg:justify-start"
+                  whileHover={{ scale: 1.03, backgroundColor: "#2570d4" }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                >
+                  Request a Strategy Conversation
+                  <ArrowRight size={15} />
+                </motion.a>
+              </BlurFade>
+
+              <BlurFade delay={0.48}>
+                <motion.a
+                  href="https://www.canva.com/design/DAHEezFFd7I/fuSVhCFEQtHNttuhJ717Cw/edit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-6 py-3 text-sm font-semibold tracking-wide text-[#0B1F3B] shadow-md border border-[#E8ECF2] sm:px-8 sm:py-4 lg:inline-flex lg:w-auto lg:justify-start"
+                  whileHover={{ scale: 1.03, backgroundColor: "#f8fafc" }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                >
+                  View Case Study
+                </motion.a>
+              </BlurFade>
+            </div>
 
             {/* Stats row */}
             <BlurFade delay={0.58}>
