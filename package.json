@@ -10,7 +10,8 @@
     "gen-types:supabase": "pnpm dlx supabase@latest gen types typescript --project-id seoklegbbskvdqszyrby --schema client_stackd > src/types/supabase.types.ts",
     "gen-types:zod": "pnpm dlx supazod@latest -i src/types/supabase.types.ts -o src/types/supabase.schema.ts",
     "gen-types": "pnpm run gen-types:supabase && pnpm run gen-types:zod",
-    "create-user": "pnpm dlx tsx scripts/create-user.ts"
+    "create-user": "pnpm dlx tsx scripts/create-user.ts",
+    "test-email": "pnpm dlx tsx scripts/test-email.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
