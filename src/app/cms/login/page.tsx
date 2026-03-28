@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -52,12 +53,15 @@ export default function LoginPage() {
       <div className="w-full max-w-md overflow-hidden rounded-sm border border-gray-100 bg-white shadow-xl">
         <div className="p-8">
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded bg-black text-xl font-bold text-white shadow-md">
-              A
+            <div className="pointer-events-none mx-auto flex h-20 w-full items-center justify-center">
+              <Image 
+                src="/logo-lightblue.png"
+                alt="Stackd Logo"
+                width={148} 
+                height={148}
+                priority 
+                />
             </div>
-            <h1 className="mb-2 text-2xl font-bold text-gray-900">
-              Admin Portal
-            </h1>
             <p className="text-sm text-gray-500">
               Sign in to manage application content
             </p>
@@ -103,7 +107,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="flex w-full justify-center rounded bg-black px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full justify-center rounded bg-blue-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? "Signing in..." : "Sign In"}
             </button>
