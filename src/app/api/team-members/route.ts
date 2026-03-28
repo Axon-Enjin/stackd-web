@@ -5,6 +5,9 @@ import {
   UnprocessableEntityError,
 } from "@/lib/errors/HttpError";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+
+export const revalidate = 3600; // Revalidate every hour
 
 export const GET = createRegularHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
@@ -114,6 +117,8 @@ export const POST = createRegularHandler(
       linkedinProfile || undefined,
       achievements,
     );
+
+    revalidatePath("/api/team-members");
 
     return NextResponse.json(newMember, { status: 201 });
   },
