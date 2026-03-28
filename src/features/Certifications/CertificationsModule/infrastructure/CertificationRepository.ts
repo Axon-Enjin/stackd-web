@@ -1,8 +1,8 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient, createSupabaseAnonymousClient } from "@/lib/supabase/server";
 import { ICertificationRepository } from "../domain/ICertificationRepository";
 import { Certification, CertificationProps } from "../domain/Certification";
 import { Tables, TablesInsert } from "@/types/supabase.types";
-// Adjust this import path to wherever your Database type is exported
+import { unstable_cache } from "next/cache";
 
 type CertificationRow = Tables<{ schema: "client_stackd" }, "certification">;
 type CertificationInsert = TablesInsert<
@@ -78,15 +78,23 @@ export class CertificationRepository implements ICertificationRepository {
   }
 
   async findById(id: string): Promise<Certification | null> {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*")
-      .eq("id", id)
-      .maybeSingle();
+    const fetchById = unstable_cache(
+      async (id: string) => {
+        const supabase = createSupabaseAnonymousClient();
+        const { data, error } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*")
+          .eq("id", id)
+          .maybeSingle();
 
-    if (error)
-      throw new Error(`Failed to find certification: ${error.message}`);
+        if (error) throw new Error(`Failed to find certification: ${error.message}`);
+        return data;
+      },
+      [`certification-${id}`],
+      { revalidate: 3600, tags: ["certifications"] }
+    );
+
+    const data = await fetchById(id);
     if (!data) return null;
 
     return Certification.hydrate(this.toDomain(data));
@@ -96,51 +104,71 @@ export class CertificationRepository implements ICertificationRepository {
     pageNumber: number,
     pageSize: number,
   ): Promise<{ list: Certification[]; count: number }> {
-    const from = (pageNumber - 1) * pageSize;
-    const to = from + pageSize - 1;
+    const fetchPaginated = unstable_cache(
+      async (page: number, size: number) => {
+        const from = (page - 1) * size;
+        const to = from + pageSize - 1;
 
-    const supabase = await createSupabaseServerClient();
-    const { data, error, count } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*", { count: "exact" })
-      .order("ranking_index", { ascending: true }) // Fixed: Use DB column name, not camelCase
-      .range(from, to);
+        const supabase = createSupabaseAnonymousClient();
+        const { data, error, count } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*", { count: "exact" })
+          .order("ranking_index", { ascending: true })
+          .range(from, to);
 
-    if (error)
-      throw new Error(`Failed to list certification: ${error.message}`);
+        if (error) throw new Error(`Failed to list certification: ${error.message}`);
+        return { data: data || [], count: count || 0 };
+      },
+      [`certifications-page-${pageNumber}-${pageSize}`],
+      { revalidate: 3600, tags: ["certifications"] }
+    );
 
+    const { data, count } = await fetchPaginated(pageNumber, pageSize);
     return {
-      list: (data || []).map((item) =>
+      list: data.map((item) =>
         Certification.hydrate(this.toDomain(item)),
       ),
-      count: count || 0,
+      count,
     };
   }
 
   async listAll(): Promise<Certification[]> {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*")
-      .order("ranking_index", { ascending: true });
+    const fetchAll = unstable_cache(
+      async () => {
+        const supabase = createSupabaseAnonymousClient();
+        const { data, error } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*")
+          .order("ranking_index", { ascending: true });
 
-    if (error)
-      throw new Error(`Failed to list all certifications: ${error.message}`);
+        if (error) throw new Error(`Failed to list all certifications: ${error.message}`);
+        return data || [];
+      },
+      ["certifications-all"],
+      { revalidate: 3600, tags: ["certifications"] }
+    );
 
-    return (data || []).map((item) =>
+    const data = await fetchAll();
+    return data.map((item) =>
       Certification.hydrate(this.toDomain(item)),
     );
   }
 
   async countAll(): Promise<number> {
-    const supabase = await createSupabaseServerClient();
-    const { count, error } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*", { count: "exact", head: true });
+    const fetchCount = unstable_cache(
+      async () => {
+        const supabase = createSupabaseAnonymousClient();
+        const { count, error } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*", { count: "exact", head: true });
 
-    if (error)
-      throw new Error(`Failed to count certifications: ${error.message}`);
+        if (error) throw new Error(`Failed to count certifications: ${error.message}`);
+        return count || 0;
+      },
+      ["certifications-count"],
+      { revalidate: 3600, tags: ["certifications"] }
+    );
 
-    return count || 0;
+    return await fetchCount();
   }
 }

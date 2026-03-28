@@ -1,9 +1,9 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient, createSupabaseAnonymousClient } from "@/lib/supabase/server";
 import { IMemberRepository } from "../domain/IMemberRepository";
 import { Member, MemberProps } from "../domain/Member";
 import { Tables, TablesInsert } from "@/types/supabase.types";
 import { toTeamSlug } from "@/lib/utils";
-// Adjust this import path to wherever your Database type is exported
+import { unstable_cache } from "next/cache";
 
 type TeamMemberRow = Tables<{ schema: "client_stackd" }, "team_member">;
 type TeamMemberInsert = TablesInsert<
@@ -90,22 +90,29 @@ export class MemberRepository implements IMemberRepository {
   }
 
   async findById(id: string): Promise<Member | null> {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*")
-      .eq("id", id)
-      .maybeSingle();
+    const fetchMember = unstable_cache(
+      async (id: string) => {
+        const supabase = createSupabaseAnonymousClient();
+        const { data, error } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*")
+          .eq("id", id)
+          .maybeSingle();
 
-    if (error) throw new Error(`Failed to find member: ${error.message}`);
+        if (error) throw new Error(`Failed to find member: ${error.message}`);
+        return data;
+      },
+      [`member-${id}`],
+      { revalidate: 3600, tags: ["team-members"] }
+    );
+
+    const data = await fetchMember(id);
     if (!data) return null;
-
     return Member.hydrate(this.toDomain(data));
   }
 
   async findByName(name: string): Promise<Member | null> {
-    // We fetch all members because name query is a computed slug from first and last name.
-    // If table size grows significantly, we could query ilike or add a slug column.
+    // Uses the cached listAll internally
     const allMembers = await this.listAll();
     const found = allMembers.find(
       (m) => toTeamSlug(m.props.firstName, m.props.lastName) === name
@@ -117,46 +124,69 @@ export class MemberRepository implements IMemberRepository {
     pageNumber: number,
     pageSize: number,
   ): Promise<{ list: Member[]; count: number }> {
-    const from = (pageNumber - 1) * pageSize;
-    const to = from + pageSize - 1;
+    const fetchPaginated = unstable_cache(
+      async (page: number, size: number) => {
+        console.log(`[MemberRepository] ⚡ FETCHING FROM DATABASE: Page ${page}`);
+        const from = (page - 1) * size;
+        const to = from + size - 1;
 
-    const supabase = await createSupabaseServerClient();
-    const { data, error, count } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*", { count: "exact" })
-      .order("ranking_index", { ascending: true }) // Fixed: Use DB column name, not camelCase
-      .range(from, to);
+        const supabase = createSupabaseAnonymousClient();
+        const { data, error, count } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*", { count: "exact" })
+          .order("ranking_index", { ascending: true })
+          .range(from, to);
 
-    if (error) throw new Error(`Failed to list members: ${error.message}`);
+        if (error) throw new Error(`Failed to list members: ${error.message}`);
+        return { data: data || [], count: count || 0 };
+      },
+      [`members-page-${pageNumber}-${pageSize}`],
+      { revalidate: 3600, tags: ["team-members"] }
+    );
 
+    const { data, count } = await fetchPaginated(pageNumber, pageSize);
     return {
-      list: (data || []).map((item) => Member.hydrate(this.toDomain(item))),
-      count: count || 0,
+      list: data.map((item) => Member.hydrate(this.toDomain(item))),
+      count,
     };
   }
 
   async listAll(): Promise<Member[]> {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*")
-      .order("ranking_index", { ascending: true });
+    const fetchAll = unstable_cache(
+      async () => {
+        console.log(`[MemberRepository] ⚡ FETCHING ALL FROM DATABASE`);
+        const supabase = createSupabaseAnonymousClient();
+        const { data, error } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*")
+          .order("ranking_index", { ascending: true });
 
-    if (error)
-      throw new Error(`Failed to list all members: ${error.message}`);
+        if (error) throw new Error(`Failed to list all members: ${error.message}`);
+        return data || [];
+      },
+      ["members-all"],
+      { revalidate: 3600, tags: ["team-members"] }
+    );
 
-    return (data || []).map((item) => Member.hydrate(this.toDomain(item)));
+    const data = await fetchAll();
+    return data.map((item) => Member.hydrate(this.toDomain(item)));
   }
 
   async countAll(): Promise<number> {
-    const supabase = await createSupabaseServerClient();
-    const { count, error } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*", { count: "exact", head: true });
+    const fetchCount = unstable_cache(
+      async () => {
+        const supabase = createSupabaseAnonymousClient();
+        const { count, error } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*", { count: "exact", head: true });
 
-    if (error)
-      throw new Error(`Failed to count team members: ${error.message}`);
+        if (error) throw new Error(`Failed to count team members: ${error.message}`);
+        return count || 0;
+      },
+      ["members-count"],
+      { revalidate: 3600, tags: ["team-members"] }
+    );
 
-    return count || 0;
+    return await fetchCount();
   }
 }

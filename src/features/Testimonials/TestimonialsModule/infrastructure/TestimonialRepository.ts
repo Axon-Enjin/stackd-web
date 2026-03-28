@@ -1,8 +1,8 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient, createSupabaseAnonymousClient } from "@/lib/supabase/server";
 import { ITestimonialRepository } from "../domain/ITestimonialRepository";
 import { Testimonial, TestimonialProps } from "../domain/Testimonial";
 import { Tables, TablesInsert } from "@/types/supabase.types";
-// Adjust this import path to wherever your Database type is exported
+import { unstable_cache } from "next/cache";
 
 type TestimonialRow = Tables<{ schema: "client_stackd" }, "testimonial">;
 type TestimonialInsert = TablesInsert<
@@ -93,16 +93,24 @@ export class TestimonialRepository implements ITestimonialRepository {
   }
 
   async findById(id: string): Promise<Testimonial | null> {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*")
-      .eq("id", id)
-      .maybeSingle();
+    const fetchById = unstable_cache(
+      async (id: string) => {
+        const supabase = createSupabaseAnonymousClient();
+        const { data, error } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*")
+          .eq("id", id)
+          .maybeSingle();
 
-    if (error) throw new Error(`Failed to find testimonial: ${error.message}`);
+        if (error) throw new Error(`Failed to find testimonial: ${error.message}`);
+        return data;
+      },
+      [`testimonial-${id}`],
+      { revalidate: 3600, tags: ["testimonials"] }
+    );
+
+    const data = await fetchById(id);
     if (!data) return null;
-
     return Testimonial.hydrate(this.toDomain(data));
   }
 
@@ -110,50 +118,67 @@ export class TestimonialRepository implements ITestimonialRepository {
     pageNumber: number,
     pageSize: number,
   ): Promise<{ list: Testimonial[]; count: number }> {
-    const from = (pageNumber - 1) * pageSize;
-    const to = from + pageSize - 1;
+    const fetchPaginated = unstable_cache(
+      async (page: number, size: number) => {
+        const from = (page - 1) * size;
+        const to = from + size - 1;
 
-    const supabase = await createSupabaseServerClient();
-    const { data, error, count } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*", { count: "exact" })
-      .order("ranking_index", { ascending: true }) // Fixed: Use DB column name, not camelCase
-      .range(from, to);
+        const supabase = createSupabaseAnonymousClient();
+        const { data, error, count } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*", { count: "exact" })
+          .order("ranking_index", { ascending: true })
+          .range(from, to);
 
-    if (error) throw new Error(`Failed to list testimonial: ${error.message}`);
+        if (error) throw new Error(`Failed to list testimonial: ${error.message}`);
+        return { data: data || [], count: count || 0 };
+      },
+      [`testimonials-page-${pageNumber}-${pageSize}`],
+      { revalidate: 3600, tags: ["testimonials"] }
+    );
 
+    const { data, count } = await fetchPaginated(pageNumber, pageSize);
     return {
-      list: (data || []).map((item) =>
-        Testimonial.hydrate(this.toDomain(item)),
-      ),
-      count: count || 0,
+      list: data.map((item) => Testimonial.hydrate(this.toDomain(item))),
+      count,
     };
   }
 
   async listAll(): Promise<Testimonial[]> {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*")
-      .order("ranking_index", { ascending: true });
+    const fetchAll = unstable_cache(
+      async () => {
+        const supabase = createSupabaseAnonymousClient();
+        const { data, error } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*")
+          .order("ranking_index", { ascending: true });
 
-    if (error)
-      throw new Error(`Failed to list all testimonials: ${error.message}`);
-
-    return (data || []).map((item) =>
-      Testimonial.hydrate(this.toDomain(item)),
+        if (error) throw new Error(`Failed to list all testimonials: ${error.message}`);
+        return data || [];
+      },
+      ["testimonials-all"],
+      { revalidate: 3600, tags: ["testimonials"] }
     );
+
+    const data = await fetchAll();
+    return data.map((item) => Testimonial.hydrate(this.toDomain(item)));
   }
 
   async countAll(): Promise<number> {
-    const supabase = await createSupabaseServerClient();
-    const { count, error } = await supabase
-      .from(this.TABLE_NAME)
-      .select("*", { count: "exact", head: true });
+    const fetchCount = unstable_cache(
+      async () => {
+        const supabase = createSupabaseAnonymousClient();
+        const { count, error } = await supabase
+          .from(this.TABLE_NAME)
+          .select("*", { count: "exact", head: true });
 
-    if (error)
-      throw new Error(`Failed to count testimonials: ${error.message}`);
+        if (error) throw new Error(`Failed to count testimonials: ${error.message}`);
+        return count || 0;
+      },
+      ["testimonials-count"],
+      { revalidate: 3600, tags: ["testimonials"] }
+    );
 
-    return count || 0;
+    return await fetchCount();
   }
 }
