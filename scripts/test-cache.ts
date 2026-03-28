@@ -1,5 +1,5 @@
 
-const DEFAULT_URL = "http://localhost:3000/api/team-members?pageNumber=1&pageSize=4";
+const DEFAULT_URL = "https://stackdpartners.com/api/team-members?pageNumber=1&pageSize=4";
 const API_URL = process.argv[2] || DEFAULT_URL;
 
 async function measureRequest(label: string) {
