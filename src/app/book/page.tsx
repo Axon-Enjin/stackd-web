@@ -1,12 +1,56 @@
-﻿import { CalendarBookingUI } from "@/components/booking/CalendarBookingUI";
+import type { Metadata } from "next";
+import { CalendarBookingUI } from "@/components/booking/CalendarBookingUI";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { BlurFade } from "@/components/magicui/BlurFade";
 import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
+import { siteConfig } from "@/configs/seo";
+
+export const metadata: Metadata = {
+  title: "Book a Free TikTok Shop Revenue Review",
+  description:
+    "Schedule a free 30-minute TikTok Shop Revenue Review with Stackd. We'll review your brand's current approach and identify opportunities to turn TikTok Shop into a structured revenue channel.",
+  alternates: {
+    canonical: "/book",
+  },
+  openGraph: {
+    title: "Book a Free TikTok Shop Revenue Review | Stackd",
+    description:
+      "Schedule a free 30-minute call with Stackd. We'll review your TikTok Shop approach and map out a path to structured, scalable revenue.",
+    url: `${siteConfig.url}/book`,
+    type: "website",
+  },
+};
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "TikTok Shop Revenue Review",
+  provider: {
+    "@type": "Organization",
+    name: "Stackd",
+    url: siteConfig.url,
+  },
+  description:
+    "A free 30-minute strategy call where Stackd reviews how your brand is currently approaching TikTok Shop and identifies revenue opportunities.",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+    availability: "https://schema.org/InStock",
+    url: `${siteConfig.url}/book`,
+  },
+  serviceType: "Revenue Operations Consultation",
+  areaServed: "US",
+};
 
 export default function BookingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F9FC]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
       <Navbar />
 
       {/* ── Hero ── */}
