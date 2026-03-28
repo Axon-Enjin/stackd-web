@@ -21,7 +21,12 @@ export const GET = createRegularHandler(async (request: NextRequest) => {
         message: "GET all certifications",
         data,
       },
-      { status: 200 },
+      {
+        status: 200,
+        headers: {
+          "CDN-Cache-Control": "public, s-maxage=3600, stale-while-revalidate=59",
+        },
+      },
     );
   }
 
@@ -50,7 +55,12 @@ export const GET = createRegularHandler(async (request: NextRequest) => {
         totalPages: Math.ceil(data.count / pageSize),
       },
     },
-    { status: 200 },
+    {
+      status: 200,
+      headers: {
+        "CDN-Cache-Control": "public, s-maxage=3600, stale-while-revalidate=59",
+      },
+    },
   );
 });
 
