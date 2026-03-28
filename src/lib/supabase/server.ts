@@ -1,8 +1,14 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { createClient } from "@supabase/supabase-js";
 import { configs } from "@/configs/configs";
 import { Database } from "@/types/supabase.types";
 
+/**
+ * Creates a standard server-side client that utilizes cookies for session management.
+ * NOTE: Using this function inside an API route or page will mark it as DYNAMIC
+ * and bypass the Vercel Edge cache unless otherwise specified.
+ */
 export async function createSupabaseServerClient() {
   const cookieStore = await cookies();
 
@@ -30,5 +36,22 @@ export async function createSupabaseServerClient() {
         schema: configs.supabase.schema,
       },
     },
+  );
+}
+
+/**
+ * Creates a static anonymous client that does NOT look at cookies.
+ * Use this for fetching PUBLIC data (Team Members, Testimonials) to enable
+ * true Vercel Edge Caching (HIT) and extremely fast performance.
+ */
+export function createSupabaseAnonymousClient() {
+  return createClient<Database>(
+    configs.supabase.projectUrl!,
+    configs.supabase.publishableKey!,
+    {
+      db: {
+        schema: configs.supabase.schema,
+      },
+    }
   );
 }

@@ -5,7 +5,7 @@ import {
   UnprocessableEntityError,
 } from "@/lib/errors/HttpError";
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export const GET = createRegularHandler(
   async (
@@ -72,7 +72,7 @@ export const PATCH = createRegularHandler(
       rankingIndex,
     );
 
-    revalidatePath("/api/team-members");
+    revalidateTag("team-members", "default");
 
     return NextResponse.json(
       { message: "Member updated successfully", data: updatedMember },
@@ -98,7 +98,7 @@ export const DELETE = createRegularHandler(
 
     if (!data) throw new NotFoundError("Resource not found");
 
-    revalidatePath("/api/team-members");
+    revalidateTag("team-members", "default");
 
     return NextResponse.json(
       { message: "ok", status: "success" },
