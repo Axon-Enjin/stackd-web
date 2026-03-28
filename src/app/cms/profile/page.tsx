@@ -140,16 +140,16 @@ export default function ProfilePage() {
         {mode !== "details" && (
           <button
             onClick={handleBack}
-            className="p-2 rounded-full hover:bg-gray-100 transition-colors dark:hover:bg-zinc-800"
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
           >
-            <ChevronLeft size={20} className="text-gray-600 dark:text-gray-400" />
+            <ChevronLeft size={20} className="text-gray-600" />
           </button>
         )}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-gray-900">
             {mode === "details" ? "Account Settings" : mode === "change-username" ? "Change Username" : "Change Password"}
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-gray-500">
             {mode === "details" ? "Manage your profile and security." : "Please provide the details below to update your account."}
           </p>
         </div>
@@ -157,30 +157,30 @@ export default function ProfilePage() {
 
       {/* Messages */}
       {error && (
-        <div className="flex items-center gap-2 rounded border border-red-100 bg-red-50 p-3 text-sm text-red-600 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400">
+        <div className="flex items-center gap-2 rounded border border-red-100 bg-red-50 p-3 text-sm text-red-600">
           <AlertCircle size={18} />
           {error}
         </div>
       )}
       {success && (
-        <div className="flex items-center gap-2 rounded border border-green-100 bg-green-50 p-3 text-sm text-green-600 dark:border-green-900/30 dark:bg-green-900/20 dark:text-green-400">
+        <div className="flex items-center gap-2 rounded border border-green-100 bg-green-50 p-3 text-sm text-green-600">
           <CheckCircle2 size={18} />
           {success}
         </div>
       )}
 
       {/* Main Card */}
-      <div className="rounded-sm border border-gray-100 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="rounded-sm border border-gray-100 bg-white p-6 shadow-sm">
         {mode === "details" && (
           <div className="space-y-6">
-            <div className="flex items-center gap-6 p-6 rounded bg-gray-50 dark:bg-zinc-800/50">
+            <div className="flex items-center gap-6 p-6 rounded bg-gray-50">
               <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#2F80ED] to-[#2FB7A8] shadow-inner text-white shrink-0">
                 <User size={40} />
               </div>
               <div className="space-y-3 min-w-0 flex-1">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Username / Name</p>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white truncate">{user?.username}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 truncate">{user?.username}</h3>
                 </div>
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Account ID</p>
@@ -198,14 +198,14 @@ export default function ProfilePage() {
                   setNewUsername(user?.username || "");
                   setMode("change-username");
                 }}
-                className="flex items-center justify-center gap-2 rounded border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 hover:border-gray-300 dark:border-zinc-700 dark:text-gray-300 dark:hover:bg-zinc-800"
+                className="flex items-center justify-center gap-2 rounded border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 hover:border-gray-300"
               >
                 <UserCircle size={18} />
                 Change Username
               </button>
               <button
                 onClick={() => setMode("change-password")}
-                className="flex items-center justify-center gap-2 rounded border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 hover:border-gray-300 dark:border-zinc-700 dark:text-gray-300 dark:hover:bg-zinc-800"
+                className="flex items-center justify-center gap-2 rounded border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 hover:border-gray-300"
               >
                 <ShieldCheck size={18} />
                 Change Password
@@ -217,26 +217,26 @@ export default function ProfilePage() {
         {mode === "change-username" && (
           <form onSubmit={handleUpdateUsername} className="space-y-5">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">
                 New Username
               </label>
               <input
                 type="text"
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
-                className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:focus:ring-white"
+                className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
                 required
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">
                 Current Password to Confirm
               </label>
               <input
                 type="password"
                 value={usernamePassword}
                 onChange={(e) => setUsernamePassword(e.target.value)}
-                className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:focus:ring-white"
+                className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
                 placeholder="••••••••"
                 required
               />
@@ -245,14 +245,14 @@ export default function ProfilePage() {
               <button
                 type="button"
                 onClick={handleBack}
-                className="flex-1 rounded border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-zinc-700 dark:text-gray-400 dark:hover:bg-zinc-800"
+                className="flex-1 rounded border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex-[2] flex items-center justify-center gap-2 rounded bg-black px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                className="flex-[2] flex items-center justify-center gap-2 rounded bg-black px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:opacity-50"
               >
                 <Save size={16} />
                 {isLoading ? "Saving..." : "Save New Username"}
@@ -264,40 +264,40 @@ export default function ProfilePage() {
         {mode === "change-password" && (
           <form onSubmit={handleChangePassword} className="space-y-5">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">
                 Current Password
               </label>
               <input
                 type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:focus:ring-white"
+                className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
                 placeholder="••••••••"
                 required
               />
             </div>
-            <div className="pt-4 border-t border-gray-50 dark:border-zinc-800">
-              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <div className="pt-4 border-t border-gray-50">
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">
                 New Password
               </label>
               <input
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:focus:ring-white"
+                className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
                 placeholder="••••••••"
                 required
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">
                 Confirm New Password
               </label>
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:focus:ring-white"
+                className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
                 placeholder="••••••••"
                 required
               />
@@ -306,14 +306,14 @@ export default function ProfilePage() {
               <button
                 type="button"
                 onClick={handleBack}
-                className="flex-1 rounded border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-zinc-700 dark:text-gray-400 dark:hover:bg-zinc-800"
+                className="flex-1 rounded border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex-[2] flex items-center justify-center gap-2 rounded bg-black px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                className="flex-[2] flex items-center justify-center gap-2 rounded bg-black px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:opacity-50"
               >
                 <Save size={16} />
                 {isLoading ? "Saving..." : "Update Password"}
