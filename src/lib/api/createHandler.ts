@@ -40,7 +40,15 @@ export const createRegularHandler = (
 
   const wrapperHandler = async (req: NextRequest, ...args: any[]) => {
     try {
-      await limiterHandler(req);
+      // Opt-out of rate limiting for public GET requests to allow Edge Caching.
+      // Reading headers (IP) in the limiter makes the route uncacheable at the CDN level.
+      // For public GET requests, Edge Caching is a more effective safety mechanism than 
+      // application-level rate limiting as it prevents the request from even reaching the server.
+      const isPublicGet = req.method === "GET" && !options.auth.required;
+
+      if (!isPublicGet) {
+        await limiterHandler(req);
+      }
 
       if (options.auth.required) {
         await requireAuth(req);
