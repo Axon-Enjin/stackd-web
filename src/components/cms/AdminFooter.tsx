@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 export function AdminFooter() {
   const year = new Date().getFullYear();
@@ -13,9 +14,11 @@ export function AdminFooter() {
           {/* Left: Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
-              <img
+              <Image
                 src="/logo-white.png"
                 alt="Stackd Logo"
+                width={100}
+                height={20}
                 className="h-2.5 w-auto object-contain"
               />
             </Link>

@@ -64,5 +64,10 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "uuid": "^11.1.0"
-  }
+  },
+  "browserslist": [
+    "> 0.3%",
+    "not dead",
+    "not IE 11"
+  ]
 }

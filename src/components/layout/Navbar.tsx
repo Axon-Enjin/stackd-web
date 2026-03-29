@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const NAV_LINKS = [
   { label: "How We Work", href: "/#how-we-work" },
@@ -71,10 +72,13 @@ export function Navbar() {
       <div className="mx-auto flex h-18 max-w-6xl px-6 xl:px-0 items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <img
+          <Image
             src="/logo-white.png"
             alt="Stackd Logo"
-            className="h-4 w-auto object-contain lg:4-3.5"
+            width={120}
+            height={28}
+            className="h-4 w-auto object-contain lg:h-3.5"
+            priority
           />
         </Link>
 

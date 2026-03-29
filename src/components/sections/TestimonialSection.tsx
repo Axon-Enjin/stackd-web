@@ -9,6 +9,7 @@ import {
 } from "@/features/Testimonials/hooks/useAllTestimonialsQuery";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 const AUTO_SCROLL_MS = 5000;
 
@@ -23,12 +24,14 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
         <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/5 bg-navy p-10 shadow-xl transition-all duration-300 hover:border-brand-blue/30 hover:shadow-brand-blue/10">
             {/* Top Row: Logo (if exists) & Quote Icon */}
             <div className="mb-8 flex items-start justify-between">
-                <div className="flex h-14 w-auto items-center overflow-hidden">
+                <div className="flex h-14 w-auto items-center overflow-hidden relative">
                     {testimonial.companyLogoUrl ? (
-                        <img
+                        <Image
                             src={testimonial.companyLogoUrl256 || testimonial.companyLogoUrl}
                             alt="Company logo"
-                            className="h-full w-full object-contain object-left transition-opacity"
+                            width={160}
+                            height={56}
+                            className="h-full w-auto object-contain object-left transition-opacity"
                         />
                     ) : null}
                 </div>
@@ -47,10 +50,12 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
             {/* Attribution: Large Avatar & Info */}
             <div className="mt-auto flex items-center gap-5 pt-8 border-t border-white/10">
                 <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-brand-blue/30 bg-white/5 shadow-inner transition-transform duration-300">
-                    <img
+                    <Image
                         src={testimonial.imageUrl256 || testimonial.imageUrl}
                         alt={testimonial.title}
-                        className="h-full w-full object-cover"
+                        fill
+                        sizes="(max-width: 768px) 80px, 120px"
+                        className="object-cover"
                     />
                 </div>
                 <div className="min-w-0">
