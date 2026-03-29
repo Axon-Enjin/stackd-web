@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, User, LogOut, ChevronDown, ExternalLink } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
@@ -65,9 +66,11 @@ export function AdminTopbar({ onToggleSidebar }: AdminTopbarProps) {
           </button>
 
           <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
-            <img
+            <Image
               src="/logo-white.png"
               alt="Stackd Logo"
+              width={100}
+              height={24}
               className="h-3 w-auto object-contain"
             />
           </Link>

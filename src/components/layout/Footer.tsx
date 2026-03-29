@@ -3,6 +3,7 @@
 import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
 import { motion } from "motion/react";
 import Link from "next/link";
+import Image from "next/image";
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-[#0B1F3B] px-6 py-12 text-white">
@@ -20,9 +21,11 @@ export function Footer() {
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div>
             <div className="mb-4 flex items-center">
-              <img
+              <Image
                 src="/logo-white.png"
                 alt="Stackd Logo"
+                width={100}
+                height={24}
                 className="h-3 w-auto object-contain"
               />
             </div>
