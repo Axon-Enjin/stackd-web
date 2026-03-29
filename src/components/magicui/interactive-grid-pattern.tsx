@@ -26,6 +26,7 @@ export function InteractiveGridPattern({
     ...props
 }: InteractiveGridPatternProps) {
     const [activeSquares, setActiveSquares] = useState<number[]>([]);
+    const [recentSquares, setRecentSquares] = useState<number[]>([]);
 
     const horizontalSquares = squares[0];
     const verticalSquares = squares[1];
@@ -42,7 +43,10 @@ export function InteractiveGridPattern({
                 Math.floor(Math.random() * totalSquares)
             );
 
-            setActiveSquares(newSquares);
+            setActiveSquares(prev => {
+                setRecentSquares(prev);
+                return newSquares;
+            });
         }, 2000); // Changes every 2s
 
         return () => clearInterval(interval);
@@ -78,7 +82,7 @@ export function InteractiveGridPattern({
 
             {/* Interactive Overlay Grid */}
             <svg x="-1" y="-1" className="overflow-visible">
-                {Array.from({ length: horizontalSquares * verticalSquares }).map((_, i) => {
+                {[...new Set([...activeSquares, ...recentSquares])].map((i) => {
                     const x = (i % horizontalSquares) * width;
                     const y = Math.floor(i / horizontalSquares) * height;
                     return (
@@ -89,8 +93,9 @@ export function InteractiveGridPattern({
                             width={width - 1}
                             height={height - 1}
                             className={cn(
-                                "transition-all duration-[2000ms] ease-in-out cursor-default",
-                                activeSquares.includes(i) ? hoverColor : "fill-transparent",
+                                "transition-opacity duration-[2000ms] ease-in-out cursor-default",
+                                hoverColor,
+                                activeSquares.includes(i) ? "opacity-100" : "opacity-0",
                                 squaresClassName
                             )}
                         />
