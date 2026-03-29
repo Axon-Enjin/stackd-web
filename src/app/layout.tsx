@@ -74,9 +74,13 @@ export const metadata: Metadata = {
 
   // ── App / Icons ──────────────────────────────────────────────────────
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico?v=2" },
+      { url: "/favicon.ico?v=2", sizes: "32x32", type: "image/x-icon" },
+      { url: "/logo-navyblue.png?v=2", sizes: "192x192", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico?v=2",
+    apple: "/logo-navyblue.png?v=2",
   },
 
   // ── Search-engine verification tokens (add your own) ────────────────
