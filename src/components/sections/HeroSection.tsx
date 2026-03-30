@@ -158,7 +158,7 @@ export function HeroSection() {
 
               <BlurFade delay={0.48}>
                 <motion.a
-                  href="https://www.canva.com/design/DAHEezFFd7I/fuSVhCFEQtHNttuhJ717Cw/edit"
+                  href="https://www.canva.com/design/DAHEezFFd7I/fuSVhCFEQtHNttuhJ717Cw/edit?utm_content=DAHEezFFd7I&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-6 py-3 text-sm font-semibold tracking-wide text-[#0B1F3B] shadow-md border border-[#E8ECF2] sm:px-8 sm:py-4 lg:inline-flex lg:w-auto lg:justify-start"
