@@ -11,10 +11,12 @@ import { VisionValuesSection } from "@/components/sections/VisionValuesSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { TestimonialSection } from "@/components/sections/TestimonialSection";
 import { ProcessSection } from "@/components/sections/ProcessSection";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function LandingPage() {
   return (
     <>
+      <SpeedInsights />
       <Navbar />
       <main>
         <HeroSection />
