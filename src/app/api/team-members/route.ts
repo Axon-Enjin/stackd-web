@@ -5,6 +5,9 @@ import {
   UnprocessableEntityError,
 } from "@/lib/errors/HttpError";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+
+export const revalidate = 3600; // Revalidate every hour
 
 export const GET = createRegularHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
@@ -25,7 +28,12 @@ export const GET = createRegularHandler(async (request: NextRequest) => {
         message: "GET team member by name",
         data,
       },
-      { status: 200 },
+      {
+        status: 200,
+        headers: {
+          "CDN-Cache-Control": "public, s-maxage=3600, stale-while-revalidate=59",
+        },
+      },
     );
   }
 
@@ -38,7 +46,12 @@ export const GET = createRegularHandler(async (request: NextRequest) => {
         message: "GET all team members",
         data,
       },
-      { status: 200 },
+      {
+        status: 200,
+        headers: {
+          "CDN-Cache-Control": "public, s-maxage=3600, stale-while-revalidate=59",
+        },
+      },
     );
   }
 
@@ -67,7 +80,12 @@ export const GET = createRegularHandler(async (request: NextRequest) => {
         totalPages: Math.ceil(data.count / pageSize),
       },
     },
-    { status: 200 },
+    {
+      status: 200,
+      headers: {
+        "CDN-Cache-Control": "public, s-maxage=3600, stale-while-revalidate=59",
+      },
+    },
   );
 });
 
@@ -114,6 +132,8 @@ export const POST = createRegularHandler(
       linkedinProfile || undefined,
       achievements,
     );
+
+    revalidateTag("team-members", "default");
 
     return NextResponse.json(newMember, { status: 201 });
   },

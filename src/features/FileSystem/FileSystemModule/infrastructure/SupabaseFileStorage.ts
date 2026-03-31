@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/serviceRole";
 import { FileBuffer } from "../domain/FileBuffer";
 import { IFileStorage } from "../domain/IFileStorage";
 import { UploadedFileBuffer } from "../domain/UploadedFileBuffer";
@@ -16,7 +16,7 @@ export class SupabaseFileStorage implements IFileStorage {
     const storagePath = `uploads/${fileName}`;
 
     // 2. Upload the original ArrayBuffer to Supabase Storage
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseServiceRoleClient();
     const { data: originalData, error: originalError } = await supabase.storage
       .from(this.BUCKET_NAME)
       .upload(storagePath, file.arraybuffer, {
@@ -119,7 +119,7 @@ export class SupabaseFileStorage implements IFileStorage {
   }
 
   async deleteFile(storageReferences: string[]): Promise<boolean> {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseServiceRoleClient();
     const { error } = await supabase.storage
       .from(this.BUCKET_NAME)
       .remove(storageReferences);

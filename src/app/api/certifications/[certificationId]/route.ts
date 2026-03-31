@@ -5,6 +5,7 @@ import {
   NotFoundError,
   UnprocessableEntityError,
 } from "@/lib/errors/HttpError";
+import { revalidateTag } from "next/cache";
 
 export const GET = createRegularHandler(
   async (
@@ -62,6 +63,8 @@ export const PATCH = createRegularHandler(
         rankingIndex,
       );
 
+    revalidateTag("certifications", "default");
+
     return NextResponse.json(
       {
         message: "Certification updated successfully",
@@ -88,6 +91,8 @@ export const DELETE = createRegularHandler(
       await certificationsModuleController.deleteCertification(certificationId);
 
     if (!data) throw new NotFoundError("Resource not found");
+
+    revalidateTag("certifications", "default");
 
     return NextResponse.json(
       { message: "ok", status: "success" },

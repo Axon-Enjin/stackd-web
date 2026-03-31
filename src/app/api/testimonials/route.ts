@@ -5,6 +5,9 @@ import {
   BadRequestError,
   UnprocessableEntityError,
 } from "@/lib/errors/HttpError";
+import { revalidateTag } from "next/cache";
+
+export const revalidate = 3600; // Revalidate every hour
 
 export const GET = createRegularHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
@@ -18,7 +21,12 @@ export const GET = createRegularHandler(async (request: NextRequest) => {
         message: "GET all testimonials",
         data,
       },
-      { status: 200 },
+      {
+        status: 200,
+        headers: {
+          "CDN-Cache-Control": "public, s-maxage=3600, stale-while-revalidate=59",
+        },
+      },
     );
   }
 
@@ -47,7 +55,12 @@ export const GET = createRegularHandler(async (request: NextRequest) => {
         totalPages: Math.ceil(data.count / pageSize),
       },
     },
-    { status: 200 },
+    {
+      status: 200,
+      headers: {
+        "CDN-Cache-Control": "public, s-maxage=3600, stale-while-revalidate=59",
+      },
+    },
   );
 });
 
@@ -78,6 +91,8 @@ export const POST = createRegularHandler(
       image,
       companyLogo || undefined,
     );
+
+    revalidateTag("testimonials", "default");
 
     return NextResponse.json(newTestimonial, { status: 201 });
   },

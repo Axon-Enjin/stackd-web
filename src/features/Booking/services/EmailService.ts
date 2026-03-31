@@ -34,10 +34,10 @@ export class EmailService {
       const targetEmail =
         this.adminEmail && this.adminEmail.includes("@")
           ? this.adminEmail
-          : "stackdcommerce@gmail.com"; 
+          : "stackdcommerce@gmail.com";
 
       await this.resend.emails.send({
-        from: "Stackd Commerce Booking <onboarding@resend.dev>",
+        from: "Stackd Commerce Booking <no-reply@stackdpartners.com>",
         to: targetEmail,
         subject: `TikTok Shop Revenue Review: ${name}`,
         html: `
@@ -75,7 +75,7 @@ export class EmailService {
         `,
       });
 
-      if(configs.environment === "DEVELOPMENT") {
+      if (configs.environment === "DEVELOPMENT") {
         console.log(`Admin notification sent to ${targetEmail}`);
       }
     } catch (error) {

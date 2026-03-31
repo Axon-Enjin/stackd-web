@@ -5,6 +5,7 @@ import {
   NotFoundError,
   UnprocessableEntityError,
 } from "@/lib/errors/HttpError";
+import { revalidateTag } from "next/cache";
 
 export const GET = createRegularHandler(
   async (
@@ -66,6 +67,8 @@ export const PATCH = createRegularHandler(
         newCompanyLogo || undefined,
       );
 
+    revalidateTag("testimonials", "default");
+
     return NextResponse.json(
       {
         message: "Testimonial updated successfully",
@@ -92,6 +95,8 @@ export const DELETE = createRegularHandler(
       await testimonialsModuleController.deleteTestimonial(testimonialId);
 
     if (!data) throw new NotFoundError("Resource not found");
+
+    revalidateTag("testimonials", "default");
 
     return NextResponse.json(
       { message: "ok", status: "success" },
