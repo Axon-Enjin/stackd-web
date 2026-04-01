@@ -8,7 +8,7 @@
 export const siteConfig = {
   name: "Stackd",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.stackdpartners.com",
-  ogImage: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.stackdpartners.com"}/logo-navyblue.png`,
+  ogImage: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.stackdpartners.com"}/og-image.png`,
   description:
     "Stackd is a revenue operations partner for direct-to-consumer brands scaling on TikTok Shop. We build and manage live commerce systems, creator networks, and performance infrastructure.",
   keywords: [
