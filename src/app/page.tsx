@@ -27,7 +27,16 @@ export const metadata: Metadata = {
     description:
       "Stackd partners with established consumer brands to build and operate the live commerce, creator, and performance systems behind TikTok Shop — as a fully accountable revenue function.",
     url: siteConfig.url,
+    siteName: siteConfig.name,
     type: "website",
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: "Stackd — TikTok Shop Revenue Operations",
+      },
+    ],
   },
 };
 
@@ -51,6 +60,7 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Stackd",
+  alternateName: ["Stackd Partners", "stackdpartners.com"],
   url: siteConfig.url,
   description: siteConfig.description,
   potentialAction: {
