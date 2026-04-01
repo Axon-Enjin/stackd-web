@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ProviderCompose } from "@/providers/ProviderCompose";
@@ -14,6 +14,10 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#0B1F3B",
+};
+
 export const metadata: Metadata = {
   // ── Base URL for resolving relative URLs in metadata ────────────────
   metadataBase: new URL(siteConfig.url),
@@ -28,10 +32,9 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   keywords: siteConfig.keywords,
 
-  // ── Canonical / alternate ────────────────────────────────────────────
-  alternates: {
-    canonical: "/",
-  },
+  // ── Canonical: set per-page in each page.tsx, NOT here in root layout.
+  // Setting canonical: "/" here would bleed onto all child pages and
+  // override their own correct per-page canonicals.
 
   // ── Robots ───────────────────────────────────────────────────────────
   robots: {
@@ -72,22 +75,14 @@ export const metadata: Metadata = {
     images: [siteConfig.ogImage],
   },
 
-  // ── App / Icons ──────────────────────────────────────────────────────
-  icons: {
-    icon: [
-      { url: "/favicon.ico?v=2" },
-      { url: "/favicon.ico?v=2", sizes: "32x32", type: "image/x-icon" },
-      { url: "/logo-navyblue.png?v=2", sizes: "192x192", type: "image/png" },
-    ],
-    shortcut: "/favicon.ico?v=2",
-    apple: "/logo-navyblue.png?v=2",
-  },
+  // ── Icons are auto-detected by Next.js App Router from src/app/:
+  //    favicon.ico, icon.svg, icon.png, apple-icon.png
+  // ── Manifest is linked via <head> below ─────────────────────────────
 
-  // ── Search-engine verification tokens (add your own) ────────────────
-  // verification: {
-  //   google: "YOUR_GOOGLE_SEARCH_CONSOLE_TOKEN",
-  //   yandex: "YOUR_YANDEX_TOKEN",
-  // },
+  // ── Search-engine verification tokens ───────────────────────────────
+  verification: {
+    google: "8Qn7UtynOUUSZu4d3TykhaXyffKY_zTZ0Ikl8Y842Q0",
+  },
 };
 
 export default function RootLayout({
@@ -104,6 +99,8 @@ export default function RootLayout({
           {/* Theme colour for browser UI chrome */}
           <meta name="theme-color" content="#0B1F3B" />
           <meta name="color-scheme" content="light dark" />
+          {/* PWA Web App Manifest */}
+          <link rel="manifest" href="/site.webmanifest" />
         </head>
         <body className={`${inter.variable} ${inter.className} antialiased`}>
           {children}
