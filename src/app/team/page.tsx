@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     description:
       "The specialists behind Stackd's live commerce, creator, and performance systems.",
     url: `${siteConfig.url}/team`,
+    siteName: siteConfig.name,
     type: "website",
   },
 };

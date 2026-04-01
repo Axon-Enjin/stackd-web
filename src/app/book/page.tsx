@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     description:
       "Schedule a free 30-minute call with Stackd. We'll review your TikTok Shop approach and map out a path to structured, scalable revenue.",
     url: `${siteConfig.url}/book`,
+    siteName: siteConfig.name,
     type: "website",
   },
 };

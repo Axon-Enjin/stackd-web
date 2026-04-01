@@ -36,6 +36,13 @@ export const metadata: Metadata = {
   // Setting canonical: "/" here would bleed onto all child pages and
   // override their own correct per-page canonicals.
 
+  applicationName: siteConfig.name,
+  appleWebApp: {
+    title: siteConfig.name,
+    statusBarStyle: "default",
+    capable: true,
+  },
+
   // ── Robots ───────────────────────────────────────────────────────────
   robots: {
     index: true,
