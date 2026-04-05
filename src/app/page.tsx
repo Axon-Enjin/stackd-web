@@ -12,6 +12,7 @@ import { VisionValuesSection } from "@/components/sections/VisionValuesSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { TestimonialSection } from "@/components/sections/TestimonialSection";
 import { ProcessSection } from "@/components/sections/ProcessSection";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { siteConfig } from "@/configs/seo";
 
 // ── Page-level metadata (inherits template from root layout) ──────────────────
@@ -111,6 +112,7 @@ const faqSchema = {
 export default function LandingPage() {
   return (
     <>
+      <SpeedInsights />
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
