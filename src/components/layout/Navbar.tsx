@@ -98,14 +98,14 @@ export function Navbar() {
 
         {/* Desktop CTA */}
         <div className="hidden items-center lg:flex">
-          <Link href="/book" passHref legacyBehavior>
-            <motion.a
+          <Link href="/book">
+            <motion.div
               className="group relative overflow-hidden rounded-md border-b-2 border-[#2F80ED] px-5 py-2.5 text-sm font-semibold text-white"
               whileTap={{ scale: 0.97 }}
             >
               <span className="absolute inset-x-0 bottom-0 h-0 bg-[#2F80ED] transition-all duration-300 ease-out group-hover:h-full" />
               <span className="relative z-10">Book a demo</span>
-            </motion.a>
+            </motion.div>
           </Link>
         </div>
 

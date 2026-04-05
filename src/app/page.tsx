@@ -17,7 +17,7 @@ import { siteConfig } from "@/configs/seo";
 
 // ── Page-level metadata (inherits template from root layout) ──────────────────
 export const metadata: Metadata = {
-  title: "TikTok Shop Revenue Operations",
+  title: "Stackd | TikTok Shop Revenue Operations",
   description:
     "Stackd partners with established consumer brands to build and operate the live commerce, creator, and performance systems behind TikTok Shop — as a fully accountable revenue function.",
   alternates: {
