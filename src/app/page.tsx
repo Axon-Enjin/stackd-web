@@ -61,7 +61,6 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Stackd",
-  alternateName: ["Stackd Partners", "stackdpartners.com"],
   url: siteConfig.url,
   description: siteConfig.description,
   potentialAction: {
