@@ -13,16 +13,16 @@ const SECTIONS = [
     bgLight: "bg-blue-50",
     textColor: "text-blue-600",
   },
-  {
-    title: "Certifications",
-    description:
-      "Showcase professional and technical certifications.",
-    href: "/cms/certifications",
-    icon: Award,
-    gradient: "from-violet-500 to-purple-600",
-    bgLight: "bg-violet-50",
-    textColor: "text-violet-600",
-  },
+  // {
+  //   title: "Certifications",
+  //   description:
+  //     "Showcase professional and technical certifications.",
+  //   href: "/cms/certifications",
+  //   icon: Award,
+  //   gradient: "from-violet-500 to-purple-600",
+  //   bgLight: "bg-violet-50",
+  //   textColor: "text-violet-600",
+  // },
   {
     title: "Testimonials",
     description:
