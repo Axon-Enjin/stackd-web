@@ -29,11 +29,11 @@ const NAV_ITEMS = [
     href: "/cms/team-members",
     icon: Users,
   },
-  {
-    label: "Certifications",
-    href: "/cms/certifications",
-    icon: Award,
-  },
+  // {
+  //   label: "Certifications",
+  //   href: "/cms/certifications",
+  //   icon: Award,
+  // },
   {
     label: "Testimonials",
     href: "/cms/testimonials",
